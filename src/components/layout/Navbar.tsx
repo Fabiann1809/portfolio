@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { navigation } from "@/data/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
-import { IntroReveal } from "@/components/intro/IntroReveal";
+import { Reveal } from "@/components/loader/Reveal";
 import { MobileMenu } from "./MobileMenu";
 
 const ids = navigation.map((item) => item.id);
@@ -13,7 +13,7 @@ export function Navbar() {
   const activeId = useActiveSection(ids);
 
   return (
-    <IntroReveal as="header" className="bg-background/90 fixed inset-x-0 top-0 z-50 backdrop-blur">
+    <Reveal as="header" className="bg-background/90 fixed inset-x-0 top-0 z-50 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <a href="#hero" className="font-bold">Portfolio</a>
         <nav className="hidden md:block">
@@ -43,6 +43,6 @@ export function Navbar() {
         </button>
       </div>
       <MobileMenu open={open} activeId={activeId} onNavigate={() => setOpen(false)} />
-    </IntroReveal>
+    </Reveal>
   );
 }

@@ -8,4 +8,4 @@ export * from "./about";
 export * from "./contact";
 export * from "./social";
 export * from "./stack";
-export * from "./intro";
+export * from "./loader";
