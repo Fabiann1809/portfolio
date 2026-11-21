@@ -8,6 +8,6 @@ export function placeholderGradient(seed: string): string {
   const mix = 30 + ((h >>> 4) % 40);
   return (
     `radial-gradient(circle at ${x}% ${y}%, color-mix(in srgb, var(--color-accent) ${mix}%, transparent), transparent 60%), ` +
-    `linear-gradient(${angle}deg, color-mix(in srgb, var(--color-primary) 70%, #05060a), color-mix(in srgb, var(--color-accent) ${mix}%, #05060a))`
+    `linear-gradient(${angle}deg, color-mix(in srgb, var(--color-primary) 70%, var(--surface)), color-mix(in srgb, var(--color-accent) ${mix}%, var(--surface)))`
   );
 }

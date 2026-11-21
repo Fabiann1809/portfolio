@@ -61,7 +61,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
       aria-label={menuLabels.panel}
       data-menu
       data-reduced={reduced}
-      className="fixed inset-0 z-40 overflow-y-auto bg-background px-6 pt-24 pb-10 text-foreground md:hidden"
+      className="fixed inset-0 z-40 overflow-y-auto bg-background px-6 pt-24 pb-10 text-foreground xl:hidden"
     >
       <div className="flex min-h-full flex-col justify-center gap-6">
       <ul className="flex flex-col gap-1">

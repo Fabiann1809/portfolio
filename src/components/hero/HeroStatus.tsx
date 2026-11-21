@@ -20,10 +20,10 @@ export function HeroStatus() {
   return (
     <Reveal
       delay={560}
-      className="relative z-20 px-5 pt-6 text-center font-mono text-[11px] leading-relaxed tracking-wide text-muted uppercase md:absolute md:top-24 md:right-8 md:p-0 md:text-right lg:right-12"
+      className="relative z-20 px-5 pt-6 text-center font-mono text-xs leading-relaxed tracking-wide text-muted uppercase xl:absolute xl:top-24 xl:right-12 xl:p-0 xl:pr-3 xl:text-right xl:text-[13px]"
     >
-      <p className="flex items-center justify-center gap-2 md:justify-end">
-        <span aria-hidden="true" className="size-1.5 rounded-full bg-emphasis" />
+      <p className="flex items-center justify-center gap-2 font-semibold text-foreground xl:justify-end">
+        <span aria-hidden="true" className="size-2 rounded-full bg-emphasis" />
         {status.availability}
         {date && <span> · {date}</span>}
       </p>

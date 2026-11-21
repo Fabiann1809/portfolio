@@ -10,6 +10,7 @@
  * --portrait-shadow-blend (cast shadow behind the portrait). Keep the swatches in data/theme.ts in sync.
  * Tokens: --background, --foreground, --muted, --surface, --line, --emphasis (accent text that
  * stays legible on the mode), --shadow-color, --vignette.
+ * --contour-alpha: opacity of the hero topographic lines.
  * Retro tokens: --name-lit (giant name on the hero screen texture), --glow and --glow-soft
  * (phosphor text-shadow), --status-green, --scanline, --retro-vignette.
  */
@@ -26,6 +27,7 @@
   --vignette: rgba(0, 0, 0, 0.6);
   --light-tint: rgba(255, 244, 220, 0.16);
   --portrait-shadow-opacity: 0.18;
+  --contour-alpha: 0.2;
   --portrait-shadow-blend: normal;
   --name-lit: #ffffff;
   --glow: rgba(150, 215, 255, 0.55);
@@ -47,6 +49,7 @@
   --vignette: rgba(120, 130, 150, 0.25);
   --light-tint: rgba(255, 255, 255, 0.7);
   --portrait-shadow-opacity: 0.24;
+  --contour-alpha: 0.24;
   --portrait-shadow-blend: multiply;
   --name-lit: #05070c;
   --glow: rgba(20, 60, 120, 0.2);
@@ -68,6 +71,7 @@
   --vignette: rgba(120, 20, 0, 0.35);
   --light-tint: rgba(255, 224, 170, 0.4);
   --portrait-shadow-opacity: 0.3;
+  --contour-alpha: 0.3;
   --portrait-shadow-blend: multiply;
   --name-lit: #140a05;
   --glow: rgba(20, 10, 5, 0.18);

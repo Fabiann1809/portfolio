@@ -20,7 +20,7 @@ export function Hero() {
         <HeroIntro />
         <HeroStatus />
         <HeroHint />
-        <div className="relative z-30 flex justify-center pt-6 md:absolute md:inset-x-0 md:bottom-6 md:pt-0">
+        <div className="relative z-30 flex justify-center pt-8 xl:absolute xl:inset-x-0 xl:bottom-6 xl:pt-0">
           <BackdropPicker />
         </div>
       </HeroStage>

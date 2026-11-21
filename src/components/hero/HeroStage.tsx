@@ -25,7 +25,7 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
       ref={ref}
       data-light-zone="true"
       onClick={onClick}
-      className="studio-hero relative isolate flex min-h-svh flex-col overflow-hidden bg-background pb-20 md:block"
+      className="studio-hero relative isolate flex min-h-svh flex-col overflow-hidden bg-background pb-8 xl:block xl:pb-0"
     >
       {children}
     </div>

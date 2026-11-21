@@ -1,12 +1,18 @@
 import { Reveal } from "@/components/loader/Reveal";
+import { ContourField } from "./ContourField";
+import { FrameBrackets } from "./FrameBrackets";
 
 /**
- * Seamless studio paper: the theme background with a vignette, plus a soft radial light that
- * follows --light-x / --light-y (set by useStudioLight on the stage). Colors come from tokens.
+ * Hero backdrop: the theme background with animated topographic contour lines, a vignette, a soft
+ * radial light that follows --light-x / --light-y (set by useStudioLight on the stage) and corner
+ * brackets. Colors come from tokens.
  */
 export function StudioBackdrop() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <Reveal className="absolute inset-0">
+        <ContourField />
+      </Reveal>
       <div
         className="absolute inset-0"
         style={{
@@ -23,6 +29,7 @@ export function StudioBackdrop() {
           }}
         />
       </Reveal>
+      <FrameBrackets />
     </div>
   );
 }

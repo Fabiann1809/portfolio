@@ -15,7 +15,7 @@ export function Portrait() {
     <Reveal
       rise="lg"
       delay={260}
-      className="pointer-events-none relative z-10 mx-auto -mt-[6vw] h-[56svh] w-full max-w-md md:absolute md:inset-x-0 md:bottom-0 md:mt-0 md:h-[80svh] md:max-w-none"
+      className="pointer-events-none relative z-10 mx-auto -mt-[6vw] h-[56svh] w-full max-w-md xl:absolute xl:inset-x-0 xl:bottom-0 xl:mt-0 xl:h-[74svh] xl:max-w-none"
     >
       <div className="relative mx-auto aspect-[1145/1374] h-full max-w-full">
         {portrait.src && !failed && (

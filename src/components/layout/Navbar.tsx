@@ -51,17 +51,17 @@ export function Navbar({ homeHref }: NavbarProps) {
       }>
       <div className="flex items-center justify-between px-[var(--edge-x)] py-3">
         <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-lg font-black tracking-[0.12em] uppercase">{navbarBrand.label}</a>
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-4 xl:gap-6">
           <a
             href={hrefPrefix + "#" + navbarBrand.cta.targetId}
             onClick={(e) => handleAnchor(e, navbarBrand.cta.targetId)}
-            className="label flex items-center gap-2 text-xs md:text-sm"
+            className="label flex items-center gap-2 text-xs xl:text-sm"
           >
             {navbarBrand.cta.label}
             <span aria-hidden="true" className="status-dot" />
           </a>
-          <nav className="hidden md:block" aria-label="Secciones">
-            <ul className="label flex gap-5 text-xs lg:gap-6 lg:text-sm">
+          <nav className="hidden xl:block" aria-label="Secciones">
+            <ul className="label flex gap-6 text-sm">
               {navigation.map((item) => (
                 <li key={item.id}>
                   <a
@@ -76,13 +76,13 @@ export function Navbar({ homeHref }: NavbarProps) {
               ))}
             </ul>
           </nav>
-          <div className="hidden md:block">
+          <div className="hidden xl:block">
             <BackdropPicker variant="compact" />
           </div>
           <button
             ref={toggleRef}
             type="button"
-            className="-mr-2 p-2 md:hidden"
+            className="-mr-2 p-2 xl:hidden"
             aria-label={open ? menuLabels.close : menuLabels.open}
             aria-expanded={open}
             aria-controls="mobile-menu"
