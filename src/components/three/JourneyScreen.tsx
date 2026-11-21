@@ -64,10 +64,8 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       uHasTexture: { value: 0 },
       uTexAspect: { value: screen.aspect },
       uPlaneAspect: { value: screen.aspect },
-      uBendX: { value: 0 },
-      uBendY: { value: 0 },
-      uCornerCurl: { value: 0 },
-      uSize: { value: 1 },
+      uBulge: { value: 0 },
+      uCorner: { value: 0 },
       uSmear: { value: 0 },
       uRgb: { value: fx.rgbBase },
       uScan: { value: fx.scan },
@@ -245,12 +243,14 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     const k = 1 - pose.fill;
     const dist = Math.min(Math.abs(pose.r), 2);
     // Deterministic per-panel variation: neighbours vary more than the one resting at the front.
-    const variance = k * (0.35 + 0.65 * Math.min(1, dist));
+    const variance = k * Math.min(1, dist);
     const vary = stream.variation;
 
     // Panels are spaced along the great circle so neighbours almost touch at the front.
     const shiftX = state.size.width < stream.narrowPx ? stream.shiftXNarrow : stream.shiftX;
-    const restW = Math.min(vp.width * screen.widthRatio, vp.height * screen.maxHeightRatio * screen.aspect) * stream.scale;
+    const pxToWorld = vp.width / state.size.width;
+    const colFree = 2 * (vp.width * (0.5 + shiftX) - stream.columnPx * pxToWorld);
+    const restW = Math.min(vp.width * screen.widthRatio, vp.height * screen.maxHeightRatio * screen.aspect, colFree) * stream.scale;
     const restH = restW / screen.aspect;
     const fullW = vp.width * screen.overscan;
     const fullH = vp.height * screen.overscan;
@@ -290,7 +290,7 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     sphereQuat.setFromAxisAngle(AXIS, angle);
     localEuler.set(
       (seedC - 0.5) * 2 * vary.pitch * variance,
-      (seedB - 0.5) * 2 * vary.yaw * variance,
+      MathUtils.degToRad(stream.yaw) * k + (seedB - 0.5) * 2 * vary.yaw * variance,
       (seed - 0.5) * 2 * vary.roll * variance,
     );
     localQuat.setFromEuler(localEuler);
@@ -301,17 +301,14 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
 
     const journey = getJourneyState();
     const un = uniforms;
-    // Bend of the panel: 0 once it fills the viewport, varied per panel.
+    // Convex barrel: 0 once the panel fills the viewport.
     const bendK = Math.pow(Math.max(0, 1 - c.fill), 1.5);
-    const bendVar = 1 + (seedC - 0.5) * 2 * vary.bend;
     un.uTime.value = state.clock.elapsedTime;
-    un.uSize.value = c.w;
     un.uPlaneAspect.value = c.w / c.h;
     un.uFill.value = c.fill;
     un.uOpacity.value = c.opacity;
-    un.uBendX.value = stream.bend.x * bendK * bendVar;
-    un.uBendY.value = stream.bend.y * bendK * (2 - bendVar);
-    un.uCornerCurl.value = stream.bend.corner * bendK * bendVar;
+    un.uBulge.value = stream.bend.bulge * bendK;
+    un.uCorner.value = stream.bend.corner * bendK;
     live.cover[index] = MathUtils.smoothstep(c.fill, 0.92, 1) * c.opacity;
     const baseDim = def.generated ? 0 : fx.dimFilled * c.fill;
     un.uDim.value = Math.min(0.9, baseDim);

@@ -6,16 +6,16 @@
  * uFill -> 1: the bend is 0 and the same shader draws the full-bleed backdrop.
  */
 export const screenVertexShader = /* glsl */ `
-  uniform float uSize;
-  uniform float uBendX;
-  uniform float uBendY;
-  uniform float uCornerCurl;
+  uniform float uBulge;
+  uniform float uPlaneAspect;
   varying vec2 vUv;
   void main() {
     vUv = uv;
     vec3 p = position;
     vec2 u = p.xy * 2.0;
-    p.z -= uSize * (uBendX * u.x * u.x + uBendY * u.y * u.y + uCornerCurl * u.x * u.x * u.y * u.y);
+    // Convex CRT barrel: edge midpoints bow outward by uBulge of the panel width, corners stay put.
+    p.x += sign(u.x) * abs(u.x) * uBulge * (1.0 - u.y * u.y);
+    p.y += sign(u.y) * abs(u.y) * uBulge * uPlaneAspect * (1.0 - u.x * u.x);
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(p, 1.0);
   }
 `;
@@ -25,6 +25,7 @@ export const screenFragmentShader = /* glsl */ `
   uniform float uHasTexture;
   uniform float uTexAspect;
   uniform float uPlaneAspect;
+  uniform float uCorner;
   uniform float uSmear;
   uniform float uRgb;
   uniform float uScan;
@@ -92,8 +93,11 @@ export const screenFragmentShader = /* glsl */ `
     vec2 uv = vUv + vec2(shift, 0.0);
 
     // Crisp 1px antialiased edge on the (torn) silhouette; no border, no frame.
-    vec2 e = min(uv, 1.0 - uv) / max(fwidth(vUv), vec2(1e-5));
-    float edge = clamp(min(e.x, e.y), 0.0, 1.0);
+    // Rounded-rectangle silhouette (corner radius uCorner, in panel heights).
+    vec2 halfSize = vec2(uPlaneAspect, 1.0) * 0.5;
+    vec2 pq = abs(uv - 0.5) * vec2(uPlaneAspect, 1.0) - halfSize + uCorner;
+    float sd = length(max(pq, 0.0)) + min(max(pq.x, pq.y), 0.0) - uCorner;
+    float edge = clamp(0.5 - sd / max(fwidth(sd), 1e-5), 0.0, 1.0);
     if (edge <= 0.001) discard;
 
     // RGB fringe: horizontal split plus a radial part that grows towards the corners.

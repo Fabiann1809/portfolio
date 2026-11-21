@@ -76,12 +76,16 @@ export interface JourneyConfig {
     /** Same as shiftX for viewports narrower than `narrowPx` (the column is a larger share of the width). */
     shiftXNarrow: number;
     narrowPx: number;
+    /** Width in CSS px of the left text column: the panel at rest is narrowed so its left edge stays right of it. */
+    columnPx: number;
     /** Panels further than this many panels from the centre are not drawn. */
     viewRange: number;
-    /** Bend of a panel at rest: share of the panel width pulled back at the edges (cylinder x / y, plus corner curl). */
-    bend: { x: number; y: number; corner: number };
-    /** Deterministic per-panel variation (radians for angles, share for bend). */
-    variation: { yaw: number; pitch: number; roll: number; bend: number };
+    /** CRT-like convex barrel of a panel at rest: `bulge` = share of the panel width the edge midpoints bow outward, `corner` = corner radius as a share of the panel height. */
+    bend: { bulge: number; corner: number };
+    /** Constant yaw of every panel at rest, in degrees (perspective feel: the left edge is closer). */
+    yaw: number;
+    /** Deterministic per-panel variation of the neighbours (radians). */
+    variation: { yaw: number; pitch: number; roll: number };
   };
   screen: {
     widthRatio: number;
