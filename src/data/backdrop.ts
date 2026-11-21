@@ -20,9 +20,18 @@ export const contourBackdrop: ContourBackdropData = {
     lineAlpha: 0.5,
     contourAlpha: 0.9,
   },
-  light: {
-    radius: 0.34,
-    boost: 0.55,
+  pointer: {
+    bumpK: 12,
+    bumpAmp: 0.32,
+    trailK: 18,
+    trailAmp: 0.28,
+    trailLife: 1,
+    trailSpacing: 8,
+    trailMax: 48,
+    idleSeconds: 2.2,
+    easeRate: 4,
+    hotAlpha: 0.85,
+    hotSteps: 6,
   },
   brackets: {
     size: 28,

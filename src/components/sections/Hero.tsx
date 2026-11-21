@@ -4,7 +4,6 @@ import { GiantName } from "@/components/hero/GiantName";
 import { Portrait } from "@/components/hero/Portrait";
 import { HeroIntro } from "@/components/hero/HeroIntro";
 import { HeroStatus } from "@/components/hero/HeroStatus";
-import { HeroHint } from "@/components/hero/HeroHint";
 import { BackdropPicker } from "@/components/theme/BackdropPicker";
 
 /**
@@ -19,7 +18,6 @@ export function Hero() {
         <Portrait />
         <HeroIntro />
         <HeroStatus />
-        <HeroHint />
         <div className="relative z-30 flex justify-center pt-8 xl:absolute xl:inset-x-0 xl:bottom-6 xl:pt-0">
           <BackdropPicker />
         </div>

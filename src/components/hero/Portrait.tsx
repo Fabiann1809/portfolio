@@ -6,7 +6,7 @@ import { hero } from "@/data/hero";
 import { Reveal } from "@/components/loader/Reveal";
 import { PortraitPlaceholder } from "./PortraitPlaceholder";
 
-/** Cut-out portrait standing on the backdrop; its cast shadow follows the studio light. */
+/** Cut-out portrait standing on the backdrop; with a cast shadow behind it. */
 export function Portrait() {
   const { portrait, portraitShadow } = hero;
   const [failed, setFailed] = useState(false);
@@ -19,8 +19,7 @@ export function Portrait() {
     >
       <div className="relative mx-auto aspect-[1145/1374] h-full max-w-full">
         {portrait.src && !failed && (
-          // Cast shadow on the backdrop: the same cut-out as a blurred silhouette, offset away from
-          // the light. The box is oversized (-10% top, -15% sides) so the mask and the blur are not
+          // Cast shadow on the backdrop: the same cut-out as a blurred silhouette, offset behind it. The box is oversized (-10% top, -15% sides) so the mask and the blur are not
           // clipped; the fade 80%..100% of it matches the portrait's own 78%..100%.
           <div
             aria-hidden="true"
@@ -41,10 +40,10 @@ export function Portrait() {
                 sizes="(min-width: 768px) 70vh, 70vw"
                 className="object-contain object-bottom"
                 style={{
-                  filter: "brightness(0) blur(var(--shadow-blur, 10px))",
+                  filter: `brightness(0) blur(${portraitShadow.blur}px)`,
                   opacity: "var(--portrait-shadow-opacity, 0.2)",
                   transformOrigin: "bottom center",
-                  transform: `translate(var(--shadow-x, -34px), var(--shadow-y, -14px)) scale(${portraitShadow.scale}) skewX(var(--shadow-skew, 2deg))`,
+                  transform: `translate(${portraitShadow.baseX}px, ${portraitShadow.baseY}px) scale(${portraitShadow.scale}) skewX(${portraitShadow.skew}deg)`,
                 }}
               />
             </div>
@@ -53,7 +52,7 @@ export function Portrait() {
         <div
           className="absolute inset-0"
           style={{
-            // Contact shadow only: the cast shadow above carries the light direction.
+            // Contact shadow only: the cast shadow above carries the direction.
             filter: "drop-shadow(0 6px 14px var(--shadow-color))",
             // Bust crop: fade the cut chest into the backdrop.
             maskImage: "linear-gradient(to bottom, #000 78%, transparent 100%)",

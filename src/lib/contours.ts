@@ -44,10 +44,11 @@ export function fbm(x: number, y: number, z: number, octaves: number): number {
 
 /**
  * Appends the iso-line segments of `level` to `path` (marching squares over a cols x rows
- * sample grid; `values` has (cols + 1) * (rows + 1) entries; cell size in px).
+ * sample grid; `values` has (cols + 1) * (rows + 1) entries; cell size in px). `path` may be a
+ * function picking the target path per cell (i, j), used to split lines by pointer "heat".
  */
 export function addIsoLine(
-  path: Path2D,
+  target: Path2D | ((i: number, j: number) => Path2D),
   values: Float32Array,
   cols: number,
   rows: number,
@@ -64,6 +65,7 @@ export function addIsoLine(
       const d = values[(j + 1) * stride + i]; // bottom-left
       const idx = (a > level ? 8 : 0) | (b > level ? 4 : 0) | (c > level ? 2 : 0) | (d > level ? 1 : 0);
       if (idx === 0 || idx === 15) continue;
+      const path = typeof target === "function" ? target(i, j) : target;
       const x = i * cell;
       const y = j * cell;
       const top = [x + cross(a, b) * cell, y] as const;
@@ -86,6 +88,12 @@ export function addIsoLine(
       }
     }
   }
+}
+
+/** Gaussian bump exp(-d2 * k), 0 beyond the cutoff (d2 = squared distance in the same units as 1/k). */
+export function gauss(d2: number, k: number): number {
+  const e = d2 * k;
+  return e > 9 ? 0 : Math.exp(-e);
 }
 
 /** Parses "#rgb", "#rrggbb" or "rgb(a)(...)" to [r, g, b]. Falls back to white. */

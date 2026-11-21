@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { contourBackdrop as cfg } from "@/data/backdrop";
-import { addIsoLine, fbm, parseColor } from "@/lib/contours";
+import { addIsoLine, fbm, gauss, parseColor } from "@/lib/contours";
 import { prefersReducedMotion } from "@/lib/motion";
 
 type Rgb = [number, number, number];
@@ -10,7 +10,7 @@ const rgba = (c: Rgb, a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
 /**
  * Topographic contour lines (marching squares over drifting value noise) drawn on a canvas, with
- * an accent scan line and a light-following highlight. Colors come from the tone tokens
+ * an accent scan line and a pointer reaction (bump + decaying wake, lines under it turn accent). Colors come from the tone tokens
  * (--foreground, --emphasis, --contour-alpha). Pauses offscreen / on hidden tabs; draws a single
  * static frame under reduced motion.
  */
@@ -24,7 +24,11 @@ export function ContourField() {
     if (!canvas || !ctx || !host) return;
 
     const reduced = prefersReducedMotion();
-    const stage = canvas.closest<HTMLElement>("[data-light-zone]");
+    const pc = cfg.pointer;
+    const trail: { x: number; y: number; age: number }[] = [];
+    const mouse = { x: 0, y: 0, on: 0, target: 0, idle: 0, has: false };
+    let hot = new Float32Array(0);
+    const mix = (a: Rgb, b: Rgb, t: number): Rgb => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
     let width = 0;
     let height = 0;
     let dpr = 1;
@@ -59,6 +63,7 @@ export function ContourField() {
       cols = Math.ceil(width / cell);
       rows = Math.ceil(height / cell);
       values = new Float32Array((cols + 1) * (rows + 1));
+      hot = new Float32Array(values.length);
     };
 
     const draw = (t: number) => {
@@ -67,39 +72,72 @@ export function ContourField() {
 
       const f = cfg.frequency / 1000;
       const stride = cols + 1;
+      const active = !reduced && (mouse.on > 0.001 || trail.length > 0);
+      const unit = 1 / height; // pointer / trail distances are in hero-height units
       for (let j = 0; j <= rows; j++) {
         for (let i = 0; i <= cols; i++) {
-          values[j * stride + i] = fbm(i * cell * f + t * cfg.driftSpeed, j * cell * f, t * cfg.warpSpeed, cfg.octaves);
+          const k = j * stride + i;
+          let v = fbm(i * cell * f + t * cfg.driftSpeed, j * cell * f, t * cfg.warpSpeed, cfg.octaves);
+          let h = 0;
+          if (active) {
+            const px = i * cell;
+            const py = j * cell;
+            let tr = 0;
+            for (const p of trail) {
+              const dx = (px - p.x) * unit;
+              const dy = (py - p.y) * unit;
+              tr += gauss(dx * dx + dy * dy, pc.trailK) * (1 - p.age / pc.trailLife);
+            }
+            tr = Math.min(1, tr);
+            let g = 0;
+            if (mouse.on > 0.001) {
+              const dx = (px - mouse.x) * unit;
+              const dy = (py - mouse.y) * unit;
+              g = gauss(dx * dx + dy * dy, pc.bumpK) * mouse.on;
+            }
+            v += g * pc.bumpAmp + tr * pc.trailAmp;
+            h = Math.min(1, tr + g);
+          }
+          values[k] = v;
+          hot[k] = h;
         }
       }
 
       const [lo, hi] = cfg.levelRange;
-      const minor = new Path2D();
-      const major = new Path2D();
+      const steps = active ? pc.hotSteps : 0;
+      // Bucket 0 = cold lines; buckets 1..steps = increasing heat (accent color + opacity).
+      const minor: Path2D[] = [];
+      const major: Path2D[] = [];
+      for (let b = 0; b <= steps; b++) {
+        minor.push(new Path2D());
+        major.push(new Path2D());
+      }
+      const bucket = (i: number, j: number) => {
+        const k = j * stride + i;
+        const h = (hot[k] + hot[k + 1] + hot[k + stride] + hot[k + stride + 1]) / 4;
+        return Math.min(steps, Math.round(h * steps));
+      };
       for (let k = 0; k < cfg.levels; k++) {
         const level = lo + ((hi - lo) * k) / Math.max(1, cfg.levels - 1);
-        addIsoLine(k % cfg.majorEvery === 0 ? major : minor, values, cols, rows, cell, level);
+        const set = k % cfg.majorEvery === 0 ? major : minor;
+        addIsoLine(steps ? (i, j) => set[bucket(i, j)] : set[0], values, cols, rows, cell, level);
       }
 
-      const stroke = (style: string | CanvasGradient) => {
+      const stroke = (style: string | CanvasGradient, b = 0) => {
         ctx.strokeStyle = style;
         ctx.lineWidth = cfg.lineWidth;
-        ctx.stroke(minor);
+        ctx.stroke(minor[b]);
         ctx.lineWidth = cfg.majorLineWidth;
-        ctx.stroke(major);
+        ctx.stroke(major[b]);
       };
 
-      // Base lines.
-      stroke(rgba(ink, tone * cfg.baseAlpha));
-
-      // Light: lines brighten around the pointer light.
-      const lx = (parseFloat(stage?.style.getPropertyValue("--light-x") || "30") / 100) * width;
-      const ly = (parseFloat(stage?.style.getPropertyValue("--light-y") || "22") / 100) * height;
-      const radius = cfg.light.radius * Math.max(width, height);
-      const glow = ctx.createRadialGradient(lx, ly, 0, lx, ly, radius);
-      glow.addColorStop(0, rgba(ink, Math.min(1, tone * (1 + cfg.light.boost * 4))));
-      glow.addColorStop(1, rgba(ink, 0));
-      stroke(glow);
+      // Base lines, then hotter buckets drawn in accent with more opacity.
+      const baseAlpha = tone * cfg.baseAlpha;
+      stroke(rgba(ink, baseAlpha), 0);
+      for (let b = 1; b <= steps; b++) {
+        const h = b / steps;
+        stroke(rgba(mix(ink, accent, h), baseAlpha + (pc.hotAlpha - baseAlpha) * h), b);
+      }
 
       // Scan line sweeping left to right; contours under it turn accent-colored.
       if (!reduced) {
@@ -112,20 +150,63 @@ export function ContourField() {
         ctx.beginPath();
         ctx.rect(x - cfg.scan.bandWidth, 0, cfg.scan.bandWidth, height);
         ctx.clip();
-        stroke(band);
+        stroke(band, 0);
         ctx.restore();
         ctx.fillStyle = rgba(accent, cfg.scan.lineAlpha);
         ctx.fillRect(x, 0, 1, height);
       }
     };
 
+    const stepPointer = (dt: number) => {
+      mouse.idle += dt;
+      if (mouse.idle > pc.idleSeconds) mouse.target = 0;
+      mouse.on += (mouse.target - mouse.on) * Math.min(1, dt * pc.easeRate);
+      if (mouse.on < 0.001 && mouse.target === 0) mouse.on = 0;
+      for (const p of trail) p.age += dt;
+      while (trail.length && trail[0].age >= pc.trailLife) trail.shift();
+    };
+
+    const onPoint = (clientX: number, clientY: number) => {
+      const rect = host.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+        mouse.target = 0;
+        return;
+      }
+      mouse.x = x;
+      mouse.y = y;
+      mouse.target = 1;
+      mouse.idle = 0;
+      const last = trail[trail.length - 1];
+      if (!last || Math.hypot(x - last.x, y - last.y) >= pc.trailSpacing) {
+        trail.push({ x, y, age: 0 });
+        if (trail.length > pc.trailMax) trail.shift();
+      }
+    };
+    const onPointer = (e: PointerEvent) => onPoint(e.clientX, e.clientY);
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t) onPoint(t.clientX, t.clientY);
+    };
+    const onLeave = () => (mouse.target = 0);
+    if (!reduced) {
+      window.addEventListener("pointermove", onPointer, { passive: true });
+      window.addEventListener("pointerdown", onPointer, { passive: true });
+      window.addEventListener("touchstart", onTouch, { passive: true });
+      window.addEventListener("touchmove", onTouch, { passive: true });
+      document.documentElement.addEventListener("pointerleave", onLeave);
+    }
+
     const loop = (now: number) => {
       frame = 0;
       if (!visible || document.hidden) return;
       frame = requestAnimationFrame(loop);
       if (now - lastDraw < 1000 / cfg.fps) return;
-      clock += Math.min(0.1, (now - (lastNow || now)) / 1000);
+      const dt = Math.min(0.1, (now - (lastNow || now)) / 1000);
+      clock += dt;
       lastNow = now;
+      stepPointer(dt);
       lastDraw = now;
       draw(clock);
     };
@@ -170,6 +251,11 @@ export function ContourField() {
       visibility.disconnect();
       tokens.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
     };
   }, []);
 

@@ -13,5 +13,4 @@ export const theme: ThemeData = {
   defaultForLight: "bone",
   pickerLabel: "Fondo del sitio",
   pickerCaption: "Fondo",
-  hint: "Mueve la luz \u00b7 clic para cambiar el fondo",
 };

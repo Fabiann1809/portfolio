@@ -6,23 +6,14 @@ export interface HeroPortrait {
   height: number;
 }
 
-/** Tunables of the silhouette cast on the backdrop behind the portrait (px / deg / ratio). */
+/** Tunables of the static silhouette cast on the backdrop behind the portrait (px / deg / ratio). */
 export interface HeroPortraitShadow {
-  /** Offset at the resting light (negative = left / up). */
+  /** Offset (negative = left / up). */
   baseX: number;
   baseY: number;
-  /** Max extra offset (px) reached when the light moves across the whole stage. */
-  travelX: number;
-  travelY: number;
-  /** Hard clamp of the total offset (px). */
-  maxOffset: number;
-  /** Blur (px) with the light on the subject, and with the light far away. */
-  blurMin: number;
-  blurMax: number;
+  blur: number;
   scale: number;
-  /** Skew (deg) at the resting light, and extra degrees per 100px of horizontal offset. */
-  skewBase: number;
-  skewPer100: number;
+  skew: number;
 }
 
 export interface HeroStatus {
@@ -57,8 +48,6 @@ export interface HeroData {
   /** Giant name drawn across the hero. */
   displayName: string;
   role: string;
-  /** Label next to the light cursor while over the hero. */
-  lightLabel: string;
   portraitShadow: HeroPortraitShadow;
   /** Role title, shown in two lines. */
   roleLines: [string, string];

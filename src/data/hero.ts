@@ -6,7 +6,6 @@ export const hero: HeroData = {
   greeting: "Hola, soy",
   displayName: "FABIÁN", // PLACEHOLDER: confirm spelling
   role: "Ingeniero de Software full stack & AI engineering",
-  lightLabel: "Luz",
   roleLines: ["Ingeniero de Software", "Full stack & AI"],
   metaLabel: "// PORTFOLIO",
   copyrightYear: 2026,
@@ -25,14 +24,9 @@ export const hero: HeroData = {
   portraitShadow: {
     baseX: -34,
     baseY: -14,
-    travelX: 70,
-    travelY: 40,
-    maxOffset: 90,
-    blurMin: 6,
-    blurMax: 14,
+    blur: 10,
     scale: 1.04,
-    skewBase: 2,
-    skewPer100: 3,
+    skew: 2,
   },
   studio: {
     portraitHeight: 78,

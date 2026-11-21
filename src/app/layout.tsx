@@ -5,7 +5,6 @@ import "./globals.css";
 import { LoaderProvider } from "@/components/loader/LoaderProvider";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/loader/Preloader";
-import { LightCursor } from "@/components/cursor/LightCursor";
 import { RetroOverlay } from "@/components/layout/RetroOverlay";
 import { themeInitScript } from "@/lib/themeScript";
 
@@ -55,7 +54,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Preloader />
             {children}
             <RetroOverlay />
-            <LightCursor />
           </SmoothScroll>
         </LoaderProvider>
       </body>

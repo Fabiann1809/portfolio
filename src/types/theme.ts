@@ -21,6 +21,4 @@ export interface ThemeData {
   pickerLabel: string;
   /** Visible caption of the full picker. */
   pickerCaption: string;
-  /** Hint pill of the hero. */
-  hint: string;
 }

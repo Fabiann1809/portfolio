@@ -31,11 +31,30 @@ export interface ContourBackdropData {
     lineAlpha: number;
     contourAlpha: number;
   };
-  light: {
-    /** Radius of the light, as a fraction of the larger hero side. */
-    radius: number;
-    /** Extra opacity of the lines under the light. */
-    boost: number;
+  /** Pointer reaction: a gaussian bump under the cursor plus a decaying wake (trail). */
+  pointer: {
+    /** Gaussian sharpness of the bump (distance in hero-height units). */
+    bumpK: number;
+    /** Height added at the pointer. */
+    bumpAmp: number;
+    /** Gaussian sharpness of each trail point. */
+    trailK: number;
+    /** Height added by the trail (sum clamped to 1). */
+    trailAmp: number;
+    /** Seconds for a trail point to fade out. */
+    trailLife: number;
+    /** Min distance in px between recorded trail points. */
+    trailSpacing: number;
+    /** Max trail points kept. */
+    trailMax: number;
+    /** Seconds without movement before the influence eases out. */
+    idleSeconds: number;
+    /** Easing speed of the influence in/out (per second). */
+    easeRate: number;
+    /** Line opacity at full heat (mixed from the base opacity). */
+    hotAlpha: number;
+    /** Number of heat steps lines are bucketed into (accent mix). */
+    hotSteps: number;
   };
   brackets: {
     /** Arm length in px. */
