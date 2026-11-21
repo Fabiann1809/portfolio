@@ -1,25 +1,25 @@
 import { education, educationTitle } from "@/data/education";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { SectionTitle } from "@/components/ui/SectionTitle";
-import { Card } from "@/components/ui/Card";
+import { TimelineRow } from "@/components/rows/TimelineRow";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function Education() {
   return (
-    <section id="education" className="flex items-center journey:min-h-screen px-4 py-24">
-      <div className="mx-auto w-full max-w-5xl">
-        <SectionTitle>{educationTitle}</SectionTitle>
-        <ScrollReveal stagger className="flex flex-col gap-4">
-          {education.map((entry) => (
-            <Card key={entry.id}>
-              <h3 className="font-display text-xl font-extrabold tracking-[0.04em] uppercase">{entry.title}</h3>
-              <p className="text-sm opacity-70">
-                {entry.institution} | {entry.period}
-              </p>
-              {entry.description && <p className="mt-2">{entry.description}</p>}
-            </Card>
-          ))}
-        </ScrollReveal>
-      </div>
+    <section id="education" className="px-[var(--edge-x)] py-24 md:py-32">
+      <SectionLabel>{educationTitle}</SectionLabel>
+      <ul className="mt-10">
+        {education.map((entry, i) => (
+          <TimelineRow
+            key={entry.id}
+            index={i}
+            row={{
+              title: entry.title,
+              organization: entry.institution,
+              period: entry.period,
+              note: entry.description,
+            }}
+          />
+        ))}
+      </ul>
     </section>
   );
 }

@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Lenis from "lenis";
-import { connectScroll } from "@/lib/scrollStore";
-import { journeyConfig } from "@/data/chapters";
+import { motion } from "@/data/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { prefersReducedMotion } from "@/lib/motion";
 
 /**
  * Creates the Lenis instance (null when the user prefers reduced motion, so native
- * scroll is used) and wires it to the scroll store.
+ * scroll is used).
  */
 export function useLenis(): Lenis | null {
   const [lenis, setLenis] = useState<Lenis | null>(null);
@@ -22,17 +21,16 @@ export function useLenis(): Lenis | null {
 
     if (prefersReducedMotion()) {
       clearClasses();
-      return connectScroll(null);
+      return;
     }
 
     const instance = new Lenis({
-      lerp: journeyConfig.lenis.lerp,
+      lerp: motion.lenis.lerp,
       smoothWheel: true,
-      wheelMultiplier: journeyConfig.lenis.wheelMultiplier,
+      wheelMultiplier: motion.lenis.wheelMultiplier,
       syncTouch: true,
       syncTouchLerp: 0.1,
     });
-    const disconnect = connectScroll(instance);
     let frame = requestAnimationFrame(function raf(time) {
       instance.raf(time);
       frame = requestAnimationFrame(raf);
@@ -41,7 +39,6 @@ export function useLenis(): Lenis | null {
 
     return () => {
       cancelAnimationFrame(frame);
-      disconnect();
       instance.destroy();
       clearClasses();
       setLenis(null);

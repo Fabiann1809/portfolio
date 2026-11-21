@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ElementType } from "react";
-import { journeyConfig } from "@/data/chapters";
+import { motion } from "@/data/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface ScrollRevealProps {
@@ -56,8 +56,8 @@ export function ScrollReveal({ children, as = "div", delay = 0, stagger = false,
       data-shown={shown}
       data-reduced={reduced}
       style={{
-        "--reveal-stagger": journeyConfig.overlay.stagger + "ms",
-        "--reveal-rise": journeyConfig.overlay.rise + "px",
+        "--reveal-stagger": motion.reveal.stagger + "ms",
+        "--reveal-rise": motion.reveal.rise + "px",
         ...(!stagger && delay ? { transitionDelay: reduced ? undefined : delay + "ms" } : null),
       } as React.CSSProperties}
     >

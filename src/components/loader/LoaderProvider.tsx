@@ -15,8 +15,7 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
 /**
  * Tracks loading progress as the average of named tasks. Built-in tasks cover the
- * document, fonts and img elements. Extra tasks can be added with registerTask or
- * useLoaderProgress, e.g. feed useProgress().progress / 100 from drei for 3D assets.
+ * document, fonts and img elements. Extra tasks can be added with registerTask.
  */
 export function LoaderProvider({ children }: { children: React.ReactNode }) {
   const [loaded, setLoaded] = useState(false);
@@ -95,12 +94,3 @@ export function useLoader() {
   return useContext(LoaderContext);
 }
 
-/** Registers a task and keeps its progress (0..1) in sync with the given value. */
-export function useLoaderProgress(id: string, progress: number, enabled = true) {
-  const { registerTask, setTaskProgress } = useContext(LoaderContext);
-  // When disabled the task is unregistered, so it never holds the preloader back.
-  useEffect(() => (enabled ? registerTask(id) : undefined), [id, enabled, registerTask]);
-  useEffect(() => {
-    if (enabled) setTaskProgress(id, progress);
-  }, [id, progress, enabled, setTaskProgress]);
-}

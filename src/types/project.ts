@@ -1,6 +1,8 @@
 export interface ProjectLinks {
   github: string;
+  /** Live demo (Vercel). */
   vercel?: string;
+  /** APK download. */
   download?: string;
 }
 
@@ -11,17 +13,24 @@ export interface Project {
   /** Frameworks and libraries only, never bare languages. */
   technologies: string[];
   collaborative: boolean;
-  /** Featured projects appear in the home journey; the gallery shows every project. */
-  featured: boolean;
+  /** Client name shown in the meta line when the project is not collaborative. */
+  client?: string;
+  year: string;
   links: ProjectLinks;
   /** Optional image path. Without it a generated gradient placeholder is shown. */
   image?: string;
 }
 
 export interface ProjectLabels {
+  /** Heading of the home section ("// LABEL 0N COUNT"). */
+  heading: string;
+  countLabel: string;
+  /** Prefix of the record codes (e.g. MSN gives MSN-01). */
+  codePrefix: string;
   collaborative: string;
   github: string;
   demo: string;
   download: string;
-  indexAriaLabel: string;
+  /** Accessible name of the progress ticks list. */
+  progressAria: string;
 }

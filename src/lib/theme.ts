@@ -1,5 +1,5 @@
 import { theme } from "@/data/theme";
-import type { BackdropId, ThemeColors } from "@/types";
+import type { BackdropId } from "@/types";
 
 /** Client-side theme store: the source of truth is `data-backdrop` on <html>. */
 const ids = theme.options.map((option) => option.id);
@@ -32,18 +32,4 @@ export function subscribeBackdrop(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-backdrop"] });
   return () => observer.disconnect();
-}
-
-const VARS = ["--background", "--foreground", "--color-primary", "--color-accent", "--vignette", "--name-lit", "--glow"] as const;
-const SEP = "|";
-
-/** Serialised snapshot of the theme tokens (stable string, cheap to compare). */
-export function readThemeKey(): string {
-  const style = getComputedStyle(document.documentElement);
-  return VARS.map((name) => style.getPropertyValue(name).trim()).join(SEP);
-}
-
-export function parseThemeKey(key: string): ThemeColors {
-  const [background, foreground, primary, accent, vignette, nameLit, glow] = key.split(SEP);
-  return { background, foreground, primary, accent, vignette, nameLit, glow };
 }

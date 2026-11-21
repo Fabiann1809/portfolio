@@ -1,114 +1,51 @@
-"use client";
-
-import { useState } from "react";
 import { contact } from "@/data/contact";
-import { validateContactForm } from "@/lib/validation";
+import { socials } from "@/data/socials";
+import { ContactForm } from "@/components/contact/ContactForm";
+import { SignalHeadline } from "@/components/contact/SignalHeadline";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { SectionTitle } from "@/components/ui/SectionTitle";
-import { Button } from "@/components/ui/Button";
-import type { ContactFormErrors, ContactFormValues } from "@/types";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
-const emptyValues: ContactFormValues = { name: "", email: "", message: "" };
-type Status = "idle" | "sending" | "success" | "error";
-
-const inputClass = "w-full rounded border border-current/30 bg-transparent p-2";
-const errorClass = "text-sm text-red-500";
-
+/** "Send the signal": giant headline, availability, socials and the contact form. */
 export function Contact() {
-  const [values, setValues] = useState<ContactFormValues>(emptyValues);
-  const [errors, setErrors] = useState<ContactFormErrors>({});
-  const [status, setStatus] = useState<Status>("idle");
-
-  function handleChange(field: keyof ContactFormValues, value: string) {
-    setValues((prev) => ({ ...prev, [field]: value }));
-  }
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const found = validateContactForm(values);
-    setErrors(found);
-    if (Object.keys(found).length > 0) return;
-
-    setStatus("sending");
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      if (!response.ok) throw new Error("Request failed");
-      setValues(emptyValues);
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
-  }
-
   return (
-    <section id="contact" className="flex items-center journey:min-h-screen px-4 py-24">
-      <div className="mx-auto w-full max-w-xl">
-        <SectionTitle>{contact.title}</SectionTitle>
-        <ScrollReveal as="p" delay={80} className="mb-6">{contact.intro}</ScrollReveal>
-        <ScrollReveal delay={160}>
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1">
-            {contact.fields.name}
-            <input
-              type="text"
-              name="name"
-              value={values.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              aria-invalid={Boolean(errors.name)}
-              className={inputClass}
-            />
-            {errors.name && (
-              <span role="alert" className={errorClass}>
-                {errors.name}
-              </span>
-            )}
-          </label>
-          <label className="flex flex-col gap-1">
-            {contact.fields.email}
-            <input
-              type="email"
-              name="email"
-              value={values.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              aria-invalid={Boolean(errors.email)}
-              className={inputClass}
-            />
-            {errors.email && (
-              <span role="alert" className={errorClass}>
-                {errors.email}
-              </span>
-            )}
-          </label>
-          <label className="flex flex-col gap-1">
-            {contact.fields.message}
-            <textarea
-              name="message"
-              rows={5}
-              value={values.message}
-              onChange={(e) => handleChange("message", e.target.value)}
-              aria-invalid={Boolean(errors.message)}
-              className={inputClass}
-            />
-            {errors.message && (
-              <span role="alert" className={errorClass}>
-                {errors.message}
-              </span>
-            )}
-          </label>
-          <Button type="submit" disabled={status === "sending"}>
-            {contact.submitLabel}
-          </Button>
-          {status === "success" && <p role="status">{contact.successMessage}</p>}
-          {status === "error" && (
-            <p role="alert" className={errorClass}>
-              {contact.errorMessage}
-            </p>
-          )}
-        </form>
+    <section id="contact" className="px-[var(--edge-x)] pt-24 pb-20 md:pt-32">
+      <SectionLabel>{contact.label}</SectionLabel>
+      <div className="mt-10">
+        <SignalHeadline lines={contact.headlineLines} />
+      </div>
+
+      <div className="mt-16 grid gap-14 border-t border-line pt-12 md:grid-cols-2 md:gap-20">
+        <ScrollReveal className="flex flex-col gap-8">
+          <p className="mono-label flex items-center gap-3">
+            <span aria-hidden="true" className="status-dot" />
+            {contact.availability}
+          </p>
+          <p className="max-w-md text-muted">{contact.intro}</p>
+          <div>
+            <p className="mono-label text-muted">{contact.emailLabel}</p>
+            <a
+              href={`mailto:${contact.email}`}
+              className="mt-2 inline-block font-condensed text-[clamp(26px,3vw,44px)] font-bold break-all underline-offset-8 hover:text-emphasis hover:underline"
+            >
+              {contact.email}
+            </a>
+          </div>
+          <div>
+            <p className="mono-label text-muted">{contact.socialsLabel}</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {socials.map((social) => (
+                <li key={social.id}>
+                  <a className="bracket-link inline-block" href={social.url} target="_blank" rel="noreferrer">
+                    {social.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={120}>
+          <ContactForm />
         </ScrollReveal>
       </div>
     </section>

@@ -8,12 +8,11 @@ import { HeroHint } from "@/components/hero/HeroHint";
 import { BackdropPicker } from "@/components/theme/BackdropPicker";
 
 /**
- * Chapter 1: a photo-studio scene. In the journey layout the stage is fixed and fades into
- * the curved screen (see useHeroFade); the section only reserves the scroll space.
+ * First section: a photo-studio scene.
  */
 export function Hero() {
   return (
-    <section id="hero" className="relative journey:h-svh">
+    <section id="hero" className="relative">
       <HeroStage>
         <StudioBackdrop />
         <GiantName />

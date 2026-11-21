@@ -3,9 +3,27 @@ export interface StackItem {
   icon: string;
 }
 
+export interface Ability {
+  id: string;
+  name: string;
+  description: string;
+  /** 0-100 per axis of ExtraData.axes. */
+  stats: number[];
+  /** Names of items in data/stack.ts (frameworks and libraries only). */
+  technologies: string[];
+}
+
 export interface ExtraData {
-  title: string;
-  items: string[];
+  /** Section label, shown as "// LABEL". */
+  label: string;
+  /** Prefix of the ability codes, e.g. "PWR" gives PWR-01. */
+  codePrefix: string;
+  activeLabel: string;
+  scanLabel: string;
+  technologiesLabel: string;
+  radarAria: string;
+  axes: string[];
+  abilities: Ability[];
 }
 
 export interface FooterData {

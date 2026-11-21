@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Doto, Geist, Geist_Mono } from "next/font/google";
+import { Barlow_Condensed, Doto, Geist, Geist_Mono } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { LoaderProvider } from "@/components/loader/LoaderProvider";
@@ -14,6 +14,14 @@ const doto = Doto({
   variable: "--font-doto",
   subsets: ["latin", "latin-ext"],
   weight: "variable",
+});
+
+// Condensed face for the giant uppercase titles of the home sections.
+const condensed = Barlow_Condensed({
+  variable: "--font-condensed-face",
+  subsets: ["latin", "latin-ext"],
+  weight: ["700", "800", "900"],
+  style: ["normal", "italic"],
 });
 
 const geistSans = Geist({
@@ -35,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${doto.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${doto.variable} ${condensed.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

@@ -24,15 +24,3 @@ export interface ThemeData {
   /** Hint pill of the hero. */
   hint: string;
 }
-
-/** CSS custom properties of the active theme, read for canvas / WebGL use. */
-export interface ThemeColors {
-  background: string;
-  foreground: string;
-  primary: string;
-  accent: string;
-  vignette: string;
-  /** Giant name color and the phosphor glow color. */
-  nameLit: string;
-  glow: string;
-}

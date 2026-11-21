@@ -12,10 +12,6 @@
  * stays legible on the mode), --shadow-color, --vignette.
  * Retro tokens: --name-lit (giant name on the hero screen texture), --glow and --glow-soft
  * (phosphor text-shadow), --status-green, --scanline, --retro-vignette.
- * Overlay tokens (--ov-*): text drawn straight over the WebGL journey (side labels, project
- * panel); they follow the brightness behind them (see html[data-environment="studio"] below).
- * Transition-panel tokens (hex only): --crt-bg, --crt-glow, --crt-line,
- * --crt-hot, --crt-shadow, --crt-mid, --crt-high, --crt-streak.
  */
 :root,
 :root[data-backdrop="ink"] {
@@ -37,14 +33,6 @@
   --status-green: #3dff8a;
   --scanline: rgba(0, 0, 0, 1);
   --retro-vignette: rgba(0, 0, 0, 0.55);
-  --crt-bg: #05070b;
-  --crt-glow: #0d1c30;
-  --crt-line: #cfe8ff;
-  --crt-hot: #ffffff;
-  --crt-shadow: #0b1a2c;
-  --crt-mid: #5aa6d4;
-  --crt-high: #e8f7ff;
-  --crt-streak: #bfe6ff;
 }
 
 :root[data-backdrop="bone"] {
@@ -66,14 +54,6 @@
   --status-green: #12a150;
   --scanline: rgba(20, 30, 50, 1);
   --retro-vignette: rgba(100, 110, 130, 0.3);
-  --crt-bg: #e9ecf0;
-  --crt-glow: #fafbfc;
-  --crt-line: #5a6472;
-  --crt-hot: #0a0d14;
-  --crt-shadow: #080b12;
-  --crt-mid: #2a3340;
-  --crt-high: #5f6b7b;
-  --crt-streak: #0a0d14;
 }
 
 :root[data-backdrop="signal"] {
@@ -95,14 +75,6 @@
   --status-green: #0b7a3b;
   --scanline: rgba(40, 10, 0, 1);
   --retro-vignette: rgba(120, 20, 0, 0.3);
-  --crt-bg: #ff5a1f;
-  --crt-glow: #ff8a55;
-  --crt-line: #5a1f0b;
-  --crt-hot: #140a05;
-  --crt-shadow: #140a05;
-  --crt-mid: #4a1f0b;
-  --crt-high: #7a2e12;
-  --crt-streak: #140a05;
 }
 
 @theme {
@@ -122,6 +94,8 @@
   --font-display: var(--font-doto), ui-monospace, monospace;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-sans: var(--font-geist-mono), ui-monospace, monospace;
+  /* Condensed grotesk for the huge uppercase titles of the sections below the hero. */
+  --font-condensed: var(--font-condensed-face), "Arial Narrow", sans-serif;
 }
 
 :root {
@@ -150,6 +124,44 @@ body {
   }
 
   /* UI label type: dot-matrix, uppercase, spaced (utilities can still override). */
+  /* Small spaced monospace used by section labels, meta lines and readouts. */
+  .mono-label {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Huge condensed uppercase title. */
+  .giant-title {
+    font-family: var(--font-condensed-face), "Arial Narrow", sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.88;
+    letter-spacing: 0.005em;
+  }
+
+  /* Outlined numeral (the fill stays transparent, the stroke takes the accent of the tone). */
+  .outline-num {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--emphasis);
+  }
+
+  /* [ LINK ] style action. */
+  .bracket-link {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    padding: 0.55rem 0.9rem;
+    transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+  }
+  .bracket-link:is(:hover, :focus-visible) {
+    border-color: var(--emphasis);
+    color: var(--emphasis);
+  }
+
   .label {
     font-family: var(--font-display);
     font-weight: 700;
@@ -157,9 +169,6 @@ body {
     letter-spacing: 0.1em;
   }
 }
-
-/* Variant for the WebGL journey layout (flag set on <html> by JourneyRoot). */
-@custom-variant journey (html[data-journey="true"] &);
 
 /* Scroll reveal: light fade + short rise + small blur, staggered for groups. */
 [data-reveal="item"],
@@ -412,209 +421,45 @@ html[data-light-cursor="true"] :is(input, textarea, select, [contenteditable="tr
   .retro-overlay[data-flicker="true"] { animation: none; }
 }
 
-/*
- * Text drawn straight over the WebGL journey. Colors follow what is behind: light text over the
- * dark backdrops, near-black over the bright white studio (StudioEnvironment sets
- * html[data-environment="studio"]); a soft halo of the opposite color keeps it readable on mixed
- * backgrounds. Muted tones keep >= 4.5:1 against their own backdrop.
- */
-:root {
-  --ov-fg: #f4f8ff;
-  --ov-muted: #b9c8da;
-  --ov-halo: rgba(2, 5, 10, 0.65);
+/* Origin story / power scan: states driven from refs. */
+[data-stop] .stop-dot {
+  background: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
-html[data-backdrop="bone"] {
-  --ov-fg: #0a0d14;
-  --ov-muted: #3f4856;
-  --ov-halo: rgba(255, 255, 255, 0.7);
+[data-stop][data-on="true"] .stop-dot {
+  background: var(--emphasis);
+  border-color: var(--emphasis);
+  box-shadow: 0 0 12px 1px color-mix(in srgb, var(--emphasis) 60%, transparent);
 }
-html[data-backdrop="signal"] {
-  --ov-fg: #140a05;
-  --ov-muted: #4a1f0b;
-  --ov-halo: rgba(255, 214, 180, 0.65);
+[data-stop] .stop-text {
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
 }
-html[data-environment="studio"] {
-  --ov-fg: #111111;
-  --ov-muted: #505050;
-  --ov-halo: rgba(255, 255, 255, 0.75);
-}
-.overlay-text {
-  color: var(--ov-fg);
-  text-shadow:
-    0 0 10px var(--ov-halo),
-    0 0 2px var(--ov-halo);
-  transition: color 0.35s ease;
-}
-.overlay-text :is(a, button) {
-  transition: color 0.35s ease;
-}
-.overlay-muted {
-  color: var(--ov-muted);
-}
-.overlay-muted:is(:hover, :focus-visible) {
-  color: var(--ov-fg);
-}
-/* Section content (SOBRE MÍ headings, paragraphs...) is drawn over the WebGL backdrops and,
-   mid-transition, over the white studio: it follows the same overlay colors in the journey layout. */
-html[data-journey="true"] main > section:not(#hero):not(#projects) {
-  color: var(--ov-fg);
-  text-shadow:
-    0 0 10px var(--ov-halo),
-    0 0 2px var(--ov-halo);
-  transition: color 0.35s ease;
-}
-/* Section text sits bottom-left over the backdrop: a small mono bullet label, then body lines that rise in one by one. */
-html[data-journey="true"] main > section:not(#hero):not(#projects) {
-  align-items: flex-end;
-  padding-bottom: 9vh;
-}
-html[data-journey="true"] main > section:not(#hero):not(#projects) > div:first-child {
-  margin-inline: 0;
-  padding-left: clamp(0px, 3vw, 3rem);
-}
-html[data-journey="true"] main > section:not(#hero):not(#projects) h2.phosphor {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  margin-bottom: 1.25rem;
-}
-html[data-journey="true"] main > section:not(#hero):not(#projects) h2.phosphor::before {
-  content: "\2022\a0";
-}
-html[data-journey="true"] main > section:not(#hero):not(#projects) :is(figure, input, textarea, button, a[class*="border"]) {
-  text-shadow: none;
+[data-stop][data-on="true"] .stop-text {
+  opacity: 1;
 }
 
-/* Side title of the projects stream, e.g. SELECTED WORK. */
-.side-title {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(1.75rem, 2.2vw, 2.1rem);
-  line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+@keyframes radar-sweep {
+  to { transform: rotate(360deg); }
 }
-/* Index rows: [01] NAME, active one prefixed with a bullet. */
-.side-index {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  line-height: 2.1;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.radar-sweep {
+  transform-origin: 50% 50%;
+  animation: radar-sweep 5s linear infinite;
 }
-.side-index [data-index-item] {
-  display: inline-flex;
-  gap: 0.6ch;
-  text-align: left;
-  color: var(--ov-muted);
-  transition: color 0.35s ease;
-}
-.side-index [data-index-item]::before {
-  content: " ";
-  width: 1ch;
-  flex: none;
-}
-.side-index [data-index-item]:hover {
-  color: var(--ov-fg);
-}
-.side-index [data-index-item][data-active="true"] {
-  color: var(--ov-fg);
-  font-weight: 700;
-}
-.side-index [data-index-item][data-active="true"]::before {
-  content: "•";
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep { animation: none; }
 }
 
-/* Left column of the projects stream: title, index and per-project panel share one width. */
-.side-column {
-  width: min(21.25rem, 26vw);
+/* Mission tunnel: frame rings of the corridor (positioned and faded per frame from refs). */
+.tunnel-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid var(--foreground);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
 }
-@media (min-width: 768px) and (max-width: 1100px) {
-  .side-column {
-    width: 30vw;
-  }
-  .side-column .side-title {
-    font-size: 1.5rem;
-  }
-  .side-column .side-index {
-    font-size: 0.7rem;
-    line-height: 1.9;
-  }
-  .side-column .project-info__title {
-    font-size: 1.1rem;
-  }
-  .side-column .project-info__desc {
-    font-size: 0.75rem;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-  }
-  .side-column .project-info__chips {
-    font-size: 0.625rem;
-  }
-  .side-column .bracket-btn {
-    font-size: 0.65rem;
-  }
-}
-.project-info__title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.375rem;
-  line-height: 1.1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  overflow-wrap: anywhere;
-}
-.project-info__meta {
-  display: block;
-  margin-top: 0.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ov-muted);
-}
-.project-info__desc {
-  margin-top: 0.625rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--ov-fg);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
-  overflow: hidden;
-}
-.project-info__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  margin-top: 0.625rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--ov-muted);
-}
-.project-info__chips li {
-  border: 1px solid var(--ov-muted);
-  border-radius: 2px;
-  padding: 0.0625rem 0.4rem;
-}
-.project-info__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.875rem;
-  margin-top: 0.75rem;
-}
-.bracket-btn {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ov-fg);
-  transition: opacity 0.2s ease;
-}
-.bracket-btn:is(:hover, :focus-visible) {
-  opacity: 0.6;
+.tunnel-ring[data-hot="true"] {
+  border-color: var(--emphasis);
 }

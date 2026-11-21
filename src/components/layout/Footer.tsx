@@ -2,13 +2,15 @@ import { footer, socials } from "@/data/socials";
 
 export function Footer() {
   return (
-    <footer className="border-t border-current/20 px-4 py-8">
-      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
-        <p className="text-sm">{footer.text}</p>
-        <ul className="flex gap-4">
+    <footer className="border-t border-line px-[var(--edge-x)] py-8">
+      <div className="mono-label flex flex-col items-start justify-between gap-4 text-muted sm:flex-row sm:items-center">
+        <p>{footer.text}</p>
+        <ul className="flex gap-5">
           {socials.map((social) => (
             <li key={social.id}>
-              <a className="label" href={social.url} target="_blank" rel="noreferrer">{social.label}</a>
+              <a className="transition-colors hover:text-emphasis" href={social.url} target="_blank" rel="noreferrer">
+                {social.label}
+              </a>
             </li>
           ))}
         </ul>

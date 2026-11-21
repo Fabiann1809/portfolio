@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { usePinnedLayout } from "@/hooks/usePinnedLayout";
 
 interface ScrambleTextProps {
   text: string;
@@ -18,13 +17,12 @@ const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/<>";
 /**
  * Types the text in with a short scramble the first time it enters the viewport.
  * The real text is always in the DOM (screen readers, selection, no-JS); the scramble only
- * rewrites the visible text node. Reduced motion and the flow layout skip it entirely.
+ * rewrites the visible text node. Reduced motion skips it entirely.
  */
 export function ScrambleText({ text, delay = 0, duration = 600, className }: ScrambleTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduced = useReducedMotion();
-  const journey = usePinnedLayout();
-  const enabled = journey && !reduced;
+  const enabled = !reduced;
 
   useEffect(() => {
     const el = ref.current;
