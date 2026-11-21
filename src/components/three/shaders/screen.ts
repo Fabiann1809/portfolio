@@ -38,6 +38,9 @@ export const screenFragmentShader = /* glsl */ `
   uniform float uSeed;
   uniform float uDrift;
   uniform float uTear;
+  uniform float uGlitch;
+  uniform float uGlitchShift;
+  uniform float uGlitchRgb;
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform vec3 uBg;
@@ -90,6 +93,14 @@ export const screenFragmentShader = /* glsl */ `
     float edgeAmt = smoothstep(0.35, 1.0, abs(vUv.x - 0.5) * 2.0);
     float shift = jitter * uTear * (0.35 + band * 1.65) * (0.2 + 0.8 * edgeAmt) * (1.0 - 0.85 * uFill);
 
+    // Path glitch: rows displaced left / right (bands move together), dropout bands, stronger RGB split.
+    float gRow = floor(vUv.y * 48.0);
+    float gBand = floor(vUv.y * 9.0);
+    float gOn = step(1.0 - 0.35 - 0.6 * uGlitch, hash21(vec2(gBand, tt * 0.7 + uSeed * 3.0)));
+    float gJit = (hash21(vec2(gRow, tt + uSeed * 5.0)) - 0.5) * 2.0;
+    shift += uGlitch * uGlitchShift * gJit * (0.25 + 0.75 * gOn);
+    float drop = uGlitch > 0.3 ? step(0.9, hash21(vec2(floor(vUv.y * 24.0), floor(uTime * 12.0) + uSeed))) * smoothstep(0.3, 0.8, uGlitch) : 0.0;
+
     vec2 uv = vUv + vec2(shift, 0.0);
 
     // Crisp 1px antialiased edge on the (torn) silhouette; no border, no frame.
@@ -102,7 +113,7 @@ export const screenFragmentShader = /* glsl */ `
 
     // RGB fringe: horizontal split plus a radial part that grows towards the corners.
     vec2 w = (uv - 0.5) * 2.0;
-    vec2 off = vec2(uRgb, 0.0) + w * uRgb * 1.6;
+    vec2 off = vec2(uRgb + uGlitch * uGlitchRgb * (0.4 + 0.6 * gOn), 0.0) + w * uRgb * 1.6;
     vec3 col;
     col.r = visual(uv + off).r;
     col.g = visual(uv).g;
@@ -116,7 +127,7 @@ export const screenFragmentShader = /* glsl */ `
     col *= mix(1.0 - uVignette, 1.0, vig);
     col = mix(col, uBg, uDim);
 
-    gl_FragColor = vec4(col, edge * uOpacity);
+    gl_FragColor = vec4(col, edge * uOpacity * (1.0 - drop));
     #include <colorspace_fragment>
   }
 `;

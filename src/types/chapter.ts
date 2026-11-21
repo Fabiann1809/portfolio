@@ -63,8 +63,10 @@ export interface JourneyConfig {
     streamInner: PhaseRange;
   };
   stream: {
-    /** Direction of the great-circle path, in degrees from vertical (bottom-right to top-left). */
+    /** Direction of the great-circle path, in degrees from vertical (bottom, slightly right, to top, slightly left). */
     pathAngle: number;
+    /** Tilt of a panel away from the front, as a share of its angle on the sphere. The entering panel is seen from below (top edge farther) and straightens at the centre; the leaving one tilts the same way going over the top. */
+    tilt: number;
     /** Sphere radius, as a multiple of the viewport height at the screen plane. */
     radius: number;
     /** Angular distance between neighbours as a share of the touching distance (below 1: they overlap slightly). */
@@ -86,6 +88,18 @@ export interface JourneyConfig {
     yaw: number;
     /** Deterministic per-panel variation of the neighbours (radians). */
     variation: { yaw: number; pitch: number; roll: number };
+    /**
+     * Glitch as a function of the path position `r` (panels from the centre). `inStart`..`inEnd`: the entering panel
+     * (r > 0) is torn at full `strength` beyond `inEnd` and clean at `inStart`. `exit`: share of strength kept by the
+     * leaving panel (r < 0) near the top. `shift`: max row displacement (share of the width).
+     */
+    glitch: { inStart: number; inEnd: number; exit: number; strength: number; shift: number; rgb: number };
+    /**
+     * Pass-and-expand of a backdrop: it keeps rising by `rise` (viewport heights) while it grows, the barrel / corner
+     * bend is held until fill reaches `bulgeHold` and relaxes after, and the final size overshoots by `overshoot`
+     * so the bent corners are covered.
+     */
+    expand: { rise: number; bulgeHold: number; overshoot: number };
   };
   screen: {
     widthRatio: number;
@@ -111,6 +125,8 @@ export interface JourneyConfig {
     tear: number;
     tearGain: number;
   };
+  /** Section overlay text (bottom-left on backdrops): per-line stagger in ms and rise in px. */
+  overlay: { stagger: number; rise: number };
   lenis: {
     lerp: number;
     wheelMultiplier: number;

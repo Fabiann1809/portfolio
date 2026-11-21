@@ -127,7 +127,7 @@ body {
 [data-reveal="item"],
 [data-reveal="group"] > * {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(var(--reveal-rise, 16px));
   filter: blur(4px);
   transition:
     opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
@@ -142,12 +142,12 @@ body {
   filter: none;
 }
 
-[data-reveal="group"] > :nth-child(2) { transition-delay: 60ms; }
-[data-reveal="group"] > :nth-child(3) { transition-delay: 120ms; }
-[data-reveal="group"] > :nth-child(4) { transition-delay: 180ms; }
-[data-reveal="group"] > :nth-child(5) { transition-delay: 240ms; }
-[data-reveal="group"] > :nth-child(6) { transition-delay: 300ms; }
-[data-reveal="group"] > :nth-child(n + 7) { transition-delay: 360ms; }
+[data-reveal="group"] > :nth-child(2) { transition-delay: calc(1 * var(--reveal-stagger, 60ms)); }
+[data-reveal="group"] > :nth-child(3) { transition-delay: calc(2 * var(--reveal-stagger, 60ms)); }
+[data-reveal="group"] > :nth-child(4) { transition-delay: calc(3 * var(--reveal-stagger, 60ms)); }
+[data-reveal="group"] > :nth-child(5) { transition-delay: calc(4 * var(--reveal-stagger, 60ms)); }
+[data-reveal="group"] > :nth-child(6) { transition-delay: calc(5 * var(--reveal-stagger, 60ms)); }
+[data-reveal="group"] > :nth-child(n + 7) { transition-delay: calc(6 * var(--reveal-stagger, 60ms)); }
 
 /* Reduced motion: quick plain fade. data-reduced also covers the ?reducedMotion=1 dev override. */
 [data-reveal][data-reduced="true"],
@@ -506,6 +506,25 @@ html[data-journey="true"] main > section:not(#hero):not(#projects) {
     0 0 10px var(--ov-halo),
     0 0 2px var(--ov-halo);
   transition: color 0.35s ease;
+}
+/* Section text sits bottom-left over the backdrop: a small mono bullet label, then body lines that rise in one by one. */
+html[data-journey="true"] main > section:not(#hero):not(#projects) {
+  align-items: flex-end;
+  padding-bottom: 9vh;
+}
+html[data-journey="true"] main > section:not(#hero):not(#projects) > div:first-child {
+  margin-inline: 0;
+  padding-left: clamp(0px, 3vw, 3rem);
+}
+html[data-journey="true"] main > section:not(#hero):not(#projects) h2.phosphor {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  margin-bottom: 1.25rem;
+}
+html[data-journey="true"] main > section:not(#hero):not(#projects) h2.phosphor::before {
+  content: "\2022\a0";
 }
 html[data-journey="true"] main > section:not(#hero):not(#projects) :is(figure, input, textarea, button, a[class*="border"]) {
   text-shadow: none;

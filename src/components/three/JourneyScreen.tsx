@@ -24,10 +24,11 @@ interface JourneyScreenProps {
 }
 
 const { stream, screen, fx, smooth } = journeyConfig;
+const { glitch, expand } = stream;
 const PATH = (stream.pathAngle * Math.PI) / 180;
 const PATH_SIN = Math.sin(PATH);
 const PATH_COS = Math.cos(PATH);
-/** Rotation axis of the sphere (in the screen plane, perpendicular to the path) and the path direction at the front (towards the bottom-right). */
+/** Rotation axis of the sphere (in the screen plane, perpendicular to the path) and the path direction at the front (towards the bottom, slightly right). */
 const AXIS = new Vector3(PATH_COS, PATH_SIN, 0);
 const TANGENT_X = PATH_SIN;
 const TANGENT_Y = -PATH_COS;
@@ -75,6 +76,9 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       uTime: { value: 0 },
       uBlur: { value: 0 },
       uTear: { value: fx.tear },
+      uGlitch: { value: 0 },
+      uGlitchShift: { value: glitch.shift },
+      uGlitchRgb: { value: glitch.rgb },
       uDim: { value: 0 },
       uSeed: { value: seed },
       uDrift: { value: 0 },
@@ -257,10 +261,12 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     const reach = Math.min(restW / Math.max(PATH_SIN, 1e-3), restH / Math.max(PATH_COS, 1e-3)) * stream.spacing;
     const radius = stream.radius * vp.height;
 
+    // Last stretch of the expansion: the bent corners are pushed past the viewport corners.
+    const over = 1 + expand.overshoot * MathUtils.smoothstep(pose.fill, expand.bulgeHold, 1);
     const target = {
       arc: (pose.r * reach) / radius,
-      w: MathUtils.lerp(restW, fullW, pose.fill),
-      h: MathUtils.lerp(restH, fullH, pose.fill),
+      w: MathUtils.lerp(restW, fullW, pose.fill) * over,
+      h: MathUtils.lerp(restH, fullH, pose.fill) * over,
       fill: pose.fill,
       opacity: pose.opacity,
     };
@@ -280,14 +286,17 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     // Sphere rotation applied to the anchor (surface point + outward normal). A filled panel
     // sits at the front with no rotation.
     const kk = 1 - c.fill;
-    const angle = c.arc * kk;
+    const angle = c.arc;
     const sinA = Math.sin(angle);
+    // Pass-and-expand: the panel keeps rising a little while it grows (bump: 0 at both ends of the fill).
+    const rise = expand.rise * vp.height * 4 * c.fill * (1 - c.fill);
     m.position.set(
       TANGENT_X * radius * sinA + shiftX * vp.width * kk,
-      TANGENT_Y * radius * sinA,
+      TANGENT_Y * radius * sinA + rise,
       radius * (Math.cos(angle) - 1),
     );
-    sphereQuat.setFromAxisAngle(AXIS, angle);
+    // Tilted the same way on both sides of the front: seen from below (top edge farther), straight at the centre.
+    sphereQuat.setFromAxisAngle(AXIS, -Math.abs(angle) * stream.tilt);
     localEuler.set(
       (seedC - 0.5) * 2 * vary.pitch * variance,
       MathUtils.degToRad(stream.yaw) * k + (seedB - 0.5) * 2 * vary.yaw * variance,
@@ -302,7 +311,8 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     const journey = getJourneyState();
     const un = uniforms;
     // Convex barrel: 0 once the panel fills the viewport.
-    const bendK = Math.pow(Math.max(0, 1 - c.fill), 1.5);
+    // Held while the panel grows, relaxes only once it nearly covers the viewport.
+    const bendK = 1 - MathUtils.smoothstep(c.fill, expand.bulgeHold, 1);
     un.uTime.value = state.clock.elapsedTime;
     un.uPlaneAspect.value = c.w / c.h;
     un.uFill.value = c.fill;
@@ -314,6 +324,11 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     un.uDim.value = Math.min(0.9, baseDim);
     un.uBlur.value = blurred ? fx.blurFilled * c.fill : 0;
     un.uSmear.value = journey.smear;
+    // Glitch from the path position: strong when entering from the bottom, mild when leaving over the top.
+    const pos = (c.arc * radius) / Math.max(reach, 1e-3);
+    const gIn = MathUtils.smoothstep(pos, glitch.inStart, glitch.inEnd);
+    const gOut = glitch.exit * MathUtils.smoothstep(-pos, glitch.inStart, glitch.inEnd);
+    un.uGlitch.value = Math.max(gIn, gOut) * glitch.strength * (1 - c.fill);
     un.uTear.value = fx.tear + journey.smear * fx.tearGain;
     un.uRgb.value = fx.rgbBase + journey.smear * fx.rgbGain;
     un.uDrift.value = journey.drift + state.clock.elapsedTime * 0.05;
