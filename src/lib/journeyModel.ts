@@ -1,5 +1,5 @@
 import { chapters, chapterStreams, journeyConfig } from "@/data/chapters";
-import type { GeneratedVisual, PhaseRange } from "@/types";
+import type { GeneratedVisual, PhaseRange, ProceduralScene } from "@/types";
 
 /**
  * Pure model of the scroll journey. The journey is one scalar J in [0, screens - 1]:
@@ -15,6 +15,7 @@ export interface ScreenDef {
   layout: "backdrop" | "stream";
   visual?: string;
   generated?: GeneratedVisual;
+  scene?: ProceduralScene;
 }
 
 export interface Interval {
@@ -44,7 +45,7 @@ export const screens: ScreenDef[] = chapters.flatMap((chapter, chapterIndex): Sc
       visual: item.visual,
     }));
   }
-  return [{ id: chapter.id, chapterId: chapter.id, chapterIndex, layout: "backdrop" as const, visual: chapter.visual, generated: chapter.generated }];
+  return [{ id: chapter.id, chapterId: chapter.id, chapterIndex, layout: "backdrop" as const, visual: chapter.visual, generated: chapter.generated, scene: chapter.scene }];
 });
 
 export const intervals: Interval[] = screens.slice(0, -1).map((from, k) => {
@@ -143,4 +144,44 @@ export function samplePoses(journey: number): number {
     }
   }
   return g;
+}
+
+/**
+ * Per-frame values published by the rendered screens (already damped), read by the studio
+ * environment and the procedural scenes. Plain mutable fields, no React state.
+ */
+export const live = {
+  /** Damped fill x opacity of each screen (1 = a full-bleed backdrop covers the viewport). */
+  cover: screens.map(() => 0),
+  /** 0 = backdrop fully covers the viewport, 1 = nothing covers it (studio fully visible). */
+  studio: 1,
+};
+
+/** Recomputes `live.studio` from the published covers. */
+export function updateStudio() {
+  let max = 0;
+  for (const value of live.cover) max = Math.max(max, value);
+  live.studio = 1 - clamp01(max);
+}
+
+/** True when the screen is close enough to the centre (and opaque enough) to be drawn. */
+export function screenInView(index: number): boolean {
+  const pose = poses[index];
+  return Math.abs(pose.r) < 2.4 && pose.opacity > 0.002;
+}
+
+/**
+ * True when the screen's render target must be refreshed: it is in view and not hidden
+ * behind another screen that already fills the viewport.
+ */
+export function screenActiveForTarget(index: number): boolean {
+  if (!screenInView(index)) return false;
+  const pose = poses[index];
+  if (pose.fill >= 0.5) return true;
+  for (let other = 0; other < poses.length; other++) {
+    if (other === index) continue;
+    const p = poses[other];
+    if (p.fill >= 0.999 && p.opacity >= 0.999) return false;
+  }
+  return true;
 }

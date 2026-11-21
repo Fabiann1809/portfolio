@@ -1,10 +1,9 @@
 "use client";
 
 import { hero } from "@/data/hero";
-import { Reveal } from "@/components/loader/Reveal";
 import { useNow } from "@/hooks/useNow";
 
-/** Dot-matrix status lines (top right): availability + date, city + live local time, years of experience. */
+/** Dot-matrix status lines (lg+, under the description): availability + date, city + live local time, years. */
 export function HeroStatus() {
   const { status } = hero;
   const now = useNow();
@@ -18,12 +17,9 @@ export function HeroStatus() {
   const years = now ? now.getFullYear() - status.experienceSince : 0;
 
   return (
-    <Reveal
-      delay={560}
-      className="label hidden z-30 text-xs leading-relaxed text-muted md:absolute hero-top md:right-[var(--edge-x)] md:block md:text-right"
-    >
-      <p className="flex items-center gap-2 md:justify-end">
-        <span aria-hidden="true" className="size-1.5 rounded-full bg-emphasis" />
+    <div className="label mt-4 hidden text-[0.9em] leading-relaxed text-muted lg:block lg:text-right">
+      <p className="flex items-center gap-2 lg:justify-end">
+        <span aria-hidden="true" className="status-dot" />
         {status.availability}
         {date && <span> · {date}</span>}
       </p>
@@ -31,7 +27,7 @@ export function HeroStatus() {
         {status.city}
         {time && <span> · {time}</span>}
       </p>
-      <p>{years > 0 ? status.yearsLabel.replace("{years}", String(years)) : " "}</p>
-    </Reveal>
+      <p>{years > 0 ? status.yearsLabel.replace("{years}", String(years)) : " "}</p>
+    </div>
   );
 }

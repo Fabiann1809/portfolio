@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { hero } from "@/data/hero";
-import { lightVars, parallaxOffsets, parallaxVars, proximity, restingLight } from "@/lib/studioLight";
+import { lightState, proximity, restingLight } from "@/lib/studioLight";
 import type { LightPoint, Offset } from "@/lib/studioLight";
 import { prefersReducedMotion } from "@/lib/motion";
 
@@ -13,15 +13,12 @@ interface Layout {
   height: number;
   /** Letter wrappers with the center of each, relative to the stage (px). */
   letters: Array<{ el: HTMLElement; center: Offset }>;
-  /** Portrait box relative to the stage (px), without the parallax shift. */
-  portrait: { el: HTMLElement; left: number; top: number; width: number; height: number } | null;
 }
 
 /**
- * Drives the studio light of `stage`: the pointer sets a target, a rAF loop damps the light
- * toward it and writes CSS variables (light position, shadows, parallax, per-letter --t, key
- * light position on the portrait). No React re-render per move. Touch and reduced motion keep
- * the light at rest: no parallax, letters stay at their static proximity.
+ * Drives the hero light of `stage`: the pointer sets a target, a rAF loop damps the light toward
+ * it, publishes it to `lightState` (read by the WebGL scene) and writes --light-x / --light-y plus
+ * the per-letter --t. No React re-render per move. Touch and reduced motion keep the light at rest.
  */
 export function useStudioLight(stage: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
@@ -33,59 +30,32 @@ export function useStudioLight(stage: React.RefObject<HTMLElement | null>) {
     let frame = 0;
     let last = 0;
     const reduced = prefersReducedMotion();
-    // True once a mouse / pen moved: only then parallax and per-letter lighting are live.
-    let fine = false;
-    let shift = { name: { x: 0, y: 0 }, person: { x: 0, y: 0 } };
-    let layout: Layout = { width: 1, height: 1, letters: [], portrait: null };
+    let layout: Layout = { width: 1, height: 1, letters: [] };
+    lightState.x = restingLight.x;
+    lightState.y = restingLight.y;
+    lightState.active = false;
 
     const measure = () => {
       const rect = el.getBoundingClientRect();
       const letters = Array.from(el.querySelectorAll<HTMLElement>("[data-letter-box]")).map((box) => {
         const r = box.getBoundingClientRect();
-        return {
-          el: box,
-          center: {
-            x: r.left + r.width / 2 - rect.left - shift.name.x,
-            y: r.top + r.height / 2 - rect.top - shift.name.y,
-          },
-        };
+        return { el: box, center: { x: r.left + r.width / 2 - rect.left, y: r.top + r.height / 2 - rect.top } };
       });
-      const box = el.querySelector<HTMLElement>("[data-portrait-box]");
-      let portrait: Layout["portrait"] = null;
-      if (box) {
-        const r = box.getBoundingClientRect();
-        portrait = {
-          el: box,
-          left: r.left - rect.left - shift.person.x,
-          top: r.top - rect.top - shift.person.y,
-          width: r.width || 1,
-          height: r.height || 1,
-        };
-      }
-      layout = { width: rect.width || 1, height: rect.height || 1, letters, portrait };
+      layout = { width: rect.width || 1, height: rect.height || 1, letters };
     };
 
     const write = () => {
       const { width, height } = layout;
-      const vars = lightVars(current, width, height);
-      const offsets = parallaxOffsets(current, fine && !reduced);
-      shift = { name: offsets.name, person: offsets.person };
-      Object.assign(vars, parallaxVars(offsets));
-      for (const name in vars) el.style.setProperty(name, vars[name]);
-
-      if (fine && !reduced) {
+      lightState.x = current.x;
+      lightState.y = current.y;
+      el.style.setProperty("--light-x", current.x * 100 + "%");
+      el.style.setProperty("--light-y", current.y * 100 + "%");
+      if (lightState.active && !reduced) {
         const light = { x: current.x * width, y: current.y * height };
         const radius = hero.studio.letterRadius * width;
         for (const letter of layout.letters) {
           letter.el.style.setProperty("--t", proximity(light, letter.center, radius).toFixed(3));
         }
-      }
-      const p = layout.portrait;
-      if (p) {
-        const kx = ((current.x * width - p.left - offsets.person.x) / p.width) * 100;
-        const ky = ((current.y * height - p.top - offsets.person.y) / p.height) * 100;
-        p.el.style.setProperty("--key-x", kx.toFixed(1) + "%");
-        p.el.style.setProperty("--key-y", ky.toFixed(1) + "%");
       }
     };
 
@@ -101,20 +71,11 @@ export function useStudioLight(stage: React.RefObject<HTMLElement | null>) {
     };
 
     const onMove = (event: PointerEvent) => {
-      if (reduced) return;
-      if (!layout.width || !layout.height) return;
+      if (reduced || event.pointerType === "touch") return;
       const rect = el.getBoundingClientRect();
-      const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / (rect.width || 1)));
-      const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / (rect.height || 1)));
-      if (event.pointerType === "touch") {
-        // Touch: only a light nudge around the resting position.
-        target.x = restingLight.x + (x - 0.5) * 0.25;
-        target.y = restingLight.y + (y - 0.5) * 0.2;
-      } else {
-        fine = true;
-        target.x = x;
-        target.y = y;
-      }
+      target.x = Math.min(1, Math.max(0, (event.clientX - rect.left) / (rect.width || 1)));
+      target.y = Math.min(1, Math.max(0, (event.clientY - rect.top) / (rect.height || 1)));
+      lightState.active = true;
       if (!frame) {
         last = performance.now();
         frame = requestAnimationFrame(tick);
@@ -137,6 +98,7 @@ export function useStudioLight(stage: React.RefObject<HTMLElement | null>) {
       observer.disconnect();
       el.removeEventListener("transitionend", measure);
       window.removeEventListener("pointermove", onMove);
+      lightState.active = false;
     };
   }, [stage]);
 }

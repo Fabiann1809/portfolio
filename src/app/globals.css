@@ -3,80 +3,113 @@
 /*
  * Site-wide backdrop themes. <html data-backdrop="ink|bone|signal"> is set before paint by an
  * inline script (see lib/themeScript.ts). Default (no attribute) = ink. Keep the swatches in
- * data/theme.ts in sync with --background below.
+ * data/theme.ts in sync with these tones.
+ *   ink    = cyan-white phosphor on blue-black (default)
+ *   bone   = bright white studio: light paper, dark ink tiles and grid lines
+ *   signal = amber phosphor monochrome on near-black
  * Tokens: --background, --foreground, --muted, --surface, --line, --emphasis (accent text that
  * stays legible on the tone), --shadow-color, --light-tint, --vignette.
  * Retro tokens: --name-lit / --name-dim (giant letters near / far from the light), --glow and
- * --glow-soft (phosphor text-shadow, low alpha), --scanline, --retro-vignette.
+ * --glow-soft (phosphor text-shadow), --name-backing (soft plate behind the name), --fringe-a /
+ * --fringe-b (RGB fringe of the name), --status-green, --cursor-glow, --scanline, --retro-vignette.
+ * Hero WebGL tokens (hex only, read by lib/heroTint.ts): --crt-bg, --crt-glow, --crt-line,
+ * --crt-hot, --crt-shadow, --crt-mid, --crt-high, --crt-streak.
  */
 :root,
 :root[data-backdrop="ink"] {
   color-scheme: dark;
-  /* Deep phosphor black with a faint green-gray tint. */
-  --background: #0a0c0a;
-  --foreground: #e6ede0;
-  --muted: #9aa394;
-  --surface: #131712;
-  --line: rgba(230, 237, 224, 0.16);
-  --emphasis: var(--color-primary);
+  --background: #05070b;
+  --foreground: #dcecff;
+  --muted: #8aa0b6;
+  --surface: #0b111a;
+  --line: rgba(207, 232, 255, 0.18);
+  --emphasis: #7ddcff;
   --shadow-color: rgba(0, 0, 0, 0.6);
-  --light-tint: rgba(210, 255, 220, 0.14);
-  --vignette: rgba(0, 0, 0, 0.55);
-  --portrait-shadow-opacity: 0.18;
-  --portrait-shadow-blend: normal;
-  --name-lit: #eaf5e4;
-  --name-dim: #3d453b;
-  --glow: rgba(170, 255, 190, 0.32);
-  --glow-soft: rgba(170, 255, 190, 0.12);
+  --light-tint: rgba(150, 210, 255, 0.14);
+  --vignette: rgba(0, 0, 0, 0.6);
+  --name-lit: #ffffff;
+  --name-dim: #cfe3f5;
+  --glow: rgba(150, 215, 255, 0.55);
+  --glow-soft: rgba(110, 190, 255, 0.22);
+  --name-backing: rgba(2, 5, 10, 0.72);
+  --fringe-a: #ff2d55;
+  --fringe-b: #18e0ff;
+  --status-green: #3dff8a;
+  --cursor-glow: #9fdcff;
   --scanline: rgba(0, 0, 0, 1);
-  --retro-vignette: rgba(0, 0, 0, 0.5);
-  --key-light: rgba(255, 246, 226, 0.95);
+  --retro-vignette: rgba(0, 0, 0, 0.55);
+  --crt-bg: #05070b;
+  --crt-glow: #0d1c30;
+  --crt-line: #cfe8ff;
+  --crt-hot: #ffffff;
+  --crt-shadow: #0b1a2c;
+  --crt-mid: #5aa6d4;
+  --crt-high: #e8f7ff;
+  --crt-streak: #bfe6ff;
 }
 
 :root[data-backdrop="bone"] {
   color-scheme: light;
-  /* Aged paper. */
-  --background: #e8dfca;
-  --foreground: #1a160d;
-  --muted: #5a513c;
-  --surface: #f1e9d6;
-  --line: rgba(26, 22, 13, 0.18);
-  --emphasis: #a8390b;
-  --shadow-color: rgba(60, 42, 16, 0.4);
-  --light-tint: rgba(255, 250, 230, 0.7);
-  --vignette: rgba(104, 80, 40, 0.28);
-  --portrait-shadow-opacity: 0.24;
-  --portrait-shadow-blend: multiply;
-  --name-lit: #1a160d;
-  --name-dim: #bdb298;
-  --glow: rgba(238, 90, 34, 0.24);
-  --glow-soft: rgba(238, 90, 34, 0.1);
-  --scanline: rgba(40, 24, 4, 1);
-  --retro-vignette: rgba(90, 62, 24, 0.34);
-  --key-light: rgba(255, 244, 214, 0.85);
+  --background: #e9ecf0;
+  --foreground: #0a0d14;
+  --muted: #4b5563;
+  --surface: #f5f6f8;
+  --line: rgba(10, 13, 20, 0.2);
+  --emphasis: #0b5cab;
+  --shadow-color: rgba(30, 40, 60, 0.35);
+  --light-tint: rgba(255, 255, 255, 0.7);
+  --vignette: rgba(120, 130, 150, 0.25);
+  --name-lit: #05070c;
+  --name-dim: #1a212c;
+  --glow: rgba(20, 60, 120, 0.2);
+  --glow-soft: rgba(20, 60, 120, 0.08);
+  --name-backing: rgba(233, 236, 240, 0.7);
+  --fringe-a: #d4143d;
+  --fringe-b: #0aa0c2;
+  --status-green: #12a150;
+  --cursor-glow: #0b5cab;
+  --scanline: rgba(20, 30, 50, 1);
+  --retro-vignette: rgba(100, 110, 130, 0.3);
+  --crt-bg: #e9ecf0;
+  --crt-glow: #fafbfc;
+  --crt-line: #5a6472;
+  --crt-hot: #0a0d14;
+  --crt-shadow: #080b12;
+  --crt-mid: #36404f;
+  --crt-high: #8e99a8;
+  --crt-streak: #0a0d14;
 }
 
 :root[data-backdrop="signal"] {
-  color-scheme: light;
-  /* Strong primary orange, slightly toward vintage. */
-  --background: #ee5a22;
-  --foreground: #140a05;
-  --muted: #33130a;
-  --surface: #f4733f;
-  --line: rgba(20, 10, 5, 0.28);
-  --emphasis: #140a05;
-  --shadow-color: rgba(90, 20, 0, 0.5);
-  --light-tint: rgba(255, 224, 170, 0.4);
-  --vignette: rgba(120, 24, 0, 0.38);
-  --portrait-shadow-opacity: 0.3;
-  --portrait-shadow-blend: multiply;
-  --name-lit: #140a05;
-  --name-dim: #9c3410;
-  --glow: rgba(255, 226, 170, 0.34);
-  --glow-soft: rgba(255, 226, 170, 0.14);
-  --scanline: rgba(60, 10, 0, 1);
-  --retro-vignette: rgba(110, 20, 0, 0.4);
-  --key-light: rgba(255, 238, 200, 0.9);
+  color-scheme: dark;
+  --background: #0a0603;
+  --foreground: #ffd9a0;
+  --muted: #b98a52;
+  --surface: #150c05;
+  --line: rgba(255, 179, 71, 0.22);
+  --emphasis: #ffb347;
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --light-tint: rgba(255, 170, 70, 0.16);
+  --vignette: rgba(0, 0, 0, 0.6);
+  --name-lit: #fff3dc;
+  --name-dim: #f2c98f;
+  --glow: rgba(255, 170, 60, 0.55);
+  --glow-soft: rgba(255, 140, 30, 0.22);
+  --name-backing: rgba(10, 5, 2, 0.72);
+  --fringe-a: #ff3b1f;
+  --fringe-b: #ffd23f;
+  --status-green: #6cff9b;
+  --cursor-glow: #ffb347;
+  --scanline: rgba(0, 0, 0, 1);
+  --retro-vignette: rgba(0, 0, 0, 0.55);
+  --crt-bg: #0a0603;
+  --crt-glow: #2a1403;
+  --crt-line: #ffb347;
+  --crt-hot: #fff0cc;
+  --crt-shadow: #1d0e04;
+  --crt-mid: #d9822a;
+  --crt-high: #ffe8bd;
+  --crt-streak: #ffd9a0;
 }
 
 @theme {
@@ -253,7 +286,6 @@ html,
 body {
   overflow-x: clip;
 }
-
 .light-cursor {
   position: fixed;
   left: 0;
@@ -286,8 +318,8 @@ body {
   background: #fff;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.12),
-    0 0 16px 5px color-mix(in srgb, var(--color-accent) 75%, transparent),
-    0 0 44px 14px color-mix(in srgb, var(--color-accent) 35%, transparent);
+    0 0 16px 5px color-mix(in srgb, var(--cursor-glow) 75%, transparent),
+    0 0 44px 14px color-mix(in srgb, var(--cursor-glow) 35%, transparent);
 }
 .light-cursor[data-mode="ring"] .light-cursor__dot {
   transform: scale(1.2);
@@ -322,73 +354,122 @@ body {
   transform: none;
 }
 
-/* ---------- Hero stage: container queries size the giant name ---------- */
+/* ---------- Hero stage ---------- */
+/* Below lg the hero is a stacked column (inline-size container); from lg it is a fixed-height
+   stage laid out in % / container units (size container). */
 .hero-stage {
   container-type: inline-size;
+  /* Base font of the side blocks; also feeds the name height cap. */
+  --blk: 13px;
 }
-/* Top edge of the intro and status blocks on desktop (the name clearance uses the same clamp). */
-@media (min-width: 768px) {
-  .hero-top {
-    top: clamp(88px, 13.4cqh, 120px);
-  }
-}
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .hero-stage {
     container-type: size;
     height: 100svh;
+    --blk: clamp(10px, 1.45cqh, 13px);
   }
 }
 
-/* Name block. Mobile: in flow, sized by width. Desktop: centered at --name-center of the stage. */
+/* WebGL canvas holder and the empty box the portrait mosaic is drawn into. */
+.portrait-slot {
+  position: relative;
+  aspect-ratio: 1145 / 1374;
+  height: min(40svh, 30rem);
+}
+@media (min-width: 1024px) {
+  .portrait-area {
+    position: absolute;
+    left: 50%;
+    top: var(--portrait-top, 13%);
+    height: var(--portrait-h, 65%);
+    translate: -50% 0;
+  }
+  .portrait-slot {
+    height: 100%;
+  }
+}
+
+/* Name block. Below lg: in flow, in front of the portrait's lower edge, sized by width.
+   From lg: centered at --name-center of the stage, capped so it never reaches the side blocks. */
 .hero-name {
+  --name-size: calc(var(--name-fit, 86) * 1cqw / var(--name-em, 4));
   position: relative;
   z-index: 10;
-  margin-top: 1.5rem;
+  margin-top: calc(var(--name-size) * -0.3);
   text-align: center;
   font-family: var(--font-display);
   font-weight: 900;
   text-transform: uppercase;
   white-space: nowrap;
   line-height: 0.8;
-  letter-spacing: var(--name-tracking, 0.01em);
-  font-size: calc(var(--name-fit, 90) * 1cqw / var(--name-em, 4.2));
+  letter-spacing: var(--name-tracking, 0.05em);
+  font-size: var(--name-size);
   user-select: none;
-  translate: var(--name-x, 0px) var(--name-y, 0px);
+  isolation: isolate;
 }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .hero-name {
     position: absolute;
     inset-inline: 0;
-    top: var(--name-center, 60%);
+    top: var(--name-center, 75%);
     margin-top: 0;
-    /* Width fit, capped so the capitals (center - rise * size) stay below the intro block. */
+    /* Width fit, capped so the capitals stay below the side blocks (center - half block - gap). */
     font-size: min(
-      calc(var(--name-fit, 90) * 1cqw / var(--name-em, 4.2)),
-      calc((var(--name-center-n, 60) * 1cqh - clamp(88px, 13.4cqh, 120px) - var(--name-clear, 250px)) / var(--name-rise, 0.27))
+      var(--name-size),
+      calc((var(--name-center-n, 75) * 1cqh - var(--block-center-n, 40) * 1cqh - 14 * var(--blk)) / var(--name-rise, 0.34))
     );
-    translate: var(--name-x, 0px) calc(-50% + var(--name-y, 0px));
+    translate: 0 -50%;
   }
+}
+
+/* Soft plate behind the letters so they read over the portrait. */
+.name-backing {
+  position: absolute;
+  inset: -45% -4%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 52% 58% at 50% 52%, var(--name-backing), transparent 72%);
 }
 
 .name-mask {
   display: inline-block;
   overflow: hidden;
-  /* Room for accents and dots; negative margins keep the tight line box. */
-  padding: 0.3em 0.04em 0.08em;
-  margin: -0.3em -0.04em -0.08em;
+  /* Room for accents, dots and the glow; negative margins keep the tight line box. */
+  padding: 0.3em 0.14em 0.3em;
+  margin: -0.3em -0.14em -0.3em;
   vertical-align: top;
 }
 .name-letter {
+  position: relative;
   display: inline-block;
-  color: color-mix(in srgb, var(--name-lit) calc(var(--t, 0.55) * 100%), var(--name-dim));
-  translate: 0 calc(var(--t, 0.55) * -0.05em);
+  color: color-mix(in srgb, var(--name-lit) calc(var(--t, 0.6) * 100%), var(--name-dim));
+  translate: 0 calc(var(--t, 0.6) * -0.03em);
   text-shadow:
-    0 0 0.05em var(--glow),
-    0 0 0.2em var(--glow-soft);
-  transform: translateY(108%);
+    0 0 0.03em var(--glow),
+    0 0 0.12em var(--glow),
+    0 0 0.4em var(--glow-soft);
+  transform: translateY(140%);
   transition:
     color 0.15s linear,
     transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i, 0) * var(--letter-stagger, 60ms) + 140ms);
+}
+/* RGB fringe: two offset copies of the letter behind it, red to the left and cyan to the right. */
+.name-letter::before,
+.name-letter::after {
+  content: attr(data-char);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  text-shadow: none;
+  opacity: 0.55;
+}
+.name-letter::before {
+  color: var(--fringe-a);
+  translate: -0.014em 0;
+}
+.name-letter::after {
+  color: var(--fringe-b);
+  translate: 0.014em 0;
 }
 .name-letter[data-in="true"] {
   transform: none;
@@ -409,16 +490,122 @@ body {
   }
 }
 
-/* Mask with the portrait cut-out (key light, cast shadow). Needs --portrait-url on an ancestor. */
-.portrait-mask {
-  -webkit-mask-image: var(--portrait-url);
-  mask-image: var(--portrait-url);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: center bottom;
-  mask-position: center bottom;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+/* Side blocks (fojcik style): left = identity, right = justified dot-matrix description. */
+.hero-side {
+  font-size: var(--blk);
+}
+@media (min-width: 1024px) {
+  .hero-side {
+    position: absolute;
+    top: var(--block-center, 40%);
+    translate: 0 -50%;
+    z-index: 30;
+    width: min(26rem, 27cqw);
+  }
+  .hero-side[data-side="left"] {
+    left: var(--edge-x);
+  }
+  .hero-side[data-side="right"] {
+    right: var(--edge-x);
+  }
+}
+.hero-meta {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero-role {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1rem, 1.75cqw, 1.8rem);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 0.06em var(--glow),
+    0 0 0.3em var(--glow-soft);
+}
+.hero-copy {
+  font-size: 1.1em;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.hero-description {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15em;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: justify;
+  text-align-last: justify;
+  max-width: 26ch;
+  margin-inline: auto;
+  color: var(--foreground);
+}
+@media (min-width: 1024px) {
+  .hero-description {
+    margin-inline: 0 0;
+    margin-left: auto;
+  }
+}
+
+/* Retro bracket button: [ LABEL ]. */
+.retro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.6em 0.9em;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  transition:
+    background-color 0.15s linear,
+    color 0.15s linear,
+    border-color 0.15s linear;
+}
+.retro-btn::before,
+.retro-btn::after {
+  color: var(--emphasis);
+  transition: color 0.15s linear;
+}
+.retro-btn::before {
+  content: "[";
+}
+.retro-btn::after {
+  content: "]";
+}
+.retro-btn[data-primary="true"] {
+  border-color: var(--foreground);
+}
+.retro-btn:hover,
+.retro-btn:focus-visible {
+  background: var(--foreground);
+  color: var(--background);
+}
+.retro-btn:hover::before,
+.retro-btn:hover::after,
+.retro-btn:focus-visible::before,
+.retro-btn:focus-visible::after {
+  color: inherit;
+}
+
+/* Status / navbar dot. */
+.status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--status-green);
+  box-shadow: 0 0 8px 1px var(--status-green);
 }
 
 /* ---------- Retro overlay (grain, scanlines, vignette, flicker) ---------- */
@@ -462,4 +649,11 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .retro-overlay[data-flicker="true"] { animation: none; }
+}
+
+/* Stacked layout (below lg): the role is a touch larger than the lg container-based size. */
+@media (max-width: 1023px) {
+  .hero-role {
+    font-size: clamp(1.25rem, 6cqw, 1.8rem);
+  }
 }

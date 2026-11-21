@@ -22,10 +22,12 @@ export interface Chapter {
   id: string;
   /** "backdrop": one screen that expands behind the section. "stream": many screens (one per item). */
   layout: ChapterLayout;
-  /** Optional image path. Without it a generated gradient/noise texture is used. */
+  /** Optional image (.jpg/.png/.webp) or video (.mp4/.webm) URL. Wins over `scene`; without either a generated gradient is used. */
   visual?: string;
   /** Visual generated in code (takes the theme into account). */
   generated?: GeneratedVisual;
+  /** Procedural 3D backdrop, used when `visual` is not set. */
+  scene?: ProceduralScene;
   /** Absent for the first chapter. */
   transition?: ChapterTransition;
 }
@@ -85,6 +87,10 @@ export interface JourneyConfig {
     curve: number;
     /** Filled screens overscan the viewport by this factor. */
     overscan: number;
+    /** Per-screen deterministic pose variation at rest (radians). */
+    tiltVariance: { y: number; z: number };
+    /** Bezel thickness as a fraction of the screen height. */
+    bezel: number;
   };
   fx: {
     /** Screens per second of stream speed that maps to a full smear. */
@@ -97,6 +103,10 @@ export interface JourneyConfig {
     dimFilled: number;
     /** Slow drift of filled backdrops, per viewport of scroll. */
     drift: number;
+    /** Texture blur (mip bias) applied to filled procedural / image backdrops behind text. */
+    blurFilled: number;
+    /** Reflection / glow strengths. */
+    glow: number;
   };
   lenis: {
     lerp: number;
@@ -104,4 +114,73 @@ export interface JourneyConfig {
     /** Duration (s) of a navbar jump while the journey is active. */
     jumpDuration: number;
   };
+}
+
+/** Procedural 3D scenes that can fill an expanded chapter backdrop (rendered to a texture). */
+export type ProceduralSceneKind = "tunnel" | "corridor" | "grid";
+
+export interface ProceduralScene {
+  kind: ProceduralSceneKind;
+  /** Accent of the scene: "primary" / "accent" (theme tokens) or any CSS hex color. */
+  tint: string;
+  /** Free number that varies layout details (module spacing, hash seeds). */
+  variant?: number;
+  /** Camera travel speed multiplier. */
+  speed?: number;
+}
+
+/** Look of the "white studio" shown behind the screens during transitions, per backdrop theme. */
+export interface StudioPalette {
+  /** Wall color at the bright centre. */
+  center: string;
+  /** Wall color at the edges (soft gray falloff). */
+  edge: string;
+  /** Floor color near the horizon / near the camera. */
+  floorFar: string;
+  floorNear: string;
+  /** Color of the drifting mono text. */
+  text: string;
+  /** Tint mixed into the whole studio (accent hint). */
+  tint: string;
+  tintStrength: number;
+  /** Navbar-like foreground to use while the studio is visible (hint for CSS). */
+  isDarkText: boolean;
+}
+
+export interface EnvironmentConfig {
+  /** Horizon position, 0 = bottom of the viewport, 1 = top. */
+  horizon: number;
+  /** World Y of the floor plane that reflects / receives shadows, as a fraction of the viewport height from centre. */
+  floorY: number;
+  reflection: { opacity: number; length: number };
+  shadow: { opacity: number; width: number; height: number };
+  /** Drifting code text on the floor and walls. */
+  text: {
+    lines: string[];
+    fontSize: number;
+    lineHeight: number;
+    textureSize: number;
+    floorScale: number;
+    wallScale: number;
+    floorOpacity: number;
+    wallOpacity: number;
+    /** Texture rows scrolled per viewport of page scroll. */
+    scrollSpeed: number;
+    idleSpeed: number;
+  };
+  palettes: Record<"ink" | "bone" | "signal", StudioPalette>;
+  /** Render target of the procedural scenes. */
+  target: { maxWidth: number; maxHeight: number };
+  /** Scene look: exposure / fog per theme brightness. */
+  scene: {
+    darkExposure: number;
+    lightExposure: number;
+    /** Page scroll (in viewport heights) to world units of camera travel. */
+    travelPerVh: number;
+    idleTravel: number;
+    /** Accent used by the cold corridor palette when `tint` is a hex. */
+    dustCount: number;
+  };
+  /** Colors considered "cold blue" when a scene uses it as base. */
+  coldBase: string;
 }

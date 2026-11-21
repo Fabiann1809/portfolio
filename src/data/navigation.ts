@@ -1,4 +1,4 @@
-import type { MenuLabels, NavItem } from "@/types";
+import type { MenuLabels, NavItem, NavbarBrand } from "@/types";
 
 // PLACEHOLDER content. Ids must match the section ids in components/sections.
 export const navigation: NavItem[] = [
@@ -16,4 +16,11 @@ export const menuLabels: MenuLabels = {
   open: "Abrir menú",
   close: "Cerrar menú",
   panel: "Menú de navegación",
+};
+
+export const navbarBrand: NavbarBrand = {
+  /** Small wordmark at the left of the header. */
+  label: "FABIÁN",
+  /** "Let's talk" link with a green status dot, before the section links. */
+  cta: { label: "Hablemos", targetId: "contact" },
 };

@@ -4,17 +4,17 @@ import { featuredProjects, projectsSectionId } from "@/data/projects";
 /**
  * Ordered chapters of the site. Ids match the section ids and the navigation entries.
  * `transition` describes the zone placed before the chapter.
- * PLACEHOLDER: no visuals yet, a generated gradient is used. Set `visual` to an image path.
+ * Each backdrop chapter uses a procedural `scene`; set `visual` to an image or video URL to replace it.
  */
 export const chapters: Chapter[] = [
   { id: "hero", layout: "backdrop", generated: "hero" },
-  { id: "about", layout: "backdrop", transition: { mode: "stream", lengthVh: 170 } },
+  { id: "about", layout: "backdrop", scene: { kind: "tunnel", tint: "primary" }, transition: { mode: "stream", lengthVh: 170 } },
   { id: projectsSectionId, layout: "stream", transition: { mode: "stream", lengthVh: 150 } },
-  { id: "testimonials", layout: "backdrop", transition: { mode: "expand", lengthVh: 170 } },
-  { id: "experience", layout: "backdrop", transition: { mode: "stream", lengthVh: 170 } },
-  { id: "education", layout: "backdrop", transition: { mode: "stream", lengthVh: 150 } },
-  { id: "extra", layout: "backdrop", transition: { mode: "stream", lengthVh: 150 } },
-  { id: "contact", layout: "backdrop", transition: { mode: "stream", lengthVh: 150 } },
+  { id: "testimonials", layout: "backdrop", scene: { kind: "corridor", tint: "#6f9bff" }, transition: { mode: "expand", lengthVh: 170 } },
+  { id: "experience", layout: "backdrop", scene: { kind: "grid", tint: "primary" }, transition: { mode: "stream", lengthVh: 170 } },
+  { id: "education", layout: "backdrop", scene: { kind: "grid", tint: "accent", variant: 1 }, transition: { mode: "stream", lengthVh: 150 } },
+  { id: "extra", layout: "backdrop", scene: { kind: "tunnel", tint: "accent", variant: 1, speed: 0.8 }, transition: { mode: "stream", lengthVh: 150 } },
+  { id: "contact", layout: "backdrop", scene: { kind: "corridor", tint: "accent", variant: 1 }, transition: { mode: "stream", lengthVh: 150 } },
 ];
 
 /** Screens of "stream" chapters, keyed by chapter id. */
@@ -45,8 +45,8 @@ export const journeyConfig: JourneyConfig = {
     tiltY: 0.28,
     tiltZ: 0.05,
   },
-  screen: { widthRatio: 0.58, maxHeightRatio: 0.66, aspect: 1.6, curve: 0.6, overscan: 1.04 },
-  fx: { smearGain: 0.9, rgbBase: 0.0012, rgbGain: 0.014, scan: 0.14, vignette: 0.55, dimFilled: 0.5, drift: 0.05 },
+  screen: { widthRatio: 0.58, maxHeightRatio: 0.66, aspect: 1.6, curve: 0.6, overscan: 1.04, tiltVariance: { y: 0.14, z: 0.13 }, bezel: 0.075 },
+  fx: { smearGain: 0.9, rgbBase: 0.0012, rgbGain: 0.014, scan: 0.14, vignette: 0.55, dimFilled: 0.5, drift: 0.05, blurFilled: 1.1, glow: 0.22 },
   lenis: { lerp: 0.08, wheelMultiplier: 0.9, jumpDuration: 2.2 },
 };
 

@@ -6,6 +6,7 @@ import { useProgress } from "@react-three/drei";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { screens } from "@/lib/journeyModel";
 import { AmbientBackdrop } from "./AmbientBackdrop";
+import { StudioEnvironment } from "./environment/StudioEnvironment";
 import { JourneyScreen } from "./JourneyScreen";
 
 interface SceneProps {
@@ -19,7 +20,7 @@ function subscribeVisibility(onChange: () => void) {
 }
 
 /**
- * The single fixed canvas behind the whole page. It hosts the ambient backdrop and every
+ * The single fixed canvas behind the whole page. It hosts the ambient backdrop, the studio environment and every
  * screen of the scroll journey (all in one world, driven by the shared journey state).
  */
 export function Scene({ onProgress }: SceneProps) {
@@ -50,6 +51,7 @@ export function Scene({ onProgress }: SceneProps) {
         {screens.map((def, index) => (
           <JourneyScreen key={def.id} index={index} def={def} theme={theme} />
         ))}
+        <StudioEnvironment />
       </Canvas>
     </div>
   );

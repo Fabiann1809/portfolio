@@ -1,17 +1,17 @@
-import { testimonials, testimonialsTitle } from "@/data/testimonials";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { testimonials, testimonialsMarquee, testimonialsTitle } from "@/data/testimonials";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { TestimonialCard } from "@/components/ui/TestimonialCard";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { TestimonialMarquee } from "@/components/testimonials/TestimonialMarquee";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="flex items-center journey:min-h-screen px-4 py-24">
-      <div className="mx-auto w-full max-w-5xl">
-        <SectionTitle>{testimonialsTitle}</SectionTitle>
-        <ScrollReveal stagger className="grid gap-6 md:grid-cols-2">
-          {testimonials.map((item) => (
-            <TestimonialCard key={item.id} testimonial={item} />
-          ))}
+    <section id="testimonials" className="flex items-center journey:min-h-screen py-24">
+      <div className="w-full">
+        <div className="mx-auto max-w-5xl px-4">
+          <SectionTitle>{testimonialsTitle}</SectionTitle>
+        </div>
+        <ScrollReveal>
+          <TestimonialMarquee items={testimonials} config={testimonialsMarquee} />
         </ScrollReveal>
       </div>
     </section>

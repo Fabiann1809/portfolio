@@ -5,9 +5,10 @@ import { useLoader } from "@/components/loader/LoaderProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
- * Giant dot-matrix name behind the portrait. Each letter sits in an overflow mask and slides up
- * when the loader finishes; its --t (light proximity, written by useStudioLight) drives color
- * and lift. The accessible name is a single sr-only text.
+ * Giant dot-matrix name in front of the portrait. Each letter sits in an overflow mask and slides
+ * up when the loader finishes; its --t (light proximity, written by useStudioLight) drives color
+ * and lift, and a pair of offset copies gives the RGB fringe. A dark plate keeps it legible over
+ * the mosaic. The accessible name is a single sr-only text.
  */
 export function GiantName() {
   const { loaded } = useLoader();
@@ -15,8 +16,9 @@ export function GiantName() {
   const letters = Array.from(hero.displayName);
 
   return (
-    <h1 className="hero-name phosphor order-2">
+    <h1 className="hero-name order-3">
       <span className="sr-only">{hero.displayName}</span>
+      <span aria-hidden="true" className="name-backing" />
       <span aria-hidden="true">
         {letters.map((letter, index) => (
           <span key={index} data-letter-box className="name-mask">
@@ -24,6 +26,7 @@ export function GiantName() {
               data-letter
               data-in={loaded}
               data-reduced={reduced}
+              data-char={letter}
               className="name-letter"
               style={{ "--i": index } as React.CSSProperties}
             >

@@ -2,10 +2,13 @@
 
 import { hero } from "@/data/hero";
 import { Reveal } from "@/components/loader/Reveal";
-import { LinkButton } from "@/components/ui/Button";
 import { useScrollTo } from "@/hooks/useScrollTo";
 
-/** Top-left block: greeting, two-line role, short paragraph and the two calls to action. */
+/**
+ * Left block (fojcik style): "// PORTFOLIO ©year" meta line, two-line role, short paragraph and
+ * the two calls to action as retro bracket buttons. Below lg the block dissolves into the stage
+ * column: role on top, buttons at the bottom (the paragraph is lg only).
+ */
 export function HeroIntro() {
   const scrollTo = useScrollTo();
 
@@ -16,27 +19,29 @@ export function HeroIntro() {
   }
 
   return (
-    <Reveal
-      delay={420}
-      className="relative z-30 order-1 px-[var(--edge-x)] pt-24 md:absolute hero-top md:left-0 md:max-w-[34rem] md:pt-0"
-    >
-      <p className="label text-sm text-muted">{hero.greeting}</p>
-      <h2 className="phosphor mt-2 font-display text-[clamp(1.35rem,2.1vw,2rem)] leading-[1.1] font-extrabold tracking-[0.04em] uppercase">
-        {hero.roleLines.map((line) => (
-          <span key={line} className="block">
-            {line}
-          </span>
-        ))}
-      </h2>
-      <p className="mt-3 max-w-[32ch] text-sm leading-relaxed text-muted">{hero.tagline}</p>
-      <div className="mt-5 flex flex-wrap gap-3">
-        <LinkButton href={"#" + hero.workTargetId} onClick={onWork} variant="solid">
+    <div data-side="left" className="hero-side contents lg:block">
+      <Reveal delay={420} className="order-1 px-[var(--edge-x)] pt-24 text-center lg:p-0 lg:text-left">
+        <p className="hero-meta flex justify-center gap-[1.5em] lg:justify-start">
+          <span>{hero.metaLabel}</span>
+          <span>©{hero.copyrightYear}</span>
+        </p>
+        <h2 className="hero-role mt-3">
+          {hero.roleLines.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
+        </h2>
+        <p className="hero-copy mt-4 hidden max-w-[32ch] lg:block">{hero.tagline}</p>
+      </Reveal>
+      <Reveal delay={560} className="order-5 flex flex-wrap justify-center gap-3 px-[var(--edge-x)] pt-6 lg:mt-5 lg:justify-start lg:p-0">
+        <a href={"#" + hero.workTargetId} onClick={onWork} data-primary="true" className="retro-btn">
           {hero.workLabel}
-        </LinkButton>
-        <LinkButton href={hero.cvPath} download>
+        </a>
+        <a href={hero.cvPath} download className="retro-btn">
           {hero.cvLabel}
-        </LinkButton>
-      </div>
-    </Reveal>
+        </a>
+      </Reveal>
+    </div>
   );
 }

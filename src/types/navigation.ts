@@ -11,3 +11,8 @@ export interface MenuLabels {
   /** Accessible name of the full-screen menu. */
   panel: string;
 }
+
+export interface NavbarBrand {
+  label: string;
+  cta: { label: string; targetId: string };
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { menuLabels, navigation } from "@/data/navigation";
+import { menuLabels, navbarBrand, navigation } from "@/data/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { Reveal } from "@/components/loader/Reveal";
@@ -50,35 +50,45 @@ export function Navbar({ homeHref }: NavbarProps) {
             : "bg-background/90 backdrop-blur")
       }>
       <div className="flex items-center justify-between px-[var(--edge-x)] py-3">
-        <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-xl font-black tracking-[0.08em] uppercase">Portfolio</a>
-        <nav className="hidden md:block">
-          <ul className="label flex gap-6 text-base">
-            {navigation.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={hrefPrefix + "#" + item.id}
-                  onClick={(e) => handleAnchor(e, item.id)}
-                  aria-current={activeId === item.id ? "true" : undefined}
-                  className={activeId === item.id ? "text-emphasis" : ""}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <BackdropPicker variant="compact" className="hidden md:inline-flex" />
-        <button
-          ref={toggleRef}
-          type="button"
-          className="-mr-2 p-2 md:hidden"
-          aria-label={open ? menuLabels.close : menuLabels.open}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((value) => !value)}
-        >
-          <HamburgerIcon open={open} />
-        </button>
+        <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-lg font-black tracking-[0.12em] uppercase">{navbarBrand.label}</a>
+        <div className="flex items-center gap-4 md:gap-6">
+          <a
+            href={hrefPrefix + "#" + navbarBrand.cta.targetId}
+            onClick={(e) => handleAnchor(e, navbarBrand.cta.targetId)}
+            className="label flex items-center gap-2 text-xs md:text-sm"
+          >
+            {navbarBrand.cta.label}
+            <span aria-hidden="true" className="status-dot" />
+          </a>
+          <nav className="hidden md:block" aria-label="Secciones">
+            <ul className="label flex gap-5 text-xs lg:gap-6 lg:text-sm">
+              {navigation.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={hrefPrefix + "#" + item.id}
+                    onClick={(e) => handleAnchor(e, item.id)}
+                    aria-current={activeId === item.id ? "true" : undefined}
+                    className={activeId === item.id ? "text-emphasis" : ""}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <BackdropPicker variant="compact" className="hidden md:inline-flex" />
+          <button
+            ref={toggleRef}
+            type="button"
+            className="-mr-2 p-2 md:hidden"
+            aria-label={open ? menuLabels.close : menuLabels.open}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((value) => !value)}
+          >
+            <HamburgerIcon open={open} />
+          </button>
+        </div>
       </div>
       <MobileMenu
         open={open}

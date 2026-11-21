@@ -1,12 +1,12 @@
 import type { ThemeData } from "@/types";
 
-// Swatches mirror the [data-backdrop] tokens in app/globals.css. PLACEHOLDER Spanish UI labels.
+// Swatches show the key color of each [data-backdrop] tone in app/globals.css (cyan phosphor / white studio / amber phosphor). PLACEHOLDER Spanish UI labels.
 export const theme: ThemeData = {
   storageKey: "portfolio-backdrop",
   options: [
-    { id: "ink", label: "Tinta", swatch: "#0a0c0a" },
-    { id: "bone", label: "Hueso", swatch: "#e8dfca" },
-    { id: "signal", label: "Señal", swatch: "#ee5a22" },
+    { id: "ink", label: "Tinta", swatch: "#7ddcff" },
+    { id: "bone", label: "Hueso", swatch: "#e9ecf0" },
+    { id: "signal", label: "Señal", swatch: "#ffb347" },
   ],
   defaultForDark: "ink",
   defaultForLight: "bone",
