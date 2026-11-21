@@ -96,8 +96,11 @@ export function useLoader() {
 }
 
 /** Registers a task and keeps its progress (0..1) in sync with the given value. */
-export function useLoaderProgress(id: string, progress: number) {
+export function useLoaderProgress(id: string, progress: number, enabled = true) {
   const { registerTask, setTaskProgress } = useContext(LoaderContext);
-  useEffect(() => registerTask(id), [id, registerTask]);
-  useEffect(() => setTaskProgress(id, progress), [id, progress, setTaskProgress]);
+  // When disabled the task is unregistered, so it never holds the preloader back.
+  useEffect(() => (enabled ? registerTask(id) : undefined), [id, enabled, registerTask]);
+  useEffect(() => {
+    if (enabled) setTaskProgress(id, progress);
+  }, [id, progress, enabled, setTaskProgress]);
 }

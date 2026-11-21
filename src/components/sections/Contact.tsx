@@ -45,7 +45,7 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="flex min-h-screen items-center px-4 py-24">
+    <section id="contact" className="flex items-center journey:min-h-screen px-4 py-24">
       <div className="mx-auto w-full max-w-xl">
         <SectionTitle>{contact.title}</SectionTitle>
         <ScrollReveal as="p" delay={80} className="mb-6">{contact.intro}</ScrollReveal>

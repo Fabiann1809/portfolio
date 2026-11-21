@@ -5,7 +5,7 @@ import { TestimonialCard } from "@/components/ui/TestimonialCard";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="flex min-h-screen items-center px-4 py-24">
+    <section id="testimonials" className="flex items-center journey:min-h-screen px-4 py-24">
       <div className="mx-auto w-full max-w-5xl">
         <SectionTitle>{testimonialsTitle}</SectionTitle>
         <ScrollReveal stagger className="grid gap-6 md:grid-cols-2">

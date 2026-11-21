@@ -1,6 +1,7 @@
 "use client";
 
 import { createElement } from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useLoader } from "./LoaderProvider";
 
 interface RevealProps {
@@ -14,12 +15,13 @@ interface RevealProps {
 /** Fades in and rises slightly when the preloader leaves. */
 export function Reveal({ children, as = "div", delay = 0, className = "" }: RevealProps) {
   const { loaded } = useLoader();
-  const state = loaded ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0";
+  const reduced = useReducedMotion();
+  const state = loaded ? "translate-y-0 opacity-100" : reduced ? "opacity-0" : "translate-y-3 opacity-0";
 
   return createElement(
     as,
     {
-      className: `transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${state} ${className}`,
+      className: `transition-[opacity,transform] ease-out motion-reduce:transition-none ${reduced ? "transition-none" : "duration-700"} ${state} ${className}`,
       style: { transitionDelay: loaded ? delay + "ms" : "0ms" },
     },
     children,

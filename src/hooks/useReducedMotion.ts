@@ -1,15 +1,9 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { prefersReducedMotion, subscribeReducedMotion } from "@/lib/motion";
 
-const query = "(prefers-reduced-motion: reduce)";
-
-function subscribe(onChange: () => void) {
-  const mq = window.matchMedia(query);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-}
-
+/** True when motion should be reduced. Server and hydration assume false, then it re-reads. */
 export function useReducedMotion(): boolean {
-  return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false);
+  return useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false);
 }

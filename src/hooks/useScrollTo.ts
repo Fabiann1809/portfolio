@@ -32,7 +32,7 @@ export function useScrollTo() {
           journey ? { offset: total, duration: journeyConfig.lenis.jumpDuration } : { offset: total },
         );
       } else {
-        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + total });
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + total, behavior: "instant" });
       }
     },
     [lenis, journey],

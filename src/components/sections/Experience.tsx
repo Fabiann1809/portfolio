@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/Card";
 
 export function Experience() {
   return (
-    <section id="experience" className="flex min-h-screen items-center px-4 py-24">
+    <section id="experience" className="flex items-center journey:min-h-screen px-4 py-24">
       <div className="mx-auto w-full max-w-5xl">
         <SectionTitle>{experienceTitle}</SectionTitle>
         <ScrollReveal stagger className="flex flex-col gap-4">

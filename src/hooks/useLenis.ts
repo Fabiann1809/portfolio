@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import { connectScroll } from "@/lib/scrollStore";
 import { journeyConfig } from "@/data/chapters";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { prefersReducedMotion } from "@/lib/motion";
 
 /**
  * Creates the Lenis instance (null when the user prefers reduced motion, so native
@@ -11,9 +13,15 @@ import { journeyConfig } from "@/data/chapters";
  */
 export function useLenis(): Lenis | null {
   const [lenis, setLenis] = useState<Lenis | null>(null);
+  // Only a trigger: the hydration snapshot is false, so the real value is read inside the effect.
+  const reducedSnapshot = useReducedMotion();
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const clearClasses = () =>
+      document.documentElement.classList.remove("lenis", "lenis-smooth", "lenis-stopped", "lenis-scrolling");
+
+    if (prefersReducedMotion()) {
+      clearClasses();
       return connectScroll(null);
     }
 
@@ -35,9 +43,10 @@ export function useLenis(): Lenis | null {
       cancelAnimationFrame(frame);
       disconnect();
       instance.destroy();
+      clearClasses();
       setLenis(null);
     };
-  }, []);
+  }, [reducedSnapshot]);
 
   return lenis;
 }

@@ -1,29 +1,85 @@
-import { navigation } from "@/data/navigation";
+"use client";
+
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { menuLabels, navigation } from "@/data/navigation";
+import { useLenisInstance } from "@/components/layout/SmoothScroll";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface MobileMenuProps {
   open: boolean;
   activeId: string;
   onNavigate: (id: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClose: () => void;
 }
 
-export function MobileMenu({ open, activeId, onNavigate }: MobileMenuProps) {
+/**
+ * Full-screen menu panel. Rendered in a portal because the navbar has transform/backdrop-filter,
+ * which would make `fixed` relative to the header instead of the viewport.
+ */
+export function MobileMenu({ open, activeId, onNavigate, onClose }: MobileMenuProps) {
+  const lenis = useLenisInstance();
+  const reduced = useReducedMotion();
+  const panelRef = useRef<HTMLElement>(null);
+
+  // Scroll lock + Escape + focus into the menu while open.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
+    lenis?.stop();
+    panelRef.current?.querySelector<HTMLElement>("a")?.focus();
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    // Leaving the mobile layout (rotate / resize) closes the menu.
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onMq = () => {
+      if (mq.matches) onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onMq);
+
+    return () => {
+      root.style.overflow = prevOverflow;
+      lenis?.start();
+      document.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onMq);
+    };
+  }, [open, lenis, onClose]);
+
   if (!open) return null;
-  return (
-    <nav id="mobile-menu" className="bg-background border-t border-current/20 md:hidden">
-      <ul className="flex flex-col p-4">
-        {navigation.map((item) => (
+  return createPortal(
+    <nav
+      ref={panelRef}
+      id="mobile-menu"
+      aria-label={menuLabels.panel}
+      data-menu
+      data-reduced={reduced}
+      className="fixed inset-0 z-40 overflow-y-auto bg-neutral-950 px-6 pt-24 pb-10 text-neutral-100 md:hidden"
+    >
+      <ul className="flex min-h-full flex-col justify-center gap-2">
+        {navigation.map((item, index) => (
           <li key={item.id}>
             <a
               href={"#" + item.id}
               onClick={(event) => onNavigate(item.id, event)}
               aria-current={activeId === item.id ? "true" : undefined}
-              className="block py-2"
+              data-menu-link
+              style={{ "--i": index } as React.CSSProperties}
+              className={
+                "block py-3 text-4xl font-semibold tracking-tight " +
+                (activeId === item.id ? "text-primary" : "")
+              }
             >
               {item.label}
             </a>
           </li>
         ))}
       </ul>
-    </nav>
+    </nav>,
+    document.body,
   );
 }

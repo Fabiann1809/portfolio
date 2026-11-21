@@ -36,16 +36,19 @@ html[data-journey="true"] body {
   color: #ededed;
 }
 
-/* Scroll reveal: subtle fade + translate + blur, staggered for groups. */
+/* Variant for the WebGL journey layout (flag set on <html> by JourneyRoot). */
+@custom-variant journey (html[data-journey="true"] &);
+
+/* Scroll reveal: light fade + short rise + small blur, staggered for groups. */
 [data-reveal="item"],
 [data-reveal="group"] > * {
   opacity: 0;
-  transform: translateY(1.5rem);
-  filter: blur(6px);
+  transform: translateY(16px);
+  filter: blur(4px);
   transition:
-    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-reveal="item"][data-shown="true"],
@@ -55,19 +58,47 @@ html[data-journey="true"] body {
   filter: none;
 }
 
-[data-reveal="group"] > :nth-child(2) { transition-delay: 90ms; }
-[data-reveal="group"] > :nth-child(3) { transition-delay: 180ms; }
-[data-reveal="group"] > :nth-child(4) { transition-delay: 270ms; }
-[data-reveal="group"] > :nth-child(5) { transition-delay: 360ms; }
-[data-reveal="group"] > :nth-child(6) { transition-delay: 450ms; }
-[data-reveal="group"] > :nth-child(n + 7) { transition-delay: 540ms; }
+[data-reveal="group"] > :nth-child(2) { transition-delay: 60ms; }
+[data-reveal="group"] > :nth-child(3) { transition-delay: 120ms; }
+[data-reveal="group"] > :nth-child(4) { transition-delay: 180ms; }
+[data-reveal="group"] > :nth-child(5) { transition-delay: 240ms; }
+[data-reveal="group"] > :nth-child(6) { transition-delay: 300ms; }
+[data-reveal="group"] > :nth-child(n + 7) { transition-delay: 360ms; }
+
+/* Reduced motion: quick plain fade. data-reduced also covers the ?reducedMotion=1 dev override. */
+[data-reveal][data-reduced="true"],
+[data-reveal][data-reduced="true"] > * {
+  transform: none !important;
+  filter: none !important;
+  transition: opacity 0.2s linear !important;
+  transition-delay: 0ms !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   [data-reveal="item"],
   [data-reveal="group"] > * {
     transform: none;
     filter: none;
-    transition: opacity 0.3s linear;
+    transition: opacity 0.2s linear;
     transition-delay: 0ms !important;
   }
+}
+
+/* Mobile menu: links fade in one after another (disabled with reduced motion). */
+@keyframes menu-link-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+[data-menu-link] {
+  animation: menu-link-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 80ms);
+}
+
+[data-menu][data-reduced="true"] [data-menu-link] {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-menu-link] { animation: none; }
 }

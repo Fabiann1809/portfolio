@@ -15,7 +15,7 @@ const Scene = dynamic(() => import("./Scene").then((mod) => mod.Scene), { ssr: f
 export function SceneLayer() {
   const [progress, setProgress] = useState(0);
   const journey = usePinnedLayout(true);
-  useLoaderProgress("scene", journey ? progress : 1);
+  useLoaderProgress("scene", progress, journey);
 
   if (!journey) return null;
   return <Scene onProgress={setProgress} />;

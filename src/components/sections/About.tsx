@@ -5,7 +5,7 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 
 export function About() {
   return (
-    <section id="about" className="flex min-h-screen items-center px-4 py-24">
+    <section id="about" className="flex items-center journey:min-h-screen px-4 py-24">
       <div className="mx-auto w-full max-w-5xl">
         <SectionTitle>{about.title}</SectionTitle>
         <ScrollReveal stagger>

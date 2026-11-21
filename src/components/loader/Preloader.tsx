@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { loader } from "@/data/loader";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
+import { prefersReducedMotion } from "@/lib/motion";
 import { useLoader } from "./LoaderProvider";
 
 const { timings } = loader;
@@ -46,16 +47,15 @@ export function Preloader() {
     };
   }, [locked, lenis]);
 
+  // Loading: ease the counter toward real progress, then move to "exiting". A timer (not rAF)
+  // guarantees the exit even if animation frames are throttled or progress never completes.
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const leaveMs = prefersReduced ? timings.reducedExitMs : timings.exitMs;
-
-
     const timers: number[] = [];
     const start = performance.now();
     let last = start;
     let value = 0;
     let frame = 0;
+    let finished = false;
 
     const paint = (v: number) => {
       const pct = Math.round(v * 100);
@@ -63,22 +63,19 @@ export function Preloader() {
       if (counterRef.current) counterRef.current.textContent = pad(pct);
       trackRef.current?.setAttribute("aria-valuenow", String(pct));
     };
+    paint(0);
 
     const finish = () => {
+      if (finished) return;
+      finished = true;
+      cancelAnimationFrame(frame);
       paint(1);
-      timers.push(
-        window.setTimeout(() => {
-          setExitMs(leaveMs);
+      timers.push(window.setTimeout(() => {
+          const prefersReduced = prefersReducedMotion();
+          setExitMs(prefersReduced ? timings.reducedExitMs : timings.exitMs);
           setReduced(prefersReduced);
           setPhase("exiting");
-          completeLoading();
-          timers.push(
-            window.setTimeout(() => {
-              setPhase("done");
-            }, leaveMs),
-          );
-        }, timings.holdMs),
-      );
+        }, timings.holdMs));
     };
 
     const tick = (now: number) => {
@@ -100,12 +97,22 @@ export function Preloader() {
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
+    timers.push(window.setTimeout(finish, timings.maxWaitMs + 500));
 
     return () => {
+      finished = true;
       cancelAnimationFrame(frame);
       timers.forEach((id) => window.clearTimeout(id));
     };
-  }, [getProgress, completeLoading]);
+  }, [getProgress]);
+
+  // Exiting: runs on its own so it cannot be cancelled by the loading effect re-running.
+  useEffect(() => {
+    if (phase !== "exiting") return;
+    completeLoading();
+    const id = window.setTimeout(() => setPhase("done"), exitMs);
+    return () => window.clearTimeout(id);
+  }, [phase, exitMs, completeLoading]);
 
   if (phase === "done") return null;
   const leaving = phase === "exiting";
@@ -127,7 +134,6 @@ export function Preloader() {
         aria-label={loader.ariaLabel}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-valuenow={0}
         className="relative h-px w-56 bg-neutral-700"
       >
         <span
