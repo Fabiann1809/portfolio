@@ -59,11 +59,8 @@ export const intervals: Interval[] = screens.slice(0, -1).map((from, k) => {
   };
 });
 
-/** Screens that stay on the sphere: stream panels plus the backdrops directly before / after a stream. */
-const chained: boolean[] = screens.map((screen, s) => {
-  if (screen.layout === "stream") return true;
-  return (s > 0 && screens[s - 1].layout === "stream") || (s < screens.length - 1 && screens[s + 1].layout === "stream");
-});
+/** Every screen stays on the sphere, so the journey reads as one continuous diagonal carousel. */
+const chained: boolean[] = screens.map(() => true);
 
 export const maxJourney = Math.max(0, screens.length - 1);
 
@@ -111,7 +108,9 @@ export function samplePoses(journey: number): number {
   const k = Math.min(count - 2, Math.floor(j));
   const f = j - k;
   const iv = intervals[k];
-  const g = k + phase(f, iv.inner ? phases.streamInner : phases.stream);
+  // Blend of linear and eased rotation: the carousel never stops between sections (no cut).
+  const eased = phase(f, iv.inner ? phases.streamInner : phases.stream);
+  const g = k + eased + (f - eased) * phases.carousel;
 
   for (let s = 0; s < count; s++) {
     const pose = Object.assign(poses[s], makePose());

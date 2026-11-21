@@ -61,6 +61,8 @@ export interface JourneyConfig {
     expand: PhaseRange;
     /** Sphere rotation between two screens of the same stream chapter. */
     streamInner: PhaseRange;
+    /** 0 = eased steps between screens, 1 = constant-speed carousel rotation. */
+    carousel: number;
   };
   stream: {
     /** Direction of the great-circle path, in degrees from vertical (bottom, slightly right, to top, slightly left). */

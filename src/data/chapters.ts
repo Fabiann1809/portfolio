@@ -28,10 +28,11 @@ export const journeyConfig: JourneyConfig = {
   maxDelta: 1 / 20,
   smooth: { journey: 0.34, position: 0.22, shape: 0.2, smear: 0.22 },
   phases: {
-    shrink: [0, 0.45],
+    shrink: [0, 0.55],
     stream: [0.08, 0.9],
-    expand: [0.4, 1],
+    expand: [0.5, 1],
     streamInner: [0.05, 0.95],
+    carousel: 0.45,
   },
   stream: {
     pathAngle: 28,
