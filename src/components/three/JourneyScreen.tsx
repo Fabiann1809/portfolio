@@ -28,7 +28,7 @@ const { glitch, expand } = stream;
 const PATH = (stream.pathAngle * Math.PI) / 180;
 const PATH_SIN = Math.sin(PATH);
 const PATH_COS = Math.cos(PATH);
-/** Rotation axis of the sphere (in the screen plane, perpendicular to the path) and the path direction at the front (towards the bottom, slightly right). */
+/** Rotation axis of the sphere (in the screen plane, perpendicular to the path) and the path direction at the front: a diagonal where positive arc = entering from the bottom-right and negative arc = leaving towards the top-left. */
 const AXIS = new Vector3(PATH_COS, PATH_SIN, 0);
 const TANGENT_X = PATH_SIN;
 const TANGENT_Y = -PATH_COS;
@@ -288,15 +288,17 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     const kk = 1 - c.fill;
     const angle = c.arc;
     const sinA = Math.sin(angle);
-    // Pass-and-expand: the panel keeps rising a little while it grows (bump: 0 at both ends of the fill).
+    // Pass-and-expand: while it grows the panel keeps travelling along the path towards the top-left,
+    // the leaving direction (bump: 0 at both ends of the fill).
     const rise = expand.rise * vp.height * 4 * c.fill * (1 - c.fill);
     m.position.set(
-      TANGENT_X * radius * sinA + shiftX * vp.width * kk,
-      TANGENT_Y * radius * sinA + rise,
+      TANGENT_X * radius * sinA + shiftX * vp.width * kk - TANGENT_X * rise,
+      TANGENT_Y * radius * sinA - TANGENT_Y * rise,
       radius * (Math.cos(angle) - 1),
     );
-    // Tilted the same way on both sides of the front: seen from below (top edge farther), straight at the centre.
-    sphereQuat.setFromAxisAngle(AXIS, -Math.abs(angle) * stream.tilt);
+    // Same signed rotation about AXIS that places the point on the sphere (z * cos + tangent * sin), so the
+    // outward normal turns away from the camera on both sides, in opposite directions; straight at the centre.
+    sphereQuat.setFromAxisAngle(AXIS, angle * stream.tilt);
     localEuler.set(
       (seedC - 0.5) * 2 * vary.pitch * variance,
       MathUtils.degToRad(stream.yaw) * k + (seedB - 0.5) * 2 * vary.yaw * variance,
