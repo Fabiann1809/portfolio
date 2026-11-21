@@ -31,7 +31,7 @@ const academic: ExperienceEntry[] = [
   {
     id: "semillero",
     title: "Semillero de investigación",
-    organization: "Universidad Cooperativa de Colombia",
+    organization: "Tecnoacademia de Túquerres",
     period: "PLACEHOLDER: años",
     subtitle: "Biotecnología",
     tags: ["RedCOLSI", "Reconocimiento"],

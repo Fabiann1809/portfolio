@@ -393,3 +393,14 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .nav-mascot, .nav-mascot-eyes { animation: none; }
 }
+
+/* Experience tags: pop in with a small overshoot. */
+@keyframes tag-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.tag-pop {
+  opacity: 0;
+  animation: tag-pop 450ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}

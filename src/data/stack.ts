@@ -14,4 +14,7 @@ export const stack: StackItem[] = [
   { name: "Next.js", icon: "/icons/stack/nextjs.svg" },
   { name: "Tailwind CSS", icon: "/icons/stack/tailwind.svg" },
   { name: "Supabase", icon: "/icons/stack/supabase.svg" },
+  { name: "Spring Boot", icon: "/icons/stack/springboot.svg" },
+  { name: "PostgreSQL", icon: "/icons/stack/postgresql.svg" },
+  { name: "LangGraph", icon: "/icons/stack/langchain.svg" },
 ];

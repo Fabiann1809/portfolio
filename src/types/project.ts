@@ -1,5 +1,14 @@
+export interface ProjectRepo {
+  /** Role of the repository (e.g. "Frontend"). */
+  label: string;
+  url: string;
+}
+
 export interface ProjectLinks {
+  /** Main repository (or organization when the project spans several). */
   github: string;
+  /** Several repositories, labelled by role; replaces the single GitHub link when present. */
+  repos?: ProjectRepo[];
   /** Live demo (Vercel). */
   vercel?: string;
   /** APK download. */

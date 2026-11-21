@@ -6,9 +6,11 @@ export function MissionLinks({ project, className = "" }: { project: Project; cl
   const { links } = project;
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
-      <a className="bracket-link" href={links.github} target="_blank" rel="noreferrer">
-        {projectLabels.github}
-      </a>
+      {(links.repos ?? [{ label: projectLabels.github, url: links.github }]).map((repo) => (
+        <a key={repo.url} className="bracket-link" href={repo.url} target="_blank" rel="noreferrer">
+          {repo.label}
+        </a>
+      ))}
       {links.vercel && (
         <a className="bracket-link" href={links.vercel} target="_blank" rel="noreferrer">
           {projectLabels.demo}

@@ -24,7 +24,9 @@ function Details({ project }: { project: Project }) {
         ))}
       </ul>
       <div className="mt-4 flex flex-wrap gap-2">
-        <LinkButton href={links.github} target="_blank" rel="noreferrer">{projectLabels.github}</LinkButton>
+        {(links.repos ?? [{ label: projectLabels.github, url: links.github }]).map((repo) => (
+          <LinkButton key={repo.url} href={repo.url} target="_blank" rel="noreferrer">{repo.label}</LinkButton>
+        ))}
         {links.vercel && (
           <LinkButton href={links.vercel} target="_blank" rel="noreferrer">{projectLabels.demo}</LinkButton>
         )}
