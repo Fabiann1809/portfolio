@@ -107,14 +107,11 @@ export function About() {
 
       <div className="grid gap-10 border-t border-line px-[var(--edge-x)] py-16 md:grid-cols-2">
         <ScrollReveal>
-          <dl className="flex flex-col gap-6">
-            {about.facts.map((fact) => (
-              <div key={fact.label}>
-                <dt className="mono-label text-muted">{fact.label}</dt>
-                <dd className="mt-2 max-w-md">{fact.value}</dd>
-              </div>
+          <div className="flex max-w-xl flex-col gap-6 text-muted">
+            {about.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
             ))}
-          </dl>
+          </div>
         </ScrollReveal>
         <div>
           <ScrollReveal as="h3" className="mono-label text-muted">{about.stackTitle}</ScrollReveal>

@@ -1,14 +1,13 @@
 import type { MenuLabels, NavItem, NavbarBrand } from "@/types";
 
-// PLACEHOLDER content. Ids must match the section ids in components/sections.
+// Ids must match the section ids in components/sections (the "extra" power profile has no nav entry).
 export const navigation: NavItem[] = [
   { id: "hero", label: "Inicio" },
-  { id: "about", label: "Sobre mí" },
+  { id: "about", label: "Acerca de mí" },
   { id: "projects", label: "Proyectos" },
   { id: "testimonials", label: "Testimonios" },
   { id: "experience", label: "Experiencia" },
-  { id: "education", label: "Educación" },
-  { id: "extra", label: "Extra" },
+  { id: "art", label: "Mi lado artístico" },
   { id: "contact", label: "Contacto" },
 ];
 

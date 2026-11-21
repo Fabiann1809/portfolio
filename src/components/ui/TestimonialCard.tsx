@@ -21,7 +21,7 @@ export function TestimonialCard({ testimonial, focusable = false }: TestimonialC
         <span className="mono-label min-w-0">
           <span className="block truncate">{name}</span>
           <span className="block truncate text-muted">
-            {role} / {company}
+            {company ? `${role} / ${company}` : role}
           </span>
         </span>
       </figcaption>

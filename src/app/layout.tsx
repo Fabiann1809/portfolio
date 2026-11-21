@@ -34,8 +34,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Personal portfolio",
+  title: "Fabián — Software Engineer Full Stack & AI",
+  description: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

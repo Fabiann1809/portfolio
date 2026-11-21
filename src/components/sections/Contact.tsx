@@ -23,12 +23,20 @@ export function Contact() {
           <p className="max-w-md text-muted">{contact.intro}</p>
           <div>
             <p className="mono-label text-muted">{contact.emailLabel}</p>
-            <a
-              href={`mailto:${contact.email}`}
-              className="mt-2 inline-block font-condensed text-[clamp(26px,3vw,44px)] font-bold break-all underline-offset-8 hover:text-emphasis hover:underline"
-            >
-              {contact.email}
-            </a>
+            {contact.email.includes("@") ? (
+              <a
+                href={`mailto:${contact.email}`}
+                className="mt-2 inline-block font-condensed text-[clamp(26px,3vw,44px)] font-bold break-all underline-offset-8 hover:text-emphasis hover:underline"
+              >
+                {contact.email}
+              </a>
+            ) : (
+              <p className="mt-2 font-condensed text-[clamp(26px,3vw,44px)] font-bold break-all">{contact.email}</p>
+            )}
+          </div>
+          <div>
+            <p className="mono-label text-muted">{contact.locationLabel}</p>
+            <p className="mt-2">{contact.location}</p>
           </div>
           <div>
             <p className="mono-label text-muted">{contact.socialsLabel}</p>

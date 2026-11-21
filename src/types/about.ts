@@ -11,17 +11,12 @@ export interface TimelineStep {
   period: string;
 }
 
-export interface AboutFact {
-  label: string;
-  value: string;
-}
-
 export interface AboutData {
   /** Section label, shown as "// LABEL 000%". */
   label: string;
   statement: StatementWord[];
   timeline: TimelineStep[];
-  /** Short facts: location and life outside tech. */
-  facts: AboutFact[];
+  /** Body paragraphs shown under the pinned statement. */
+  paragraphs: string[];
   stackTitle: string;
 }

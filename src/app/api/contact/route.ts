@@ -14,6 +14,7 @@ export async function POST(request: Request) {
   const values: ContactFormValues = {
     name: String(body.name ?? ""),
     email: String(body.email ?? ""),
+    subject: String(body.subject ?? ""),
     message: String(body.message ?? ""),
   };
   const errors = validateContactForm(values);
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
       from: "Portfolio <onboarding@resend.dev>",
       to,
       replyTo: values.email,
-      subject: "New message from " + values.name,
+      subject: values.subject + " - " + values.name,
       text: values.message + "\n\nFrom: " + values.name + " <" + values.email + ">",
     });
     if (error) {

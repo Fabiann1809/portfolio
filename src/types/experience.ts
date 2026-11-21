@@ -1,10 +1,16 @@
-export type ExperienceType = "freelance" | "full-time" | "part-time" | "internship";
-
 export interface ExperienceEntry {
   id: string;
-  type: ExperienceType;
-  role: string;
-  company: string;
+  title: string;
+  organization: string;
   period: string;
-  description: string;
+  /** Small tag after the organization (e.g. "Colaboré"). */
+  tag?: string;
+  note?: string;
+}
+
+export interface ExperienceGroup {
+  id: string;
+  /** Sub-label of the group (e.g. "Académica"). */
+  label: string;
+  entries: ExperienceEntry[];
 }

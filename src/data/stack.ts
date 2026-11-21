@@ -1,10 +1,17 @@
 import type { StackItem } from "@/types";
 
-// PLACEHOLDER content. Icons live in public/icons/stack. Frameworks and libraries only, no percentages.
+// Frameworks, libraries and tools used across the projects. Icons live in public/icons/stack (Simple Icons). No percentages.
 export const stack: StackItem[] = [
+  { name: "Jetpack Compose", icon: "/icons/stack/jetpack-compose.svg" },
+  { name: "Wear OS", icon: "/icons/stack/wear-os.svg" },
+  { name: "Android", icon: "/icons/stack/android.svg" },
+  { name: "TensorFlow Lite", icon: "/icons/stack/tensorflow.svg" },
+  { name: "scikit-learn", icon: "/icons/stack/scikit-learn.svg" },
+  { name: "Firebase", icon: "/icons/stack/firebase.svg" },
+  { name: "Godot", icon: "/icons/stack/godot.svg" },
+  { name: "Electron", icon: "/icons/stack/electron.svg" },
   { name: "React", icon: "/icons/stack/react.svg" },
   { name: "Next.js", icon: "/icons/stack/nextjs.svg" },
   { name: "Tailwind CSS", icon: "/icons/stack/tailwind.svg" },
-  { name: "Node.js", icon: "/icons/stack/nodejs.svg" },
-  { name: "Vercel AI SDK", icon: "/icons/stack/vercel-ai.svg" },
+  { name: "Supabase", icon: "/icons/stack/supabase.svg" },
 ];

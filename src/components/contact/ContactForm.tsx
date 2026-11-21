@@ -5,7 +5,7 @@ import { contact } from "@/data/contact";
 import { validateContactForm } from "@/lib/validation";
 import type { ContactFormErrors, ContactFormValues } from "@/types";
 
-const emptyValues: ContactFormValues = { name: "", email: "", message: "" };
+const emptyValues: ContactFormValues = { name: "", email: "", subject: "", message: "" };
 type Status = "idle" | "sending" | "success" | "error";
 
 const fieldClass =
@@ -75,6 +75,22 @@ export function ContactForm() {
         {errors.email && (
           <span role="alert" className={errorClass}>
             {errors.email}
+          </span>
+        )}
+      </label>
+      <label className={labelClass}>
+        {contact.fields.subject}
+        <input
+          type="text"
+          name="subject"
+          value={values.subject}
+          onChange={(e) => handleChange("subject", e.target.value)}
+          aria-invalid={Boolean(errors.subject)}
+          className={fieldClass}
+        />
+        {errors.subject && (
+          <span role="alert" className={errorClass}>
+            {errors.subject}
           </span>
         )}
       </label>

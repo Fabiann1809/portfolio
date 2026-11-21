@@ -1,6 +1,6 @@
 import type { ExtraData } from "@/types";
 
-// PLACEHOLDER content. Stats are 0-100 per axis.
+// Stats are 0-100 per axis (radar shape only). Technologies name items of data/stack.ts.
 export const extra: ExtraData = {
   label: "Perfil de habilidades",
   codePrefix: "PWR",
@@ -12,31 +12,31 @@ export const extra: ExtraData = {
   abilities: [
     {
       id: "full-stack",
-      name: "Full stack",
-      description: "PLACEHOLDER: de la base de datos a la interfaz, entregando producto completo y mantenible.",
-      stats: [88, 80, 90, 86, 78],
-      technologies: ["React", "Next.js", "Node.js", "Tailwind CSS"],
+      name: "Full stack web",
+      description: "Aplicaciones de escritorio y web de la interfaz a los datos, como VYRO: React, Tailwind CSS y Supabase.",
+      stats: [84, 78, 86, 82, 76],
+      technologies: ["React", "Next.js", "Tailwind CSS", "Supabase", "Electron"],
+    },
+    {
+      id: "mobile",
+      name: "Apps Android y Wear OS",
+      description: "Aplicaciones nativas para el teléfono y el reloj, como el asistente de lectura y stateAI.",
+      stats: [80, 74, 78, 84, 70],
+      technologies: ["Jetpack Compose", "Android", "Wear OS", "Firebase"],
     },
     {
       id: "ai-engineering",
       name: "AI engineering",
-      description: "PLACEHOLDER: integración de modelos de lenguaje, agentes y flujos de datos en productos reales.",
-      stats: [76, 70, 84, 74, 90],
-      technologies: ["Vercel AI SDK", "Next.js", "Node.js"],
+      description: "Modelos que corren en el dispositivo y APIs de lenguaje integradas en productos reales.",
+      stats: [74, 70, 82, 72, 88],
+      technologies: ["TensorFlow Lite", "scikit-learn"],
     },
     {
-      id: "frontend",
-      name: "Interfaces",
-      description: "PLACEHOLDER: interfaces rápidas, accesibles y con movimiento cuidado.",
-      stats: [92, 84, 70, 94, 66],
-      technologies: ["React", "Next.js", "Tailwind CSS"],
-    },
-    {
-      id: "backend",
-      name: "APIs y sistemas",
-      description: "PLACEHOLDER: servicios claros, bien tipados y listos para crecer.",
-      stats: [82, 72, 94, 80, 70],
-      technologies: ["Node.js", "Next.js"],
+      id: "games",
+      name: "Juegos y simulación",
+      description: "Roguelike con una IA adaptativa que aprende cómo juegas, hecho con Godot.",
+      stats: [78, 72, 80, 84, 68],
+      technologies: ["Godot"],
     },
   ],
 };

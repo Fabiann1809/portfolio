@@ -1,11 +1,11 @@
 import type { Social } from "@/types";
 
-// PLACEHOLDER content.
 export const socials: Social[] = [
-  { id: "github", label: "GitHub", url: "https://github.com/" },
-  { id: "linkedin", label: "LinkedIn", url: "https://linkedin.com/" },
+  { id: "github", label: "GitHub", url: "https://github.com/Fabiann1809" },
+  // PLACEHOLDER: replace with the real LinkedIn profile URL.
+  { id: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/PLACEHOLDER" },
 ];
 
 export const footer = {
-  text: "PLACEHOLDER: Nombre Apellido. Todos los derechos reservados.",
+  text: "© 2026 Fabián. Hecho con Next.js y Tailwind CSS",
 };

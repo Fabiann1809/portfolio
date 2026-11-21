@@ -1,20 +1,19 @@
 import type { HeroData } from "@/types";
 import { projectsSectionId } from "@/data/projects";
 
-// PLACEHOLDER content: fill in name, city, time zone, year and portrait.
 export const hero: HeroData = {
-  greeting: "Hola, soy",
-  displayName: "FABIÁN", // PLACEHOLDER: confirm spelling
-  role: "Ingeniero de Software full stack & AI engineering",
-  roleLines: ["Ingeniero de Software", "full stack & AI engineering"],
+  greeting: "Hola, soy Fabián",
+  displayName: "FABIÁN",
+  role: "Ingeniería de Software Full Stack & AI Engineering",
+  roleLines: ["Ingeniería de Software", "Full Stack & AI Engineering"],
   metaLabel: "// PORTFOLIO",
   copyrightYear: 2026,
-  tagline: "PLACEHOLDER: breve descripción de lo que haces y del tipo de proyectos que buscas.",
-  description: "PLACEHOLDER: software que une ingeniería, diseño e IA. Interfaces rápidas y sistemas claros.",
-  workLabel: "Ver mi trabajo",
+  tagline: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
+  description: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
+  workLabel: "Ver proyectos",
   workTargetId: projectsSectionId,
   cvLabel: "Descargar CV",
-  cvPath: "/cv/cv.pdf",
+  cvPath: "/cv/fabian-cv.pdf",
   portrait: {
     src: "/images/hero/portrait.webp",
     alt: "Fabián",
@@ -36,11 +35,10 @@ export const hero: HeroData = {
     photoVignette: 0.22,
   },
   status: {
-    availability: "Disponible para trabajar",
-    city: "Ciudad, País", // PLACEHOLDER
-    timeZone: "America/Bogota", // PLACEHOLDER
+    availability: "Disponible para oportunidades",
+    city: "Túquerres / Pasto",
+    timeZone: "America/Bogota",
     locale: "es",
-    experienceSince: 2021, // PLACEHOLDER
-    yearsLabel: "{years} años de experiencia",
+    stage: "5.º semestre · Ing. de Software",
   },
 };

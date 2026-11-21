@@ -7,10 +7,13 @@ export interface ContactData {
   availability: string;
   email: string;
   emailLabel: string;
+  location: string;
+  locationLabel: string;
   socialsLabel: string;
   fields: {
     name: string;
     email: string;
+    subject: string;
     message: string;
   };
   submitLabel: string;
@@ -22,6 +25,7 @@ export interface ContactData {
 export interface ContactFormValues {
   name: string;
   email: string;
+  subject: string;
   message: string;
 }
 

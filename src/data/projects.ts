@@ -1,6 +1,6 @@
 import type { Project, ProjectLabels } from "@/types";
 
-// PLACEHOLDER content. Technologies: frameworks/libraries only.
+// Technologies: frameworks, libraries and tools only. Verified against each repository (Fabiann1809/*).
 /** Must match the id of the Projects section (and the navigation entry). */
 export const projectsSectionId = "projects";
 
@@ -15,27 +15,57 @@ export const projectLabels: ProjectLabels = {
   progressAria: "Progreso de proyectos",
 };
 
-const make = (n: number, collaborative: boolean, technologies: string[]): Project => ({
-  id: `project-${n}`,
-  title: `Proyecto de ejemplo ${n}`,
-  description: `PLACEHOLDER: descripción del proyecto ${n}.`,
-  technologies,
-  collaborative,
-  ...(collaborative ? {} : { client: `Cliente ${n}` }),
-  year: String(2026 - Math.floor(n / 3)),
-  links: {
-    github: "https://github.com/",
-    ...(n % 2 === 1 ? { vercel: "https://vercel.com/" } : { download: `/downloads/project-${n}.apk` }),
-  },
-});
-
 export const projects: Project[] = [
-  make(1, false, ["Next.js", "Tailwind CSS"]),
-  make(2, true, ["React", "Express"]),
-  make(3, false, ["Vue", "Pinia"]),
-  make(4, false, ["Next.js", "Prisma"]),
-  make(5, true, ["React", "Redux"]),
-  make(6, false, ["Astro", "Tailwind CSS"]),
-  make(7, false, ["SvelteKit"]),
-  make(8, true, ["NestJS", "React Query"]),
+  {
+    id: "state-ai",
+    title: "stateAI (Smartwatch)",
+    description:
+      "Aplicación para Wear OS que mide tu energía y concentración con la variabilidad del ritmo cardíaco. Una mascota te guía y, con pulsos hápticos, te avisa cuándo respirar o pausar.",
+    technologies: ["Wear OS", "Jetpack Compose", "Room", "TensorFlow Lite", "scikit-learn"],
+    collaborative: false,
+    year: "2026",
+    links: { github: "https://github.com/Fabiann1809/stateAI" },
+  },
+  {
+    id: "reader",
+    title: "Asistente de lectura (Android)",
+    description:
+      "Biblioteca personal con IA: fotografías un párrafo difícil y te lo explica con analogías cotidianas, y después te evalúa con quizzes. Tus datos se quedan en tu dispositivo.",
+    technologies: ["Jetpack Compose", "Room", "ML Kit", "Readium", "Firebase", "LLM API"],
+    collaborative: false,
+    year: "2026",
+    links: {
+      github: "https://github.com/Fabiann1809/reader",
+      download: "https://github.com/Fabiann1809/reader/releases/download/v0.6.0/app-release.apk",
+    },
+  },
+  {
+    id: "camino-a-casa",
+    title: "Camino a casa",
+    description:
+      "Roguelike de mazmorras con tres escenarios y el regreso a casa como hilo narrativo. Colaboré en este juego, que integra una IA que aprende cómo juegas y reacciona.",
+    technologies: ["Godot 4"],
+    collaborative: true,
+    year: "2026",
+    links: { github: "https://github.com/Fabiann1809/isla-espejo" },
+  },
+  {
+    id: "vyro",
+    title: "VYRO",
+    description:
+      "Entrenador de habilidades de escritorio: observa tu técnica con la cámara y te corrige en tiempo real, con seguimiento de tu progreso. Todo se procesa en tu computador.",
+    technologies: ["Electron", "React", "Tailwind CSS", "MediaPipe", "Supabase", "Zustand"],
+    collaborative: false,
+    year: "2026",
+    links: { github: "https://github.com/Fabiann1809/vyro" },
+  },
+  {
+    id: "fabify",
+    title: "Fabify",
+    description: "Proyecto práctico sobre estructuras de datos y algoritmos, centrado en una lista doblemente enlazada.",
+    technologies: ["PLACEHOLDER: tecnologías"],
+    collaborative: false,
+    year: "2026",
+    links: { github: "https://github.com/Fabiann1809" },
+  },
 ];

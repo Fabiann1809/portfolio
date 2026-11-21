@@ -22,6 +22,9 @@ export function HeroIntro() {
       delay={420}
       className="relative z-20 mx-5 pt-24 text-center sm:mx-auto sm:max-w-md xl:absolute xl:bottom-[8vh] xl:left-[3.5vw] xl:mx-0 xl:max-w-none xl:pt-0 xl:text-left"
     >
+      <p className="mono-label mb-3 text-emphasis" style={SHADOW}>
+        {hero.greeting}
+      </p>
       <h2
         className="text-[clamp(1.6rem,2.3vw,2.4rem)] leading-[1.02] font-bold tracking-tight text-foreground max-xl:text-[clamp(1.75rem,7vw,2.5rem)]"
         style={SHADOW}
@@ -30,7 +33,7 @@ export function HeroIntro() {
         <br />
         {hero.roleLines[1]}
       </h2>
-      <p className="mx-auto mt-4 max-w-[34ch] text-sm leading-relaxed text-muted xl:mx-0" style={SHADOW}>
+      <p className="mx-auto mt-4 max-w-[40ch] text-sm leading-relaxed text-muted xl:mx-0" style={SHADOW}>
         {hero.tagline}
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3 xl:justify-start">

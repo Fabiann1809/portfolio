@@ -23,10 +23,8 @@ export interface HeroStatus {
   timeZone: string;
   /** Locale used for the date and the time. */
   locale: string;
-  /** First working year; the third line shows the years since. */
-  experienceSince: number;
-  /** Template with a `{years}` placeholder. */
-  yearsLabel: string;
+  /** Third line: current study stage. */
+  stage: string;
 }
 
 /** Desktop layout (>= lg) of the hero, in % of the stage, plus the light CRT treatment of the photo. */

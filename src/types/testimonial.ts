@@ -2,7 +2,8 @@ export interface Testimonial {
   id: string;
   name: string;
   role: string;
-  company: string;
+  /** Optional organization shown after the role. */
+  company?: string;
   quote: string;
   /** Small-resolution image path (rendered pixelated). Initials fallback when missing. */
   avatar?: string;

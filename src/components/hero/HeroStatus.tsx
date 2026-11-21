@@ -4,7 +4,7 @@ import { hero } from "@/data/hero";
 import { Reveal } from "@/components/loader/Reveal";
 import { useNow } from "@/hooks/useNow";
 
-/** Mono status lines (top right): availability + date, city + live local time, years of experience. */
+/** Mono status lines (top right): availability + date, city + live local time, study stage. */
 export function HeroStatus() {
   const { status } = hero;
   const now = useNow();
@@ -15,7 +15,6 @@ export function HeroStatus() {
   const time = now
     ? new Intl.DateTimeFormat(status.locale, { hour: "2-digit", minute: "2-digit", timeZone: status.timeZone }).format(now)
     : "";
-  const years = now ? now.getFullYear() - status.experienceSince : 0;
 
   return (
     <Reveal
@@ -31,7 +30,7 @@ export function HeroStatus() {
         {status.city}
         {time && <span> · {time}</span>}
       </p>
-      <p>{years > 0 ? status.yearsLabel.replace("{years}", String(years)) : " "}</p>
+      <p>{status.stage}</p>
     </Reveal>
   );
 }
