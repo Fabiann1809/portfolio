@@ -20,10 +20,10 @@ export function HeroIntro() {
   return (
     <Reveal
       delay={420}
-      className="relative z-20 mx-5 pt-24 text-center sm:mx-auto sm:max-w-md xl:absolute xl:top-[14vh] xl:left-[3.5vw] xl:mx-0 xl:max-w-none xl:pt-0 xl:text-left"
+      className="relative z-20 mx-5 pt-24 text-center sm:mx-auto sm:max-w-md xl:absolute xl:bottom-[8vh] xl:left-[3.5vw] xl:mx-0 xl:max-w-none xl:pt-0 xl:text-left"
     >
       <h2
-        className="text-[clamp(2rem,3.2vw,3rem)] leading-[1.02] font-bold tracking-tight text-foreground max-xl:text-[clamp(1.75rem,7vw,2.5rem)]"
+        className="text-[clamp(1.6rem,2.3vw,2.4rem)] leading-[1.02] font-bold tracking-tight text-foreground max-xl:text-[clamp(1.75rem,7vw,2.5rem)]"
         style={SHADOW}
       >
         {hero.roleLines[0]}
