@@ -1,17 +1,20 @@
 @import "tailwindcss";
 
 /*
- * Two site modes. <html data-backdrop="ink|bone"> is set before paint by an inline script (see
- * lib/themeScript.ts; default follows prefers-color-scheme). No attribute = ink.
- *   ink  = dark (Tinta): cyan-white phosphor on blue-black
- *   bone = light (Hueso): paper white, dark ink tiles and grid lines
+ * Three backdrop tones. <html data-backdrop="ink|bone|signal"> is set before paint by an inline script
+ * (see lib/themeScript.ts; default follows prefers-color-scheme). No attribute = ink.
+ *   ink    = dark (Tinta): cyan-white phosphor on blue-black
+ *   bone   = light (Hueso): paper white, dark ink tiles and grid lines
+ *   signal = orange (Señal): light-style tokens (dark text) on orange
+ * Studio hero tokens: --light-tint (soft light that follows the pointer), --portrait-shadow-opacity /
+ * --portrait-shadow-blend (cast shadow behind the portrait). Keep the swatches in data/theme.ts in sync.
  * Tokens: --background, --foreground, --muted, --surface, --line, --emphasis (accent text that
  * stays legible on the mode), --shadow-color, --vignette.
  * Retro tokens: --name-lit (giant name on the hero screen texture), --glow and --glow-soft
  * (phosphor text-shadow), --status-green, --scanline, --retro-vignette.
  * Overlay tokens (--ov-*): text drawn straight over the WebGL journey (side labels, project
  * panel); they follow the brightness behind them (see html[data-environment="studio"] below).
- * Hero WebGL tokens (hex only, read by lib/heroTint.ts): --crt-bg, --crt-glow, --crt-line,
+ * Transition-panel tokens (hex only): --crt-bg, --crt-glow, --crt-line,
  * --crt-hot, --crt-shadow, --crt-mid, --crt-high, --crt-streak.
  */
 :root,
@@ -25,6 +28,9 @@
   --emphasis: #7ddcff;
   --shadow-color: rgba(0, 0, 0, 0.6);
   --vignette: rgba(0, 0, 0, 0.6);
+  --light-tint: rgba(255, 244, 220, 0.16);
+  --portrait-shadow-opacity: 0.18;
+  --portrait-shadow-blend: normal;
   --name-lit: #ffffff;
   --glow: rgba(150, 215, 255, 0.55);
   --glow-soft: rgba(110, 190, 255, 0.22);
@@ -51,6 +57,9 @@
   --emphasis: #0b5cab;
   --shadow-color: rgba(30, 40, 60, 0.35);
   --vignette: rgba(120, 130, 150, 0.25);
+  --light-tint: rgba(255, 255, 255, 0.7);
+  --portrait-shadow-opacity: 0.24;
+  --portrait-shadow-blend: multiply;
   --name-lit: #05070c;
   --glow: rgba(20, 60, 120, 0.2);
   --glow-soft: rgba(20, 60, 120, 0.08);
@@ -65,6 +74,35 @@
   --crt-mid: #2a3340;
   --crt-high: #5f6b7b;
   --crt-streak: #0a0d14;
+}
+
+:root[data-backdrop="signal"] {
+  color-scheme: light;
+  --background: #ff5a1f;
+  --foreground: #140a05;
+  --muted: #4a1f0b;
+  --surface: #ff7a45;
+  --line: rgba(20, 10, 5, 0.25);
+  --emphasis: #140a05;
+  --shadow-color: rgba(90, 20, 0, 0.5);
+  --vignette: rgba(120, 20, 0, 0.35);
+  --light-tint: rgba(255, 224, 170, 0.4);
+  --portrait-shadow-opacity: 0.3;
+  --portrait-shadow-blend: multiply;
+  --name-lit: #140a05;
+  --glow: rgba(20, 10, 5, 0.18);
+  --glow-soft: rgba(20, 10, 5, 0.07);
+  --status-green: #0b7a3b;
+  --scanline: rgba(40, 10, 0, 1);
+  --retro-vignette: rgba(120, 20, 0, 0.3);
+  --crt-bg: #ff5a1f;
+  --crt-glow: #ff8a55;
+  --crt-line: #5a1f0b;
+  --crt-hot: #140a05;
+  --crt-shadow: #140a05;
+  --crt-mid: #4a1f0b;
+  --crt-high: #7a2e12;
+  --crt-streak: #140a05;
 }
 
 @theme {
@@ -227,178 +265,98 @@ body {
 [data-reduced="true"] .gallery-lens-out,
 [data-reduced="true"] .gallery-fade-out { animation: gallery-fade-out 0.15s linear both; }
 
+/* The light cursor and the studio hero must never cause horizontal scroll. */
 html,
 body {
   overflow-x: clip;
 }
 
-/* ---------- Hero stage ---------- */
-/* Below lg the hero is a stacked column (inline-size container); from lg it is a fixed-height
-   stage laid out in % / container units (size container). */
-.hero-stage {
-  container-type: inline-size;
-  /* Base font of the side blocks; also feeds the name height cap. */
-  --blk: 13px;
+/* Custom light cursor (only mounted on fine pointers); native cursor stays for text fields. */
+html[data-light-cursor="true"],
+html[data-light-cursor="true"] * {
+  cursor: none;
 }
-@media (min-width: 1024px) {
-  .hero-stage {
-    container-type: size;
-    height: 100svh;
-    --blk: clamp(10px, 1.45cqh, 13px);
-  }
+html[data-light-cursor="true"] :is(input, textarea, select, [contenteditable="true"]) {
+  cursor: text;
 }
 
-/* The portrait photo: stacked column below lg, bottom-anchored and tall from lg. */
-.portrait-slot {
-  position: relative;
-  aspect-ratio: 1145 / 1374;
-  height: min(40svh, 30rem);
-  /* Soft bottom fade into the background. */
-  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--photo-fade, 28%)), transparent 100%);
-  opacity: 0;
-  transition: opacity 0.9s ease 0.2s;
+/* Studio hero (commit 0d750b8 look): Geist grotesk type inside the stage, not the dot-matrix UI face. */
+.studio-hero {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
-.portrait-slot[data-in="true"] {
+.studio-hero .label {
+  font-family: inherit;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Light cursor: glowing dot with a label over the hero, subtle ring elsewhere. Mode via data-mode. */
+.light-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+.light-cursor[data-mode="light"],
+.light-cursor[data-mode="ring"],
+.light-cursor[data-mode="hover"] {
   opacity: 1;
 }
-@media (min-width: 1024px) {
-  .portrait-area {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    height: var(--portrait-h, 78%);
-    translate: -50% 0;
-  }
-  .portrait-slot {
-    height: 100%;
-  }
-}
-/* Light CRT feel clipped to the figure (mask set inline): faint scanlines + a tiny vignette. */
-.portrait-crt {
+.light-cursor__dot {
   position: absolute;
-  inset: 0;
-  mask-size: contain;
-  mask-position: bottom center;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  -webkit-mask-position: bottom center;
-  -webkit-mask-repeat: no-repeat;
-  background:
-    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, color-mix(in srgb, var(--scanline) calc(var(--photo-scan, 0.04) * 100%), transparent) 2px, color-mix(in srgb, var(--scanline) calc(var(--photo-scan, 0.04) * 100%), transparent) 3px),
-    radial-gradient(ellipse 75% 70% at 50% 42%, transparent 55%, color-mix(in srgb, var(--scanline) calc(var(--photo-vignette, 0.2) * 100%), transparent) 130%);
-}
-@media (prefers-reduced-motion: reduce) {
-  .portrait-slot {
-    transition: none;
-  }
-}
-
-/* Side blocks (fojcik style): left = identity, right = justified dot-matrix description. */
-.hero-side {
-  font-size: var(--blk);
-}
-@media (min-width: 1024px) {
-  .hero-side {
-    position: absolute;
-    top: var(--block-center, 50%);
-    translate: 0 -50%;
-    z-index: 30;
-    width: min(26rem, 27cqw);
-  }
-  .hero-side[data-side="left"] {
-    left: var(--edge-x);
-  }
-  .hero-side[data-side="right"] {
-    right: var(--edge-x);
-  }
-}
-.hero-meta {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05em;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.hero-role {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1rem, 1.75cqw, 1.8rem);
-  line-height: 1.1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-shadow:
-    0 0 0.06em var(--glow),
-    0 0 0.3em var(--glow-soft);
-}
-.hero-copy {
-  font-size: 1.1em;
-  line-height: 1.55;
-  color: var(--muted);
-}
-.hero-description {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.15em;
-  line-height: 1.45;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-align: justify;
-  text-align-last: justify;
-  max-width: 26ch;
-  margin-inline: auto;
-  color: var(--foreground);
-}
-@media (min-width: 1024px) {
-  .hero-description {
-    margin-inline: 0 0;
-    margin-left: auto;
-  }
-}
-
-/* Retro bracket button: [ LABEL ]. */
-.retro-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55em;
-  padding: 0.6em 0.9em;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--foreground) 6%, transparent);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.05em;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--foreground);
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
   transition:
-    background-color 0.15s linear,
-    color 0.15s linear,
-    border-color 0.15s linear;
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
-.retro-btn::before,
-.retro-btn::after {
-  color: var(--emphasis);
-  transition: color 0.15s linear;
+.light-cursor[data-mode="light"] .light-cursor__dot {
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 0 16px 5px color-mix(in srgb, var(--color-accent) 75%, transparent),
+    0 0 44px 14px color-mix(in srgb, var(--color-accent) 35%, transparent);
 }
-.retro-btn::before {
-  content: "[";
+.light-cursor[data-mode="ring"] .light-cursor__dot {
+  transform: scale(1.2);
+  border-color: color-mix(in srgb, var(--foreground) 55%, transparent);
 }
-.retro-btn::after {
-  content: "]";
+.light-cursor[data-mode="hover"] .light-cursor__dot {
+  transform: scale(2.6);
+  border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  background: color-mix(in srgb, var(--foreground) 12%, transparent);
 }
-.retro-btn[data-primary="true"] {
-  border-color: var(--foreground);
+.light-cursor[data-pressed="true"] .light-cursor__dot {
+  transform: scale(0.8);
 }
-.retro-btn:hover,
-.retro-btn:focus-visible {
-  background: var(--foreground);
-  color: var(--background);
+.light-cursor__label {
+  position: absolute;
+  left: 14px;
+  top: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
-.retro-btn:hover::before,
-.retro-btn:hover::after,
-.retro-btn:focus-visible::before,
-.retro-btn:focus-visible::after {
-  color: inherit;
+.light-cursor[data-mode="light"] .light-cursor__label {
+  opacity: 0.85;
+  transform: none;
 }
 
 /* Status / navbar dot. */
@@ -454,13 +412,6 @@ body {
   .retro-overlay[data-flicker="true"] { animation: none; }
 }
 
-/* Stacked layout (below lg): the role is a touch larger than the lg container-based size. */
-@media (max-width: 1023px) {
-  .hero-role {
-    font-size: clamp(1.25rem, 6cqw, 1.8rem);
-  }
-}
-
 /*
  * Text drawn straight over the WebGL journey. Colors follow what is behind: light text over the
  * dark backdrops, near-black over the bright white studio (StudioEnvironment sets
@@ -476,6 +427,11 @@ html[data-backdrop="bone"] {
   --ov-fg: #0a0d14;
   --ov-muted: #3f4856;
   --ov-halo: rgba(255, 255, 255, 0.7);
+}
+html[data-backdrop="signal"] {
+  --ov-fg: #140a05;
+  --ov-muted: #4a1f0b;
+  --ov-halo: rgba(255, 214, 180, 0.65);
 }
 html[data-environment="studio"] {
   --ov-fg: #111111;

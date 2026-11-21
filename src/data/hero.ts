@@ -3,7 +3,10 @@ import { projectsSectionId } from "@/data/projects";
 
 // PLACEHOLDER content: fill in name, city, time zone, year and portrait.
 export const hero: HeroData = {
+  greeting: "Hola, soy",
   displayName: "FABIÁN", // PLACEHOLDER: confirm spelling
+  role: "Ingeniero de Software full stack & AI engineering",
+  lightLabel: "Luz",
   roleLines: ["Ingeniero de Software", "Full stack & AI"],
   metaLabel: "// PORTFOLIO",
   copyrightYear: 2026,
@@ -18,6 +21,18 @@ export const hero: HeroData = {
     alt: "Fabián",
     width: 1145,
     height: 1374,
+  },
+  portraitShadow: {
+    baseX: -34,
+    baseY: -14,
+    travelX: 70,
+    travelY: 40,
+    maxOffset: 90,
+    blurMin: 6,
+    blurMax: 14,
+    scale: 1.04,
+    skewBase: 2,
+    skewPer100: 3,
   },
   studio: {
     portraitHeight: 78,

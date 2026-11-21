@@ -7,14 +7,14 @@ import { usePinnedLayout } from "@/hooks/usePinnedLayout";
 const FADE_FROM = 0.02;
 const FADE_TO = 0.32;
 
-/** Writes the fade state to the stage element (visibility, pointer events, live flag). */
+/** Writes the fade state to the stage element (visibility, pointer events, light-zone flag). */
 function writeFade(el: HTMLElement, opacity: number) {
   const hidden = opacity < 0.01;
   el.style.opacity = opacity >= 1 ? "" : String(opacity);
   el.style.visibility = hidden ? "hidden" : "";
   el.style.pointerEvents = opacity < 0.3 ? "none" : "";
-  if (hidden) delete el.dataset.heroLive;
-  else el.dataset.heroLive = "true";
+  if (hidden) delete el.dataset.lightZone;
+  else el.dataset.lightZone = "true";
 }
 
 /**

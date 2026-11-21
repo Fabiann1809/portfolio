@@ -1,25 +1,29 @@
-import { hero } from "@/data/hero";
 import { HeroStage } from "@/components/hero/HeroStage";
-import { HeroScene } from "@/components/hero/HeroScene";
-import { PortraitSlot } from "@/components/hero/PortraitSlot";
+import { StudioBackdrop } from "@/components/hero/StudioBackdrop";
+import { GiantName } from "@/components/hero/GiantName";
+import { Portrait } from "@/components/hero/Portrait";
 import { HeroIntro } from "@/components/hero/HeroIntro";
-import { HeroAside } from "@/components/hero/HeroAside";
+import { HeroStatus } from "@/components/hero/HeroStatus";
+import { HeroHint } from "@/components/hero/HeroHint";
+import { BackdropPicker } from "@/components/theme/BackdropPicker";
 
 /**
- * Chapter 1: the portrait over a barrel-distorted wireframe wall, flanked by two text blocks.
- * The name is only an sr-only heading here: the giant lettering and the pixel mosaic appear on
- * the curved screen the hero shrinks into (see lib/heroTexture.ts). In the journey layout the
- * stage is fixed and fades into that screen (see useHeroFade); the section reserves the scroll space.
+ * Chapter 1: a photo-studio scene. In the journey layout the stage is fixed and fades into
+ * the curved screen (see useHeroFade); the section only reserves the scroll space.
  */
 export function Hero() {
   return (
     <section id="hero" className="relative journey:h-svh">
       <HeroStage>
-        <h1 className="sr-only">{hero.displayName}</h1>
-        <HeroScene />
-        <PortraitSlot />
+        <StudioBackdrop />
+        <GiantName />
+        <Portrait />
         <HeroIntro />
-        <HeroAside />
+        <HeroStatus />
+        <HeroHint />
+        <div className="relative z-30 flex justify-center pt-6 md:absolute md:inset-x-0 md:bottom-6 md:pt-0">
+          <BackdropPicker />
+        </div>
       </HeroStage>
     </section>
   );

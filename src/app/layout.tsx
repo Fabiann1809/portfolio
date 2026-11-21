@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Doto, Geist_Mono } from "next/font/google";
+import { Doto, Geist, Geist_Mono } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { LoaderProvider } from "@/components/loader/LoaderProvider";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/loader/Preloader";
+import { LightCursor } from "@/components/cursor/LightCursor";
 import { RetroOverlay } from "@/components/layout/RetroOverlay";
 import { themeInitScript } from "@/lib/themeScript";
 
@@ -13,6 +14,11 @@ const doto = Doto({
   variable: "--font-doto",
   subsets: ["latin", "latin-ext"],
   weight: "variable",
+});
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
@@ -29,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${doto.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${doto.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -41,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Preloader />
             {children}
             <RetroOverlay />
+            <LightCursor />
           </SmoothScroll>
         </LoaderProvider>
       </body>

@@ -6,7 +6,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { Reveal } from "@/components/loader/Reveal";
 import { HamburgerIcon } from "@/components/ui/HamburgerIcon";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { BackdropPicker } from "@/components/theme/BackdropPicker";
 import { MobileMenu } from "./MobileMenu";
 
 const ids = navigation.map((item) => item.id);
@@ -77,7 +77,7 @@ export function Navbar({ homeHref }: NavbarProps) {
             </ul>
           </nav>
           <div className="hidden md:block">
-            <ThemeToggle />
+            <BackdropPicker variant="compact" />
           </div>
           <button
             ref={toggleRef}

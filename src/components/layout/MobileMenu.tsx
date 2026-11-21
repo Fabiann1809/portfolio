@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { menuLabels, navigation } from "@/data/navigation";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { BackdropPicker } from "@/components/theme/BackdropPicker";
 
 interface MobileMenuProps {
   open: boolean;
@@ -83,7 +83,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
           </li>
         ))}
       </ul>
-      <ThemeToggle withLabels className="self-start" />
+      <BackdropPicker variant="full" className="self-start" />
       </div>
     </nav>,
     document.body,

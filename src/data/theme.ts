@@ -1,14 +1,17 @@
 import type { ThemeData } from "@/types";
 
-// PLACEHOLDER Spanish UI labels. "ink" is the dark mode, "bone" the light one (see app/globals.css).
+// Swatches mirror the [data-backdrop] tokens in app/globals.css. PLACEHOLDER Spanish UI labels.
+// ink = dark (Tinta), bone = light (Hueso), signal = orange (Senal, light-style tokens).
 export const theme: ThemeData = {
   storageKey: "portfolio-backdrop",
   options: [
-    { id: "bone", label: "Modo claro" },
-    { id: "ink", label: "Modo oscuro" },
+    { id: "ink", label: "Tinta", swatch: "#0b0b0c" },
+    { id: "bone", label: "Hueso", swatch: "#ece7dd" },
+    { id: "signal", label: "Se\u00f1al", swatch: "#ff5a1f" },
   ],
   defaultForDark: "ink",
   defaultForLight: "bone",
-  migrate: { signal: "ink" },
-  switchLabel: "Tema del sitio",
+  pickerLabel: "Fondo del sitio",
+  pickerCaption: "Fondo",
+  hint: "Mueve la luz \u00b7 clic para cambiar el fondo",
 };

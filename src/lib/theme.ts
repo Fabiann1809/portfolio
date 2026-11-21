@@ -22,6 +22,11 @@ export function applyBackdrop(id: BackdropId) {
   }
 }
 
+export function cycleBackdrop() {
+  const next = ids[(ids.indexOf(readBackdrop()) + 1) % ids.length];
+  applyBackdrop(next);
+}
+
 /** Calls `onChange` whenever `data-backdrop` changes (any source). */
 export function subscribeBackdrop(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
