@@ -76,7 +76,7 @@ export function ProjectsPinned() {
       style={{ height: projects.length * 100 + "vh" }}
     >
       <div ref={hudRef} className="overlay-text sticky top-0 h-screen overflow-hidden px-[var(--edge-x)]">
-        <div className="absolute top-1/2 left-[var(--edge-x)] max-w-[18rem] -translate-y-1/2">
+        <div className="side-column absolute top-1/2 left-[var(--edge-x)] -translate-y-1/2">
           <h2 className="side-title mb-6">
             {projectsSideTitle.split(" ").map((word) => (
               <span key={word} className="block">
@@ -85,14 +85,14 @@ export function ProjectsPinned() {
             ))}
           </h2>
           <ProjectIndex projects={projects} onSelect={handleSelect} />
-        </div>
-        <div data-view-all className="absolute bottom-12 left-[var(--edge-x)]" style={{ opacity: 0 }}>
-          <ViewAllLink />
-        </div>
-        <div className="absolute right-[var(--edge-x)] bottom-12 h-64 w-full max-w-sm">
-          {projects.map((project) => (
-            <ProjectInfo key={project.id} project={project} />
-          ))}
+          <div className="side-column__info mt-7 grid">
+            {projects.map((project) => (
+              <ProjectInfo key={project.id} project={project} />
+            ))}
+          </div>
+          <div data-view-all className="mt-5" style={{ opacity: 0 }}>
+            <ViewAllLink />
+          </div>
         </div>
       </div>
     </section>

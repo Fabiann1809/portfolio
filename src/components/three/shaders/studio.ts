@@ -1,6 +1,6 @@
 /**
  * "White studio" backdrop shown while screens are shrunk: a bright cyclorama wall with a soft
- * gray falloff, a horizon where a glossy floor begins, and faint monospace code drifting across
+ * gray falloff, a horizon where a floor begins, and faint monospace code drifting across
  * floor (in perspective) and wall. Drawn as one full-viewport quad.
  */
 export const studioVertexShader = /* glsl */ `
@@ -52,12 +52,8 @@ export const studioFragmentShader = /* glsl */ `
     float floorMask = 1.0 - smoothstep(h - 0.02, h + 0.02, y);
     float dy = max(h - y, 0.0);
     vec3 floorCol = mix(uFloorFar, uFloorNear, smoothstep(0.0, h, dy));
-    // Glossy sheen: the bright wall reflected near the horizon, strongest in the middle.
-    floorCol += vec3(0.06) * exp(-r * r * 3.0) * (1.0 - smoothstep(0.0, 0.22, dy));
-    float hz = (y - h) * 70.0;
-    float horizon = exp(-hz * hz) * 0.05;
 
-    vec3 col = mix(wall, floorCol, floorMask) + horizon;
+    vec3 col = mix(wall, floorCol, floorMask);
 
     // Code text on the floor (perspective) and, much fainter, on the wall.
     float depth = 1.0 / (dy + 0.055);

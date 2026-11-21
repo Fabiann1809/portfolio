@@ -6,9 +6,6 @@ import type { EnvironmentConfig } from "@/types";
  */
 export const environment: EnvironmentConfig = {
   horizon: 0.4,
-  floorY: -0.38,
-  reflection: { opacity: 0.3, length: 0.42 },
-  shadow: { opacity: 0.38, width: 0.96, height: 0.05 },
   text: {
     lines: [
       "const journey = createJourney({ chapters, smooth: 0.34 });",

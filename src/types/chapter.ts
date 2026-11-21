@@ -4,10 +4,13 @@ import type { BackdropId } from "./theme";
 export type ChapterLayout = "backdrop" | "stream";
 
 /**
- * "stream": the previous screen exits diagonally while the next one enters.
- * "expand": the current screen itself grows to fill the viewport and becomes the next backdrop.
+ * How the journey moves from the previous chapter into this one.
+ * "conveyor": frameless bent panels ride one diagonal conveyor (bottom-right to top-left).
+ * "conveyor-fill": same conveyor, but the entering panel rises to the centre, then scales up and flattens to fill the viewport.
+ * "vertical-pan": full-bleed to full-bleed; a continuous vertical camera move with a glitch seam and a slight roll.
+ * "fly-in": the entering scene flies in from depth as a small panel and grows to fill the viewport.
  */
-export type TransitionMode = "stream" | "expand";
+export type TransitionMode = "conveyor" | "conveyor-fill" | "vertical-pan" | "fly-in";
 
 /** Transition zone placed BEFORE a chapter, between it and the previous one. */
 export interface ChapterTransition {
@@ -54,45 +57,77 @@ export interface JourneyConfig {
     position: number;
     shape: number;
     smear: number;
+    /** Fast follow-up used by transitions that must keep two screens glued together (pan, fly-in). */
+    transition: number;
   };
   phases: {
+    /** A full-bleed screen bends into a panel (conveyor entry). */
     shrink: PhaseRange;
+    /** Conveyor movement across a transition zone. */
     stream: PhaseRange;
+    /** "conveyor-fill": the entering panel scales up and flattens. */
     expand: PhaseRange;
-    /** Movement between two screens of the same stream chapter. */
+    /** Conveyor movement between two screens of the same stream chapter. */
     streamInner: PhaseRange;
-    /** "expand" mode: the current screen grows. */
-    expandSelf: PhaseRange;
-    /** "expand" mode: the next backdrop fades in beneath. */
-    expandNextIn: PhaseRange;
-    /** "expand" mode: the grown screen fades out. */
-    expandSelfOut: PhaseRange;
+    /** "vertical-pan" progress. */
+    pan: PhaseRange;
+    /** "fly-in" progress. */
+    flyIn: PhaseRange;
   };
   stream: {
-    /** Offset of the neighbouring screen, as a fraction of the viewport. */
-    offsetX: number;
-    offsetY: number;
+    /** Direction of the conveyor, in degrees from vertical (bottom-right to top-left). */
+    pathAngle: number;
+    /** Distance between neighbours as a share of the touching distance (below 1: they overlap slightly). */
+    spacing: number;
+    /** Panel size multiplier. */
+    scale: number;
+    /** Rightward shift of the whole stream, as a fraction of the viewport width (room for the left text column). */
+    shiftX: number;
+    /** Same as shiftX for viewports narrower than `narrowPx` (the column is a larger share of the width). */
+    shiftXNarrow: number;
+    narrowPx: number;
     /** World units pushed back per unit of distance from the centre. */
     depth: number;
     /** Scale lost per unit of distance from the centre. */
     scaleFalloff: number;
-    /** Radians of rotation per unit of distance (screens face the centre). */
+    /** Radians of rotation per unit of distance (panels face the centre). */
     tiltX: number;
     tiltY: number;
     tiltZ: number;
+    /** Bend of a panel at rest: share of the panel width pulled back at the edges (cylinder x / y, plus corner curl). */
+    bend: { x: number; y: number; corner: number };
+    /** Deterministic per-panel variation (radians for angles, share for bend). */
+    variation: { yaw: number; pitch: number; roll: number; bend: number };
   };
   screen: {
     widthRatio: number;
     maxHeightRatio: number;
     aspect: number;
-    /** Barrel curvature at rest. */
-    curve: number;
     /** Filled screens overscan the viewport by this factor. */
     overscan: number;
-    /** Per-screen deterministic pose variation at rest (radians). */
-    tiltVariance: { y: number; z: number };
-    /** Bezel thickness as a fraction of the screen height. */
-    bezel: number;
+  };
+  transitions: {
+    pan: {
+      /** Peak roll (radians) of the camera in the middle of the pan. */
+      roll: number;
+      /** Extra zoom at the middle of the pan (keeps the rotated screens covering the viewport). */
+      zoom: number;
+      /** Share of a screen height the two screens overlap at the seam. */
+      overlap: number;
+    };
+    flyIn: {
+      /** Scale of the entering panel at the start. */
+      startScale: number;
+      /** Starting yaw / roll (radians) of the entering panel. */
+      yaw: number;
+      roll: number;
+      /** World units the entering panel starts behind the plane. */
+      depth: number;
+      /** Scale lost by the leaving scene, its roll (radians) and the share it fades to the background. */
+      outZoom: number;
+      outRoll: number;
+      outDim: number;
+    };
   };
   fx: {
     /** Screens per second of stream speed that maps to a full smear. */
@@ -107,8 +142,9 @@ export interface JourneyConfig {
     drift: number;
     /** Texture blur (mip bias) applied to filled procedural / image backdrops behind text. */
     blurFilled: number;
-    /** Reflection / glow strengths. */
-    glow: number;
+    /** Edge tearing: base and per unit of scroll speed (share of the panel width). */
+    tear: number;
+    tearGain: number;
   };
   lenis: {
     lerp: number;
@@ -131,7 +167,7 @@ export interface ProceduralScene {
   speed?: number;
 }
 
-/** Look of the "white studio" shown behind the screens during transitions, per backdrop theme. */
+/** Look of the "white studio" shown behind the panels during transitions, per backdrop theme. */
 export interface StudioPalette {
   /** Wall color at the bright centre. */
   center: string;
@@ -152,10 +188,6 @@ export interface StudioPalette {
 export interface EnvironmentConfig {
   /** Horizon position, 0 = bottom of the viewport, 1 = top. */
   horizon: number;
-  /** World Y of the floor plane that reflects / receives shadows, as a fraction of the viewport height from centre. */
-  floorY: number;
-  reflection: { opacity: number; length: number };
-  shadow: { opacity: number; width: number; height: number };
   /** Drifting code text on the floor and walls. */
   text: {
     lines: string[];

@@ -1,32 +1,36 @@
 import { projectLabels } from "@/data/projects";
-import { LinkButton } from "@/components/ui/Button";
 import type { Project } from "@/types";
 
-/** Text layer for one project. Opacity/transform/inert are driven every frame by ProjectsPinned. */
+/**
+ * Text layer for one project, stacked in one grid cell with its siblings (left column, under the
+ * index). Opacity/transform/inert are driven every frame by ProjectsPinned.
+ */
 export function ProjectInfo({ project }: { project: Project }) {
   const { links } = project;
   return (
-    <div data-project-info className="absolute right-0 bottom-0 w-full" style={{ opacity: 0 }}>
-      <h3 className="font-display text-3xl font-extrabold tracking-[0.04em] uppercase">{project.title}</h3>
-      {project.collaborative && (
-        <span className="label mt-1 block text-xs opacity-70">
-          {projectLabels.collaborative}
-        </span>
-      )}
-      <p className="mt-3 text-sm">{project.description}</p>
-      <ul className="mt-3 flex flex-wrap gap-2 text-xs">
+    <div data-project-info className="project-info col-start-1 row-start-1" style={{ opacity: 0 }}>
+      <h3 className="project-info__title">{project.title}</h3>
+      {project.collaborative && <span className="project-info__meta">{projectLabels.collaborative}</span>}
+      <p className="project-info__desc">{project.description}</p>
+      <ul className="project-info__chips">
         {project.technologies.map((tech) => (
-          <li key={tech} className="rounded border border-current/30 px-2 py-0.5">
-            {tech}
-          </li>
+          <li key={tech}>{tech}</li>
         ))}
       </ul>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <LinkButton href={links.github} target="_blank" rel="noreferrer">{projectLabels.github}</LinkButton>
+      <div className="project-info__actions">
+        <a className="bracket-btn" href={links.github} target="_blank" rel="noreferrer">
+          [ {projectLabels.github} ]
+        </a>
         {links.vercel && (
-          <LinkButton href={links.vercel} target="_blank" rel="noreferrer">{projectLabels.demo}</LinkButton>
+          <a className="bracket-btn" href={links.vercel} target="_blank" rel="noreferrer">
+            [ {projectLabels.demo} ]
+          </a>
         )}
-        {links.download && <LinkButton href={links.download} download>{projectLabels.download}</LinkButton>}
+        {links.download && (
+          <a className="bracket-btn" href={links.download} download>
+            [ {projectLabels.download} ]
+          </a>
+        )}
       </div>
     </div>
   );

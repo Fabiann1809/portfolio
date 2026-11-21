@@ -8,7 +8,6 @@ import { damp } from "maath/easing";
 import { CanvasTexture, Color, DoubleSide, MathUtils, ShaderMaterial, SRGBColorSpace, TextureLoader, VideoTexture } from "three";
 import type { Mesh, Texture } from "three";
 import { journeyConfig } from "@/data/chapters";
-import { environment } from "@/data/environment";
 import { hero } from "@/data/hero";
 import { drawHeroTexture, whenPortraitReady } from "@/lib/heroTexture";
 import type { ThemeColors } from "@/types";
@@ -16,7 +15,6 @@ import { getJourneyState, stepJourney } from "@/lib/journey";
 import { live, poses, screenInView } from "@/lib/journeyModel";
 import type { ScreenDef } from "@/lib/journeyModel";
 import { ProceduralVisual } from "./environment/ProceduralVisual";
-import { getShadowTexture } from "./environment/shadowTexture";
 import { screenFragmentShader, screenVertexShader } from "./shaders/screen";
 
 interface JourneyScreenProps {
@@ -26,20 +24,20 @@ interface JourneyScreenProps {
 }
 
 const { stream, screen, fx, smooth } = journeyConfig;
-const { reflection, shadow } = environment;
+const PATH = (stream.pathAngle * Math.PI) / 180;
+const PATH_SIN = Math.sin(PATH);
+const PATH_COS = Math.cos(PATH);
 const VIDEO_PATTERN = /\.(mp4|webm|ogv|mov)(\?.*)?$/i;
 
 /**
- * One curved CRT screen of the journey. Its pose (stream position, fill, opacity) comes from
- * the shared journey model; every value is damped per frame before it reaches the mesh.
- * Its picture is, in priority order: an image / video URL (`def.visual`), a procedural 3D
- * scene rendered to a texture (`def.scene`), a generated hero texture or a generated gradient.
- * Over the studio environment it also draws a mirrored floor reflection and a contact shadow.
+ * One frameless warped panel of the journey. Its pose (conveyor position, fill, opacity, pan /
+ * fly-in transform) comes from the shared journey model; every value is damped per frame
+ * before it reaches the mesh. Its picture is, in priority order: an image / video URL
+ * (`def.visual`), a procedural 3D scene rendered to a texture (`def.scene`), a generated
+ * hero texture or a generated gradient.
  */
 export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
   const mesh = useRef<Mesh>(null);
-  const reflectMesh = useRef<Mesh>(null);
-  const shadowMesh = useRef<Mesh>(null);
   const video = useRef<HTMLVideoElement | null>(null);
   const videoPlaying = useRef(false);
   const texture = useRef<Texture | null>(null);
@@ -48,6 +46,7 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
 
   const seed = (index * 0.37 + 0.11) % 1;
   const seedB = (seed * 7.31 + 0.3) % 1;
+  const seedC = (seedB * 5.77 + 0.17) % 1;
   const procedural = !def.visual && !def.generated && def.scene ? def.scene : null;
   const blurred = !def.generated;
   const uniforms = useMemo(
@@ -56,7 +55,9 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       uHasTexture: { value: 0 },
       uTexAspect: { value: screen.aspect },
       uPlaneAspect: { value: screen.aspect },
-      uCurve: { value: 0 },
+      uBendX: { value: 0 },
+      uBendY: { value: 0 },
+      uCornerCurl: { value: 0 },
       uSize: { value: 1 },
       uSmear: { value: 0 },
       uRgb: { value: fx.rgbBase },
@@ -65,13 +66,10 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       uFill: { value: 0 },
       uOpacity: { value: 0 },
       uTime: { value: 0 },
-      uBezel: { value: 1 },
-      uBezelSize: { value: screen.bezel },
       uBlur: { value: 0 },
-      uGlow: { value: fx.glow },
-      uReflect: { value: 0 },
-      uFloorY: { value: 0 },
-      uReflectLen: { value: 1 },
+      uTear: { value: fx.tear },
+      uSeam: { value: 0 },
+      uGlitch: { value: 0 },
       uDim: { value: 0 },
       uSeed: { value: seed },
       uDrift: { value: 0 },
@@ -83,33 +81,20 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     [seed],
   );
 
-  // The floor reflection shares every uniform of the screen except its own opacity and flag.
-  const reflectUniforms = useMemo(() => ({ ...uniforms, uOpacity: { value: 0 }, uReflect: { value: 1 } }), [uniforms]);
-
-  // Materials are built here (not by JSX) so the uniform objects above are the live ones.
-  const mainMaterial = useMemo(
-    () => new ShaderMaterial({ vertexShader: screenVertexShader, fragmentShader: screenFragmentShader, uniforms, transparent: true, depthWrite: false }),
-    [uniforms],
-  );
-  const reflectMaterial = useMemo(
+  // The material is built here (not by JSX) so the uniform objects above are the live ones.
+  const material = useMemo(
     () =>
       new ShaderMaterial({
         vertexShader: screenVertexShader,
         fragmentShader: screenFragmentShader,
-        uniforms: reflectUniforms,
+        uniforms,
         transparent: true,
         depthWrite: false,
         side: DoubleSide,
       }),
-    [reflectUniforms],
+    [uniforms],
   );
-  useEffect(
-    () => () => {
-      mainMaterial.dispose();
-      reflectMaterial.dispose();
-    },
-    [mainMaterial, reflectMaterial],
-  );
+  useEffect(() => () => material.dispose(), [material]);
 
   // Theme changes update the uniforms in place (no re-mount).
   useEffect(() => {
@@ -234,8 +219,6 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     if (!visible) {
       seen.current = false;
       live.cover[index] = 0;
-      if (reflectMesh.current) reflectMesh.current.visible = false;
-      if (shadowMesh.current) shadowMesh.current.visible = false;
       if (video.current && videoPlaying.current) {
         video.current.pause();
         videoPlaying.current = false;
@@ -251,24 +234,42 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
 
     const dt = Math.min(delta, journeyConfig.maxDelta);
     const vp = state.viewport;
+    const camZ = state.camera.position.z;
     const c = cur.current;
     const k = 1 - pose.fill;
     const dist = Math.min(Math.abs(pose.r), 2);
-    // Deterministic per-screen tilt: neighbours vary more than the one resting at the centre.
-    const variance = k * (0.35 + 0.65 * Math.min(1, dist));
+    // Deterministic per-panel variation: neighbours vary more than the one resting at the centre.
+    const variance = pose.lane * k * (0.35 + 0.65 * Math.min(1, dist));
+    const vary = stream.variation;
 
-    const restW = Math.min(vp.width * screen.widthRatio, vp.height * screen.maxHeightRatio * screen.aspect);
+    // Conveyor: panels sit along a diagonal, spaced so neighbours almost touch.
+    const shiftX = state.size.width < stream.narrowPx ? stream.shiftXNarrow : stream.shiftX;
+    const restW = Math.min(vp.width * screen.widthRatio, vp.height * screen.maxHeightRatio * screen.aspect) * stream.scale;
     const restH = restW / screen.aspect;
+    const fullW = vp.width * screen.overscan;
+    const fullH = vp.height * screen.overscan;
+    const reach = Math.min(restW / Math.max(PATH_SIN, 1e-3), restH / Math.max(PATH_COS, 1e-3)) * stream.spacing;
+    const dz = -dist * stream.depth * k;
+    // Positions grow with depth so the screen-space layout stays the designed one.
+    const persp = (camZ - dz) / camZ;
+    const laneX = (pose.r * reach * PATH_SIN * persp + pose.lane * shiftX * vp.width) * k;
+    const laneY = -pose.r * reach * PATH_COS * persp * k + pose.oy * fullH;
+    // Camera roll / zoom around the viewport centre (vertical pan, fly-in).
+    const cosR = Math.cos(pose.roll);
+    const sinR = Math.sin(pose.roll);
+    const px = laneX * pose.zoom;
+    const py = laneY * pose.zoom;
+
     const target = {
-      x: pose.r * stream.offsetX * vp.width * k,
-      y: -pose.r * stream.offsetY * vp.height * k,
-      z: -dist * stream.depth * k,
-      w: MathUtils.lerp(restW, vp.width * screen.overscan, pose.fill),
-      h: MathUtils.lerp(restH, vp.height * screen.overscan, pose.fill),
-      sc: 1 - stream.scaleFalloff * dist * k,
-      rx: -pose.r * stream.tiltX * k,
-      ry: -pose.r * stream.tiltY * k + (seedB - 0.5) * 2 * screen.tiltVariance.y * variance,
-      rz: pose.r * stream.tiltZ * k + (seed - 0.5) * 2 * screen.tiltVariance.z * variance,
+      x: px * cosR - py * sinR,
+      y: px * sinR + py * cosR,
+      z: dz - pose.depth,
+      w: MathUtils.lerp(restW, fullW, pose.fill),
+      h: MathUtils.lerp(restH, fullH, pose.fill),
+      sc: (1 - stream.scaleFalloff * dist * k) * pose.zoom,
+      rx: -pose.r * stream.tiltX * k + (seedC - 0.5) * 2 * vary.pitch * variance,
+      ry: -pose.r * stream.tiltY * k + (seedB - 0.5) * 2 * vary.yaw * variance + pose.yaw,
+      rz: pose.r * stream.tiltZ * k + (seed - 0.5) * 2 * vary.roll * variance + pose.roll,
       fill: pose.fill,
       opacity: pose.opacity,
     };
@@ -277,83 +278,56 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       Object.assign(c, target);
       seen.current = true;
     } else {
-      damp(c, "x", target.x, smooth.position, dt);
-      damp(c, "y", target.y, smooth.position, dt);
-      damp(c, "z", target.z, smooth.position, dt);
-      damp(c, "rx", target.rx, smooth.position, dt);
-      damp(c, "ry", target.ry, smooth.position, dt);
-      damp(c, "rz", target.rz, smooth.position, dt);
-      damp(c, "sc", target.sc, smooth.shape, dt);
-      damp(c, "w", target.w, smooth.shape, dt);
-      damp(c, "h", target.h, smooth.shape, dt);
-      damp(c, "fill", target.fill, smooth.shape, dt);
-      damp(c, "opacity", target.opacity, smooth.shape, dt);
+      const tp = pose.direct ? smooth.transition : smooth.position;
+      const ts = pose.direct ? smooth.transition : smooth.shape;
+      damp(c, "x", target.x, tp, dt);
+      damp(c, "y", target.y, tp, dt);
+      damp(c, "z", target.z, tp, dt);
+      damp(c, "rx", target.rx, tp, dt);
+      damp(c, "ry", target.ry, tp, dt);
+      damp(c, "rz", target.rz, tp, dt);
+      damp(c, "sc", target.sc, ts, dt);
+      damp(c, "w", target.w, ts, dt);
+      damp(c, "h", target.h, ts, dt);
+      damp(c, "fill", target.fill, ts, dt);
+      damp(c, "opacity", target.opacity, ts, dt);
     }
 
     m.position.set(c.x, c.y, c.z);
     m.rotation.set(c.rx, c.ry, c.rz);
     m.scale.set(c.w * c.sc, c.h * c.sc, 1);
-    m.renderOrder = pose.layer;
+    // Farther panels draw first; the entering fly-in screen draws on top.
+    m.renderOrder = pose.layer * 100 + 50 - Math.round(dist * 10);
 
     const journey = getJourneyState();
     const un = uniforms;
+    // Bend of the panel: 0 once it fills the viewport, varied per panel.
+    const bendK = Math.pow(Math.max(0, 1 - c.fill), 1.5);
+    const bendVar = 1 + (seedC - 0.5) * 2 * vary.bend;
     un.uTime.value = state.clock.elapsedTime;
     un.uSize.value = c.w * c.sc;
     un.uPlaneAspect.value = c.w / c.h;
     un.uFill.value = c.fill;
     un.uOpacity.value = c.opacity;
-    un.uCurve.value = screen.curve * Math.pow(Math.max(0, 1 - c.fill), 1.5);
-    un.uBezel.value = 1 - MathUtils.smoothstep(c.fill, 0.35, 0.95);
+    un.uBendX.value = stream.bend.x * bendK * bendVar;
+    un.uBendY.value = stream.bend.y * bendK * (2 - bendVar);
+    un.uCornerCurl.value = stream.bend.corner * bendK * bendVar;
     live.cover[index] = MathUtils.smoothstep(c.fill, 0.92, 1) * c.opacity;
-    un.uDim.value = def.generated ? 0 : fx.dimFilled * c.fill;
+    const baseDim = def.generated ? 0 : fx.dimFilled * c.fill;
+    un.uDim.value = Math.min(0.9, baseDim + pose.dim);
     un.uBlur.value = blurred ? fx.blurFilled * c.fill : 0;
     un.uSmear.value = journey.smear;
+    un.uTear.value = fx.tear + journey.smear * fx.tearGain;
+    un.uSeam.value = pose.seam;
+    un.uGlitch.value = pose.glitch;
     un.uRgb.value = fx.rgbBase + journey.smear * fx.rgbGain;
     un.uDrift.value = journey.drift + state.clock.elapsedTime * 0.05;
-
-    // Floor reflection and contact shadow (only meaningful over the studio).
-    const floorY = environment.floorY * vp.height;
-    const studio = live.studio;
-    const sh = c.h * c.sc;
-    const reflect = reflectMesh.current;
-    if (reflect) {
-      const show = studio > 0.01 && c.fill < 0.9 && c.y + sh / 2 > floorY;
-      reflect.visible = show;
-      if (show) {
-        reflect.position.set(c.x, 2 * floorY - c.y, c.z);
-        reflect.rotation.set(-c.rx, c.ry, -c.rz);
-        reflect.scale.set(c.w * c.sc, -sh, 1);
-        reflect.renderOrder = -3;
-        reflectUniforms.uFloorY.value = floorY;
-        reflectUniforms.uReflectLen.value = vp.height * reflection.length;
-        reflectUniforms.uOpacity.value = c.opacity * reflection.opacity * studio * (1 - c.fill);
-      }
-    }
-    const blob = shadowMesh.current;
-    if (blob) {
-      const gap = (c.y - sh / 2 - floorY) / vp.height;
-      const strength = MathUtils.smoothstep(gap, -0.1, 0) * (1 - MathUtils.smoothstep(gap, 0.12, 0.7)) * studio * (1 - c.fill) * c.opacity;
-      blob.visible = strength > 0.005;
-      if (blob.visible) {
-        blob.position.set(c.x, floorY, c.z);
-        blob.scale.set(c.w * c.sc * shadow.width, vp.height * shadow.height, 1);
-        blob.renderOrder = -2;
-        (blob.material as { opacity: number }).opacity = strength * shadow.opacity;
-      }
-    }
   });
 
   return (
     <>
-      <mesh ref={mesh} visible={false} material={mainMaterial}>
-        <planeGeometry args={[1, 1, 40, 40]} />
-      </mesh>
-      <mesh ref={reflectMesh} visible={false} material={reflectMaterial}>
-        <planeGeometry args={[1, 1, 24, 24]} />
-      </mesh>
-      <mesh ref={shadowMesh} visible={false} frustumCulled={false}>
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial map={getShadowTexture()} color="#000000" transparent depthWrite={false} depthTest={false} toneMapped={false} />
+      <mesh ref={mesh} visible={false} material={material} frustumCulled={false}>
+        <planeGeometry args={[1, 1, 64, 40]} />
       </mesh>
       {procedural && <ProceduralVisual index={index} spec={procedural} theme={theme} uniforms={uniforms} />}
     </>
