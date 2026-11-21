@@ -294,11 +294,11 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     m.position.set(
       TANGENT_X * radius * sinA + shiftX * vp.width * kk - TANGENT_X * rise,
       TANGENT_Y * radius * sinA - TANGENT_Y * rise,
-      radius * (Math.cos(angle) - 1),
+      radius * (1 - Math.cos(angle)) * stream.concaveDepth,
     );
-    // Same signed rotation about AXIS that places the point on the sphere (z * cos + tangent * sin), so the
-    // outward normal turns away from the camera on both sides, in opposite directions; straight at the centre.
-    sphereQuat.setFromAxisAngle(AXIS, angle * stream.tilt);
+    // Inside of the sphere (like the reference): off-centre panels come slightly closer and turn their
+    // outer edge towards the camera, in opposite directions on each side; straight at the centre.
+    sphereQuat.setFromAxisAngle(AXIS, -angle * stream.tilt);
     localEuler.set(
       (seedC - 0.5) * 2 * vary.pitch * variance,
       MathUtils.degToRad(stream.yaw) * k + (seedB - 0.5) * 2 * vary.yaw * variance,

@@ -67,6 +67,8 @@ export interface JourneyConfig {
     pathAngle: number;
     /** Tilt of a panel away from the front, as a share of its angle on the sphere. The entering panel is seen from below (top edge farther) and straightens at the centre; the leaving one tilts the same way going over the top. */
     tilt: number;
+    /** 0 = convex outside, >0 = off-centre panels come closer (inside of the sphere). */
+    concaveDepth: number;
     /** Sphere radius, as a multiple of the viewport height at the screen plane. */
     radius: number;
     /** Angular distance between neighbours as a share of the touching distance (below 1: they overlap slightly). */
