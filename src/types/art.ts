@@ -15,5 +15,12 @@ export interface ArtData {
   text: string;
   techniqueLabel: string;
   yearLabel: string;
+  /** Accessible labels of the artwork wheel. */
+  galleryAria: string;
+  wheelAria: string;
+  previous: string;
+  next: string;
+  /** Prefix of a thumbnail accessible name, followed by the artwork title. */
+  select: string;
   artworks: Artwork[];
 }

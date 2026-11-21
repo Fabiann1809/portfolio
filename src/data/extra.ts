@@ -3,12 +3,10 @@ import type { ExtraData } from "@/types";
 // Technologies name items of data/stack.ts.
 export const extra: ExtraData = {
   label: "Perfil de habilidades",
+  codePrefix: "PWR",
+  activeLabel: "Activa",
+  scanLabel: "Escáner",
   technologiesLabel: "Tecnologías",
-  wheelAria: "Habilidades",
-  select: "Ver habilidad",
-  previous: "Habilidad anterior",
-  next: "Habilidad siguiente",
-  counterSeparator: "/",
   abilities: [
     {
       id: "full-stack",

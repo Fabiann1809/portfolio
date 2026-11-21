@@ -1,13 +1,12 @@
 import type { MenuLabels, NavItem, NavbarBrand } from "@/types";
 
-// Ids must match the section ids in components/sections (the "extra" power profile has no nav entry).
+// Ids must match the section ids in components/sections ("extra" and "art" have no nav entry: the previous item stays highlighted while scrolling through them).
 export const navigation: NavItem[] = [
   { id: "hero", label: "Inicio" },
   { id: "about", label: "Acerca de mí" },
   { id: "projects", label: "Proyectos" },
   { id: "testimonials", label: "Testimonios" },
   { id: "experience", label: "Experiencia" },
-  { id: "art", label: "Mi lado artístico" },
   { id: "contact", label: "Contacto" },
 ];
 
