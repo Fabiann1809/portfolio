@@ -15,9 +15,9 @@ export function Portrait() {
     <Reveal
       rise="lg"
       delay={260}
-      className="pointer-events-none relative z-10 mx-auto -mt-[6vw] h-[56svh] w-full max-w-md xl:absolute xl:inset-x-0 xl:bottom-0 xl:mt-0 xl:h-[74svh] xl:max-w-none"
+      className="pointer-events-none relative z-10 mx-auto -mt-[6vw] h-[56svh] w-full max-w-md xl:absolute xl:inset-x-0 xl:bottom-0 xl:mt-0 xl:h-[90svh] xl:max-w-none"
     >
-      <div className="relative mx-auto aspect-[1145/1374] h-full max-w-full">
+      <div className="relative mx-auto aspect-[1145/1374] h-full max-w-full xl:translate-x-[5vw]">
         {portrait.src && !failed && (
           // Cast shadow on the backdrop: the same cut-out as a blurred silhouette, offset behind it. The box is oversized (-10% top, -15% sides) so the mask and the blur are not
           // clipped; the fade 80%..100% of it matches the portrait's own 78%..100%.

@@ -6,7 +6,7 @@ export const hero: HeroData = {
   greeting: "Hola, soy",
   displayName: "FABIÁN", // PLACEHOLDER: confirm spelling
   role: "Ingeniero de Software full stack & AI engineering",
-  roleLines: ["Ingeniero de Software", "Full stack & AI"],
+  roleLines: ["Ingeniero de Software", "full stack & AI engineering"],
   metaLabel: "// PORTFOLIO",
   copyrightYear: 2026,
   tagline: "PLACEHOLDER: breve descripción de lo que haces y del tipo de proyectos que buscas.",

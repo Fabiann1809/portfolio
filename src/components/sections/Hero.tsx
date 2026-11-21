@@ -14,9 +14,9 @@ export function Hero() {
     <section id="hero" className="relative">
       <HeroStage>
         <StudioBackdrop />
+        <HeroIntro />
         <GiantName />
         <Portrait />
-        <HeroIntro />
         <HeroStatus />
         <div className="relative z-30 flex justify-center pt-8 xl:absolute xl:inset-x-0 xl:bottom-6 xl:pt-0">
           <BackdropPicker />
