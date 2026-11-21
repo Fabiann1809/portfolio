@@ -9,6 +9,8 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 interface MobileMenuProps {
   open: boolean;
   activeId: string;
+  /** Prepended to each section href (e.g. "/" on pages other than home). */
+  hrefPrefix?: string;
   onNavigate: (id: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
   onClose: () => void;
 }
@@ -17,7 +19,7 @@ interface MobileMenuProps {
  * Full-screen menu panel. Rendered in a portal because the navbar has transform/backdrop-filter,
  * which would make `fixed` relative to the header instead of the viewport.
  */
-export function MobileMenu({ open, activeId, onNavigate, onClose }: MobileMenuProps) {
+export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClose }: MobileMenuProps) {
   const lenis = useLenisInstance();
   const reduced = useReducedMotion();
   const panelRef = useRef<HTMLElement>(null);
@@ -64,7 +66,7 @@ export function MobileMenu({ open, activeId, onNavigate, onClose }: MobileMenuPr
         {navigation.map((item, index) => (
           <li key={item.id}>
             <a
-              href={"#" + item.id}
+              href={hrefPrefix + "#" + item.id}
               onClick={(event) => onNavigate(item.id, event)}
               aria-current={activeId === item.id ? "true" : undefined}
               data-menu-link

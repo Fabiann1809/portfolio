@@ -1,5 +1,5 @@
 import type { Chapter, JourneyConfig, StreamItem } from "@/types";
-import { projects, projectsSectionId } from "@/data/projects";
+import { featuredProjects, projectsSectionId } from "@/data/projects";
 
 /**
  * Ordered chapters of the site. Ids match the section ids and the navigation entries.
@@ -19,7 +19,7 @@ export const chapters: Chapter[] = [
 
 /** Screens of "stream" chapters, keyed by chapter id. */
 export const chapterStreams: Record<string, StreamItem[]> = {
-  [projectsSectionId]: projects.map((project) => ({ id: project.id, visual: project.image })),
+  [projectsSectionId]: featuredProjects.map((project) => ({ id: project.id, visual: project.image })),
 };
 
 /** Every timing / easing / look constant of the scroll journey lives here. */

@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { projects, projectsSectionId, projectsTitle } from "@/data/projects";
+import { featuredProjects as projects, projectsSectionId, projectsTitle } from "@/data/projects";
 import { getJourneyState, registerTrack } from "@/lib/journey";
 import { chapterScreens, clamp01 } from "@/lib/journeyModel";
 import { useJourneyFrame } from "@/hooks/useJourneyFrame";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { ProjectIndex } from "./ProjectIndex";
 import { ProjectInfo } from "./ProjectInfo";
+import { ViewAllLink } from "@/components/gallery/ViewAllLink";
 
 const { first, count } = chapterScreens(projectsSectionId);
 /** Distance (in screens) over which the HUD fades in/out around the projects stream. */
@@ -45,6 +46,13 @@ export function ProjectsPinned() {
       const on = String(i === active);
       if (item.dataset.active !== on) item.dataset.active = on;
     });
+    const viewAll = hud.querySelector<HTMLElement>("[data-view-all]");
+    if (viewAll) {
+      const o = (count > 1 ? clamp01(g - first - (count - 2)) : 1) * hudOpacity;
+      viewAll.style.opacity = String(o);
+      const hidden = o < 0.5;
+      if (viewAll.inert !== hidden) viewAll.inert = hidden;
+    }
     hud.querySelectorAll<HTMLElement>("[data-project-info]").forEach((info, i) => {
       const o = clamp01(1 - Math.abs(g - (first + i)) / INFO_FADE) * hudOpacity;
       info.style.opacity = String(o);
@@ -73,6 +81,9 @@ export function ProjectsPinned() {
         </p>
         <div className="absolute top-1/2 left-8 -translate-y-1/2">
           <ProjectIndex projects={projects} onSelect={handleSelect} />
+        </div>
+        <div data-view-all className="absolute bottom-12 left-8" style={{ opacity: 0 }}>
+          <ViewAllLink />
         </div>
         <div className="absolute right-8 bottom-12 h-64 w-full max-w-sm">
           {projects.map((project) => (

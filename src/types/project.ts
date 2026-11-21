@@ -11,8 +11,11 @@ export interface Project {
   /** Frameworks and libraries only, never bare languages. */
   technologies: string[];
   collaborative: boolean;
+  /** Featured projects appear in the home journey; the gallery shows every project. */
+  featured: boolean;
   links: ProjectLinks;
-  image: string;
+  /** Optional image path. Without it a generated gradient placeholder is shown. */
+  image?: string;
 }
 
 export interface ProjectLabels {

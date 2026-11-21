@@ -13,23 +13,34 @@ export const projectLabels: ProjectLabels = {
   indexAriaLabel: "Ir al proyecto",
 };
 
+const make = (
+  n: number,
+  featured: boolean,
+  collaborative: boolean,
+  technologies: string[],
+): Project => ({
+  id: `project-${n}`,
+  title: `Proyecto de ejemplo ${n}`,
+  description: `PLACEHOLDER: descripción del proyecto ${n}.`,
+  technologies,
+  collaborative,
+  featured,
+  links: {
+    github: "https://github.com/",
+    ...(n % 2 === 1 ? { vercel: "https://vercel.com/" } : { download: `/downloads/project-${n}.zip` }),
+  },
+});
+
 export const projects: Project[] = [
-  {
-    id: "project-1",
-    title: "Proyecto de ejemplo 1",
-    description: "PLACEHOLDER: descripción del proyecto.",
-    technologies: ["Next.js", "Tailwind CSS"],
-    collaborative: false,
-    links: { github: "https://github.com/", vercel: "https://vercel.com/" },
-    image: "/images/project-1.png",
-  },
-  {
-    id: "project-2",
-    title: "Proyecto de ejemplo 2",
-    description: "PLACEHOLDER: descripción del proyecto colaborativo.",
-    technologies: ["React", "Express"],
-    collaborative: true,
-    links: { github: "https://github.com/", download: "/downloads/project-2.zip" },
-    image: "/images/project-2.png",
-  },
+  make(1, true, false, ["Next.js", "Tailwind CSS"]),
+  make(2, true, true, ["React", "Express"]),
+  make(3, false, false, ["Vue", "Pinia"]),
+  make(4, true, false, ["Next.js", "Prisma"]),
+  make(5, false, true, ["React", "Redux"]),
+  make(6, true, false, ["Astro", "Tailwind CSS"]),
+  make(7, false, false, ["SvelteKit"]),
+  make(8, false, true, ["NestJS", "React Query"]),
 ];
+
+/** Projects shown in the home journey. */
+export const featuredProjects: Project[] = projects.filter((project) => project.featured);
