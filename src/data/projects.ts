@@ -1,7 +1,17 @@
-import type { Project } from "@/types";
+import type { Project, ProjectLabels } from "@/types";
 
 // PLACEHOLDER content. Technologies: frameworks/libraries only.
 export const projectsTitle = "Proyectos";
+/** Must match the id of the Projects section (and the navigation entry). */
+export const projectsSectionId = "projects";
+
+export const projectLabels: ProjectLabels = {
+  collaborative: "Colaborativo",
+  github: "GitHub",
+  demo: "Demo",
+  download: "Descargar",
+  indexAriaLabel: "Ir al proyecto",
+};
 
 export const projects: Project[] = [
   {

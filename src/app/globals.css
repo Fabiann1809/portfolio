@@ -30,3 +30,39 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Scroll reveal: subtle fade + translate + blur, staggered for groups. */
+[data-reveal="item"],
+[data-reveal="group"] > * {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal="item"][data-shown="true"],
+[data-reveal="group"][data-shown="true"] > * {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+[data-reveal="group"] > :nth-child(2) { transition-delay: 90ms; }
+[data-reveal="group"] > :nth-child(3) { transition-delay: 180ms; }
+[data-reveal="group"] > :nth-child(4) { transition-delay: 270ms; }
+[data-reveal="group"] > :nth-child(5) { transition-delay: 360ms; }
+[data-reveal="group"] > :nth-child(6) { transition-delay: 450ms; }
+[data-reveal="group"] > :nth-child(n + 7) { transition-delay: 540ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal="item"],
+  [data-reveal="group"] > * {
+    transform: none;
+    filter: none;
+    transition: opacity 0.3s linear;
+    transition-delay: 0ms !important;
+  }
+}

@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { SceneLayer } from "@/components/three/SceneLayer";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
@@ -12,9 +12,10 @@ import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   return (
-    <SmoothScroll>
+    <>
+      <SceneLayer />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <About />
         <Projects />
@@ -24,7 +25,9 @@ export default function Home() {
         <Extra />
         <Contact />
       </main>
-      <Footer />
-    </SmoothScroll>
+      <div className="relative z-10">
+        <Footer />
+      </div>
+    </>
   );
 }

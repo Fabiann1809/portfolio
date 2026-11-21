@@ -1,18 +1,42 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Lenis from "lenis";
+import { connectScroll } from "@/lib/scrollStore";
 
-export function useLenis() {
+/**
+ * Creates the Lenis instance (null when the user prefers reduced motion, so native
+ * scroll is used) and wires it to the scroll store.
+ */
+export function useLenis(): Lenis | null {
+  const [lenis, setLenis] = useState<Lenis | null>(null);
+
   useEffect(() => {
-    const lenis = new Lenis();
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return connectScroll(null);
+    }
+
+    const instance = new Lenis({
+      lerp: 0.09,
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      syncTouch: true,
+      syncTouchLerp: 0.1,
+    });
+    const disconnect = connectScroll(instance);
     let frame = requestAnimationFrame(function raf(time) {
-      lenis.raf(time);
+      instance.raf(time);
       frame = requestAnimationFrame(raf);
     });
+    setLenis(instance);
+
     return () => {
       cancelAnimationFrame(frame);
-      lenis.destroy();
+      disconnect();
+      instance.destroy();
+      setLenis(null);
     };
   }, []);
+
+  return lenis;
 }

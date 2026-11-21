@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { loader } from "@/data/loader";
+import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { useLoader } from "./LoaderProvider";
 
 const { timings } = loader;
@@ -18,27 +19,37 @@ export function Preloader() {
   const dotRef = useRef<HTMLSpanElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const lenis = useLenisInstance();
+  const locked = phase !== "done";
 
+  // Freeze scrolling while the overlay is visible: stop Lenis, or swallow input without it.
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const leaveMs = prefersReduced ? timings.reducedExitMs : timings.exitMs;
-
+    if (!locked) return;
     const root = document.documentElement;
     const prevOverflow = root.style.overflow;
     root.style.overflow = "hidden";
-    // Lenis listens to wheel/touch on window: swallow them while the overlay is visible.
+    lenis?.stop();
     const block = (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
     };
     const opts = { capture: true, passive: false } as const;
-    window.addEventListener("wheel", block, opts);
-    window.addEventListener("touchmove", block, opts);
-    const unlock = () => {
+    if (!lenis) {
+      window.addEventListener("wheel", block, opts);
+      window.addEventListener("touchmove", block, opts);
+    }
+    return () => {
       root.style.overflow = prevOverflow;
+      lenis?.start();
       window.removeEventListener("wheel", block, opts);
       window.removeEventListener("touchmove", block, opts);
     };
+  }, [locked, lenis]);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const leaveMs = prefersReduced ? timings.reducedExitMs : timings.exitMs;
+
 
     const timers: number[] = [];
     const start = performance.now();
@@ -63,7 +74,6 @@ export function Preloader() {
           completeLoading();
           timers.push(
             window.setTimeout(() => {
-              unlock();
               setPhase("done");
             }, leaveMs),
           );
@@ -94,7 +104,6 @@ export function Preloader() {
     return () => {
       cancelAnimationFrame(frame);
       timers.forEach((id) => window.clearTimeout(id));
-      unlock();
     };
   }, [getProgress, completeLoading]);
 

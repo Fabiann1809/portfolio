@@ -1,4 +1,5 @@
 import { education, educationTitle } from "@/data/education";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Card } from "@/components/ui/Card";
 
@@ -7,7 +8,7 @@ export function Education() {
     <section id="education" className="px-4 py-24">
       <div className="mx-auto max-w-5xl">
         <SectionTitle>{educationTitle}</SectionTitle>
-        <div className="flex flex-col gap-4">
+        <ScrollReveal stagger className="flex flex-col gap-4">
           {education.map((entry) => (
             <Card key={entry.id}>
               <h3 className="font-semibold">{entry.title}</h3>
@@ -17,7 +18,7 @@ export function Education() {
               {entry.description && <p className="mt-2">{entry.description}</p>}
             </Card>
           ))}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

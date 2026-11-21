@@ -3,7 +3,7 @@ import { navigation } from "@/data/navigation";
 interface MobileMenuProps {
   open: boolean;
   activeId: string;
-  onNavigate: () => void;
+  onNavigate: (id: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 export function MobileMenu({ open, activeId, onNavigate }: MobileMenuProps) {
@@ -15,7 +15,7 @@ export function MobileMenu({ open, activeId, onNavigate }: MobileMenuProps) {
           <li key={item.id}>
             <a
               href={"#" + item.id}
-              onClick={onNavigate}
+              onClick={(event) => onNavigate(item.id, event)}
               aria-current={activeId === item.id ? "true" : undefined}
               className="block py-2"
             >

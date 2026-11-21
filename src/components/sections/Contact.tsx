@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { contact } from "@/data/contact";
 import { validateContactForm } from "@/lib/validation";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Button } from "@/components/ui/Button";
 import type { ContactFormErrors, ContactFormValues } from "@/types";
@@ -47,7 +48,8 @@ export function Contact() {
     <section id="contact" className="px-4 py-24">
       <div className="mx-auto max-w-xl">
         <SectionTitle>{contact.title}</SectionTitle>
-        <p className="mb-6">{contact.intro}</p>
+        <ScrollReveal as="p" delay={80} className="mb-6">{contact.intro}</ScrollReveal>
+        <ScrollReveal delay={160}>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <label className="flex flex-col gap-1">
             {contact.fields.name}
@@ -107,6 +109,7 @@ export function Contact() {
             </p>
           )}
         </form>
+        </ScrollReveal>
       </div>
     </section>
   );

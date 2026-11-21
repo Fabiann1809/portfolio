@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import { LoaderProvider } from "@/components/loader/LoaderProvider";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/loader/Preloader";
 
 const geistSans = Geist({
@@ -27,8 +29,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <LoaderProvider>
-          <Preloader />
-          {children}
+          <SmoothScroll>
+            <Preloader />
+            {children}
+          </SmoothScroll>
         </LoaderProvider>
       </body>
     </html>

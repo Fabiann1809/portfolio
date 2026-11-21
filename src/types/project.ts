@@ -14,3 +14,11 @@ export interface Project {
   links: ProjectLinks;
   image: string;
 }
+
+export interface ProjectLabels {
+  collaborative: string;
+  github: string;
+  demo: string;
+  download: string;
+  indexAriaLabel: string;
+}
