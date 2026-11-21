@@ -7,8 +7,6 @@ export interface Ability {
   id: string;
   name: string;
   description: string;
-  /** 0-100 per axis of ExtraData.axes. */
-  stats: number[];
   /** Names of items in data/stack.ts (frameworks and libraries only). */
   technologies: string[];
 }
@@ -21,8 +19,6 @@ export interface ExtraData {
   activeLabel: string;
   scanLabel: string;
   technologiesLabel: string;
-  radarAria: string;
-  axes: string[];
   abilities: Ability[];
 }
 

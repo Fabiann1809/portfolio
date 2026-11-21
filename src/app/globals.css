@@ -363,17 +363,6 @@ body {
   opacity: 1;
 }
 
-@keyframes radar-sweep {
-  to { transform: rotate(360deg); }
-}
-.radar-sweep {
-  transform-origin: 50% 50%;
-  animation: radar-sweep 5s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .radar-sweep { animation: none; }
-}
-
 /* Mission tunnel: frame rings of the corridor (positioned and faded per frame from refs). */
 .tunnel-ring {
   position: absolute;

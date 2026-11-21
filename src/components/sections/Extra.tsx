@@ -8,7 +8,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 const codeOf = (i: number) => `${extra.codePrefix}-${String(i + 1).padStart(2, "0")}`;
 
-/** "Power profile": abilities list (hover / focus / click activates) next to a radar scan panel. */
+/** "Power profile": abilities list (hover / focus / click activates) next to a scan panel. */
 export function Extra() {
   const [activeId, setActiveId] = useState(extra.abilities[0].id);
   const activeIndex = Math.max(0, extra.abilities.findIndex((ability) => ability.id === activeId));
