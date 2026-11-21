@@ -7,9 +7,9 @@ export function ProjectInfo({ project }: { project: Project }) {
   const { links } = project;
   return (
     <div data-project-info className="absolute right-0 bottom-0 w-full" style={{ opacity: 0 }}>
-      <h3 className="text-2xl font-semibold">{project.title}</h3>
+      <h3 className="font-display text-3xl font-extrabold tracking-[0.04em] uppercase">{project.title}</h3>
       {project.collaborative && (
-        <span className="mt-1 block text-xs tracking-widest uppercase opacity-70">
+        <span className="label mt-1 block text-xs opacity-70">
           {projectLabels.collaborative}
         </span>
       )}

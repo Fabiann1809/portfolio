@@ -76,7 +76,7 @@ export function ProjectsPinned() {
       style={{ height: projects.length * 100 + "vh" }}
     >
       <div ref={hudRef} className="sticky top-0 h-screen overflow-hidden px-8">
-        <p className="absolute top-20 left-8 font-mono text-xs tracking-[0.4em] uppercase opacity-70">
+        <p className="absolute top-20 left-8 font-display text-sm font-bold tracking-[0.3em] uppercase opacity-80">
           {projectsTitle}
         </p>
         <div className="absolute top-1/2 left-8 -translate-y-1/2">

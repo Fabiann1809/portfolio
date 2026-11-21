@@ -6,7 +6,7 @@ export function ViewAllLink({ className }: { className?: string }) {
   return (
     <Link
       href={galleryRoute}
-      className={cn("inline-flex items-center gap-2 text-sm tracking-wide underline-offset-4 hover:underline", className)}
+      className={cn("inline-flex items-center gap-2 label text-sm underline-offset-4 hover:underline", className)}
     >
       {galleryLabels.viewAll}
       <span aria-hidden="true">→</span>

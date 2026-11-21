@@ -21,7 +21,7 @@ export function Hero() {
         <HeroIntro />
         <HeroStatus />
         <HeroHint />
-        <div className="relative z-30 flex justify-center pt-6 md:absolute md:inset-x-0 md:bottom-6 md:pt-0">
+        <div className="relative z-30 order-4 flex justify-center pt-6 md:absolute md:inset-x-0 md:bottom-8 md:pt-0">
           <BackdropPicker />
         </div>
       </HeroStage>

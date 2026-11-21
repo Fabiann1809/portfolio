@@ -49,3 +49,33 @@ export function lightVars(light: LightPoint, width: number, height: number): Rec
   }
   return vars;
 }
+
+export interface Offset {
+  x: number;
+  y: number;
+}
+
+/** Per-layer parallax shift (px): layers move against the light, farther layers less. Zero without a fine pointer. */
+export function parallaxOffsets(light: LightPoint, active: boolean): Record<"wall" | "name" | "person", Offset> {
+  const nx = active ? (light.x - 0.5) * 2 : 0;
+  const ny = active ? (light.y - 0.5) * 2 : 0;
+  const { parallax } = hero.studio;
+  const at = (max: number): Offset => ({ x: -nx * max, y: -ny * max });
+  return { wall: at(parallax.wall), name: at(parallax.name), person: at(parallax.person) };
+}
+
+/** CSS variables of the parallax layers (--wall-x, --name-y, --person-x, ...). */
+export function parallaxVars(offsets: ReturnType<typeof parallaxOffsets>): Record<string, string> {
+  const vars: Record<string, string> = {};
+  for (const layer of ["wall", "name", "person"] as const) {
+    vars[`--${layer}-x`] = offsets[layer].x.toFixed(2) + "px";
+    vars[`--${layer}-y`] = offsets[layer].y.toFixed(2) + "px";
+  }
+  return vars;
+}
+
+/** Proximity (0..1) of the light to a point: 1 on top of it, 0 beyond `radius` (px). Smoothstep falloff. */
+export function proximity(light: Offset, point: Offset, radius: number): number {
+  const t = 1 - Math.min(1, Math.hypot(light.x - point.x, light.y - point.y) / Math.max(1, radius));
+  return t * t * (3 - 2 * t);
+}

@@ -11,7 +11,7 @@ function Details({ project }: { project: Project }) {
   return (
     <>
       {project.collaborative && (
-        <span className="mb-2 inline-block rounded-full border border-foreground/30 px-2.5 py-0.5 text-[10px] tracking-[0.25em] uppercase">
+        <span className="mb-2 inline-block label rounded-full border border-foreground/30 px-2.5 py-0.5 text-xs">
           {projectLabels.collaborative}
         </span>
       )}

@@ -1,12 +1,12 @@
+import { hero } from "@/data/hero";
 import type { ThemeColors } from "@/types";
 
 /** Layout of the giant name on the generated hero screen texture (approximates the DOM hero). */
-const NAME_WIDTH = 0.92;
-const NAME_BASELINE = 0.7;
 const REST_LIGHT = { x: 0.3, y: 0.22 };
 
 interface HeroTextureOptions {
   text: string;
+  /** CSS font-family of the display face (Doto); the caller must have loaded it. */
   fontFamily: string;
   colors: ThemeColors;
   /** Viewport size, so the texture has the same aspect as the filled screen. */
@@ -37,12 +37,29 @@ export function drawHeroTexture(canvas: HTMLCanvasElement, { text, fontFamily, c
   ctx.fillStyle = light;
   ctx.fillRect(0, 0, w, h);
 
-  ctx.font = `900 200px ${fontFamily}`;
-  const measured = ctx.measureText(text).width || 1;
-  const size = (200 * w * NAME_WIDTH) / measured;
-  ctx.font = `900 ${size}px ${fontFamily}`;
+  // Same layout as the DOM name: Doto 900, tracking, width fit, vertical center at nameCenterY.
+  const { nameFit, nameCenterY, nameTracking, introClearancePx, nameRiseEm, letterRest } = hero.studio;
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = colors.foreground;
-  ctx.fillText(text, w / 2, h * NAME_BASELINE);
+  const setFont = (size: number) => {
+    ctx.font = `900 ${size}px ${fontFamily}`;
+    ctx.letterSpacing = nameTracking * size + "px";
+  };
+  setFont(200);
+  const measured = ctx.measureText(text).width || 1;
+  // Same cap as the DOM: capitals stay below the intro block (px scaled to the texture).
+  const scale = w / Math.max(1, viewport.width);
+  const introTop = Math.min(120, Math.max(88, 0.134 * viewport.height)) * scale;
+  const maxSize = (h * (nameCenterY / 100) - introTop - introClearancePx * scale) / nameRiseEm;
+  const size = Math.max(10, Math.min((200 * w * (nameFit / 100)) / measured, maxSize));
+  setFont(size);
+  const metrics = ctx.measureText(text);
+  const baseline = h * (nameCenterY / 100) + (metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2;
+
+  // Static mid proximity, like the DOM name without a pointer.
+  ctx.fillStyle = colors.nameLit;
+  ctx.fillStyle = `color-mix(in srgb, ${colors.nameLit} ${letterRest * 100}%, ${colors.nameDim})`;
+  ctx.shadowColor = colors.glow;
+  ctx.shadowBlur = size * 0.08;
+  ctx.fillText(text, w / 2, baseline);
 }

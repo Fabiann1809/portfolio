@@ -49,10 +49,10 @@ export function Navbar({ homeHref }: NavbarProps) {
             ? ""
             : "bg-background/90 backdrop-blur")
       }>
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="font-bold">Portfolio</a>
+      <div className="flex items-center justify-between px-[var(--edge-x)] py-3">
+        <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-xl font-black tracking-[0.08em] uppercase">Portfolio</a>
         <nav className="hidden md:block">
-          <ul className="flex gap-6">
+          <ul className="label flex gap-6 text-base">
             {navigation.map((item) => (
               <li key={item.id}>
                 <a

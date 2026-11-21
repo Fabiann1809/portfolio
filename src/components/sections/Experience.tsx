@@ -11,7 +11,7 @@ export function Experience() {
         <ScrollReveal stagger className="flex flex-col gap-4">
           {experience.map((entry) => (
             <Card key={entry.id}>
-              <h3 className="font-semibold">
+              <h3 className="font-display text-xl font-extrabold tracking-[0.04em] uppercase">
                 {entry.role} - {entry.company}
               </h3>
               <p className="text-sm opacity-70">

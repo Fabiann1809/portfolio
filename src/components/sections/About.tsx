@@ -13,7 +13,7 @@ export function About() {
             <p key={text} className="mb-4 max-w-2xl">{text}</p>
           ))}
         </ScrollReveal>
-        <ScrollReveal as="h3" className="mt-8 mb-4 text-xl font-semibold">{about.stackTitle}</ScrollReveal>
+        <ScrollReveal as="h3" className="mt-8 mb-4 font-display text-2xl font-extrabold tracking-[0.04em] uppercase">{about.stackTitle}</ScrollReveal>
         <ScrollReveal as="ul" stagger className="flex flex-wrap gap-4">
           {stack.map((item) => (
             <li key={item.name} className="flex items-center gap-2">

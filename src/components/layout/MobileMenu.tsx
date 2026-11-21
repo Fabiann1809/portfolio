@@ -73,7 +73,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
               data-menu-link
               style={{ "--i": index } as React.CSSProperties}
               className={
-                "block py-3 text-4xl font-semibold tracking-tight " +
+                "block py-3 font-display text-4xl font-extrabold tracking-[0.06em] uppercase " +
                 (activeId === item.id ? "text-emphasis" : "")
               }
             >

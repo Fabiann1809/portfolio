@@ -4,9 +4,9 @@ import type { ThemeData } from "@/types";
 export const theme: ThemeData = {
   storageKey: "portfolio-backdrop",
   options: [
-    { id: "ink", label: "Tinta", swatch: "#0b0b0c" },
-    { id: "bone", label: "Hueso", swatch: "#ece7dd" },
-    { id: "signal", label: "Señal", swatch: "#ff5a1f" },
+    { id: "ink", label: "Tinta", swatch: "#0a0c0a" },
+    { id: "bone", label: "Hueso", swatch: "#e8dfca" },
+    { id: "signal", label: "Señal", swatch: "#ee5a22" },
   ],
   defaultForDark: "ink",
   defaultForLight: "bone",

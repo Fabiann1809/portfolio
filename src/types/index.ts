@@ -12,3 +12,4 @@ export * from "./loader";
 export * from "./chapter";
 export * from "./gallery";
 export * from "./theme";
+export * from "./retro";

@@ -33,4 +33,8 @@ export interface ThemeColors {
   accent: string;
   lightTint: string;
   vignette: string;
+  /** Giant name color near / far from the light, and the phosphor glow color. */
+  nameLit: string;
+  nameDim: string;
+  glow: string;
 }

@@ -40,7 +40,7 @@ export function BackdropPicker({ variant = "full", className }: BackdropPickerPr
         className,
       )}
     >
-      {full && <span className="font-mono text-[10px] tracking-[0.25em] text-muted uppercase">{theme.pickerCaption}</span>}
+      {full && <span className="label text-xs text-muted">{theme.pickerCaption}</span>}
       {options.map((option, index) => {
         const checked = option.id === current;
         return (
@@ -59,7 +59,7 @@ export function BackdropPicker({ variant = "full", className }: BackdropPickerPr
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
               "inline-flex items-center gap-2 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emphasis",
-              full ? "py-1 pr-3 pl-1.5 text-xs" : "p-1",
+              full ? "label py-1 pr-3 pl-1.5 text-xs" : "p-1",
               checked ? "bg-foreground/10 text-foreground" : "text-muted hover:text-foreground",
             )}
           >

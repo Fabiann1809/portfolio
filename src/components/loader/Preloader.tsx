@@ -124,10 +124,10 @@ export function Preloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background font-mono text-muted ease-[cubic-bezier(0.76,0,0.24,1)] ${stateClass}`}
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background font-display text-muted ease-[cubic-bezier(0.76,0,0.24,1)] ${stateClass}`}
       style={{ transitionProperty: "transform, opacity", transitionDuration: exitMs + "ms" }}
     >
-      <p className="mb-6 text-xs tracking-[0.5em] uppercase">{loader.label}</p>
+      <p className="phosphor mb-6 text-2xl font-extrabold tracking-[0.4em] uppercase">{loader.label}</p>
       <div
         ref={trackRef}
         role="progressbar"
@@ -142,7 +142,7 @@ export function Preloader() {
           style={{ left: "0%" }}
         />
       </div>
-      <span ref={counterRef} aria-hidden="true" className="mt-5 text-[10px] tracking-[0.3em] text-muted/70">
+      <span ref={counterRef} aria-hidden="true" className="mt-5 text-sm font-bold tracking-[0.3em] text-muted/80">
         000
       </span>
     </div>

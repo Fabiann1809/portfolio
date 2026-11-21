@@ -6,7 +6,7 @@ export const hero: HeroData = {
   greeting: "Hola, soy",
   name: "Nombre Apellido",
   displayName: "FABIÁN", // PLACEHOLDER: confirm spelling
-  role: "Ingeniero de Software full stack & AI engineering",
+  roleLines: ["Ingeniero de Software", "Full stack & AI"],
   tagline: "PLACEHOLDER: breve descripción de lo que haces y del tipo de proyectos que buscas.",
   workLabel: "Ver mi trabajo",
   workTargetId: projectsSectionId,
@@ -30,6 +30,19 @@ export const hero: HeroData = {
     scale: 1.04,
     skewBase: 2,
     skewPer100: 3,
+  },
+  studio: {
+    nameWidthEm: 3.66, // measured: Doto 900 "FABIÁN" = 3.6em + tracking; adjust if the font or the name changes
+    nameFit: 90,
+    introClearancePx: 250,
+    nameRiseEm: 0.27,
+    nameCenterY: 60,
+    nameTracking: 0.01,
+    letterStaggerMs: 60,
+    letterRadius: 0.22,
+    letterRest: 0.55,
+    parallax: { wall: 6, name: 10, person: 16 },
+    keyLight: { radius: 60, strength: 0.9 },
   },
   status: {
     availability: "Disponible para trabajar",

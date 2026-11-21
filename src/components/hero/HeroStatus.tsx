@@ -4,7 +4,7 @@ import { hero } from "@/data/hero";
 import { Reveal } from "@/components/loader/Reveal";
 import { useNow } from "@/hooks/useNow";
 
-/** Mono status lines (top right): availability + date, city + live local time, years of experience. */
+/** Dot-matrix status lines (top right): availability + date, city + live local time, years of experience. */
 export function HeroStatus() {
   const { status } = hero;
   const now = useNow();
@@ -20,9 +20,9 @@ export function HeroStatus() {
   return (
     <Reveal
       delay={560}
-      className="relative z-20 px-5 pt-6 text-center font-mono text-[11px] leading-relaxed tracking-wide text-muted uppercase md:absolute md:top-24 md:right-8 md:p-0 md:text-right lg:right-12"
+      className="label hidden z-30 text-xs leading-relaxed text-muted md:absolute hero-top md:right-[var(--edge-x)] md:block md:text-right"
     >
-      <p className="flex items-center justify-center gap-2 md:justify-end">
+      <p className="flex items-center gap-2 md:justify-end">
         <span aria-hidden="true" className="size-1.5 rounded-full bg-emphasis" />
         {status.availability}
         {date && <span> · {date}</span>}

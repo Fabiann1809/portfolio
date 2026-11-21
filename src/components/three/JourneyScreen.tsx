@@ -83,7 +83,7 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       if (cancelled) return;
       drawHeroTexture(canvas, {
         text: hero.displayName,
-        fontFamily: getComputedStyle(document.body).fontFamily,
+        fontFamily: getComputedStyle(document.documentElement).getPropertyValue("--font-doto").trim() || "monospace",
         colors: theme,
         viewport: { width: window.innerWidth, height: window.innerHeight },
       });
@@ -101,6 +101,9 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     };
 
     apply();
+    // Draw again once Doto is really loaded, so the canvas never uses the fallback.
+    const family = getComputedStyle(document.documentElement).getPropertyValue("--font-doto").trim();
+    if (family) document.fonts?.load(`900 100px ${family}`).then(apply, () => {});
     document.fonts?.ready.then(apply);
     window.addEventListener("resize", onResize);
     return () => {

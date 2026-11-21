@@ -8,7 +8,7 @@ export function Footer() {
         <ul className="flex gap-4">
           {socials.map((social) => (
             <li key={social.id}>
-              <a href={social.url} target="_blank" rel="noreferrer">{social.label}</a>
+              <a className="label" href={social.url} target="_blank" rel="noreferrer">{social.label}</a>
             </li>
           ))}
         </ul>

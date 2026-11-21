@@ -34,7 +34,7 @@ export function subscribeBackdrop(onChange: () => void): () => void {
   return () => observer.disconnect();
 }
 
-const VARS = ["--background", "--foreground", "--color-primary", "--color-accent", "--light-tint", "--vignette"] as const;
+const VARS = ["--background", "--foreground", "--color-primary", "--color-accent", "--light-tint", "--vignette", "--name-lit", "--name-dim", "--glow"] as const;
 const SEP = "|";
 
 /** Serialised snapshot of the theme tokens (stable string, cheap to compare). */
@@ -44,6 +44,6 @@ export function readThemeKey(): string {
 }
 
 export function parseThemeKey(key: string): ThemeColors {
-  const [background, foreground, primary, accent, lightTint, vignette] = key.split(SEP);
-  return { background, foreground, primary, accent, lightTint, vignette };
+  const [background, foreground, primary, accent, lightTint, vignette, nameLit, nameDim, glow] = key.split(SEP);
+  return { background, foreground, primary, accent, lightTint, vignette, nameLit, nameDim, glow };
 }

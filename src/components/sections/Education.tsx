@@ -11,7 +11,7 @@ export function Education() {
         <ScrollReveal stagger className="flex flex-col gap-4">
           {education.map((entry) => (
             <Card key={entry.id}>
-              <h3 className="font-semibold">{entry.title}</h3>
+              <h3 className="font-display text-xl font-extrabold tracking-[0.04em] uppercase">{entry.title}</h3>
               <p className="text-sm opacity-70">
                 {entry.institution} | {entry.period}
               </p>

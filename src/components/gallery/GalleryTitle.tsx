@@ -5,7 +5,7 @@ import { galleryConfig } from "@/data/gallery";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
 
-const titleClass = "col-start-1 row-start-1 text-lg font-semibold tracking-[0.12em] uppercase";
+const titleClass = "col-start-1 row-start-1 font-display text-xl font-extrabold tracking-[0.1em] uppercase";
 
 /** Active project title, uppercase, cross-fading between projects. */
 export function GalleryTitle({ project, className }: { project: Project; className?: string }) {

@@ -38,12 +38,39 @@ export interface HeroStatus {
   yearsLabel: string;
 }
 
+/** Tunables of the studio scene: giant name layout, letter lighting, parallax and photo key light. */
+export interface HeroStudio {
+  /** Advance width of the display name in em (Doto 900, with tracking); fits the name to the stage width. */
+  nameWidthEm: number;
+  /** Name width as % of the stage width. */
+  nameFit: number;
+  /** Height (px) the intro block needs from its top edge, incl. a gap: the name never rises into it. */
+  introClearancePx: number;
+  /** Distance (em) from the name center up to the top of its capitals; used to keep the name clear of the intro. */
+  nameRiseEm: number;
+  /** Vertical center of the name as % of the stage height. */
+  nameCenterY: number;
+  /** Letter spacing of the name (em). */
+  nameTracking: number;
+  /** Delay between letters of the entrance (ms). */
+  letterStaggerMs: number;
+  /** Light radius that lights a letter, as a fraction of the stage width. */
+  letterRadius: number;
+  /** Letter proximity (0..1) without a fine pointer or with reduced motion. */
+  letterRest: number;
+  /** Max parallax shift (px) per layer. */
+  parallax: { wall: number; name: number; person: number };
+  /** Key light on the photo: radius as % of the portrait box and highlight strength (0..1). */
+  keyLight: { radius: number; strength: number };
+}
+
 export interface HeroData {
   greeting: string;
   name: string;
   /** Giant name drawn across the hero. */
   displayName: string;
-  role: string;
+  /** Role title, shown in two lines. */
+  roleLines: [string, string];
   tagline: string;
   /** Primary call to action: scrolls to the section `targetId`. */
   workLabel: string;
@@ -54,5 +81,6 @@ export interface HeroData {
   lightLabel: string;
   portrait: HeroPortrait;
   portraitShadow: HeroPortraitShadow;
+  studio: HeroStudio;
   status: HeroStatus;
 }
