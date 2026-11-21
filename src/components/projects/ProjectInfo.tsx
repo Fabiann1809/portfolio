@@ -2,17 +2,11 @@ import { projectLabels } from "@/data/projects";
 import { LinkButton } from "@/components/ui/Button";
 import type { Project } from "@/types";
 
-/** Text layer for one project; fades and slides in when active, out when not. */
-export function ProjectInfo({ project, active }: { project: Project; active: boolean }) {
+/** Text layer for one project. Opacity/transform/inert are driven every frame by ProjectsPinned. */
+export function ProjectInfo({ project }: { project: Project }) {
   const { links } = project;
   return (
-    <div
-      inert={!active}
-      aria-hidden={!active}
-      className={`absolute right-0 bottom-0 w-full transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${
-        active ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
-      }`}
-    >
+    <div data-project-info className="absolute right-0 bottom-0 w-full" style={{ opacity: 0 }}>
       <h3 className="text-2xl font-semibold">{project.title}</h3>
       {project.collaborative && (
         <span className="mt-1 block text-xs tracking-widest uppercase opacity-70">

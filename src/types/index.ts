@@ -9,3 +9,4 @@ export * from "./contact";
 export * from "./social";
 export * from "./stack";
 export * from "./loader";
+export * from "./chapter";

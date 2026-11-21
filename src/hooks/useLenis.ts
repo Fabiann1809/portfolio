@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import { connectScroll } from "@/lib/scrollStore";
+import { journeyConfig } from "@/data/chapters";
 
 /**
  * Creates the Lenis instance (null when the user prefers reduced motion, so native
@@ -17,9 +18,9 @@ export function useLenis(): Lenis | null {
     }
 
     const instance = new Lenis({
-      lerp: 0.09,
+      lerp: journeyConfig.lenis.lerp,
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: journeyConfig.lenis.wheelMultiplier,
       syncTouch: true,
       syncTouchLerp: 0.1,
     });

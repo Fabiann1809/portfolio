@@ -3,10 +3,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
-import { projects, projectsSectionId } from "@/data/projects";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { BackgroundField } from "./BackgroundField";
-import { CrtScreen } from "./CrtScreen";
+import { screens } from "@/lib/journeyModel";
+import { AmbientBackdrop } from "./AmbientBackdrop";
+import { JourneyScreen } from "./JourneyScreen";
 
 interface SceneProps {
   /** Loading progress 0..1 (canvas ready + assets). */
@@ -22,11 +21,10 @@ const readCssColor = (name: string, fallback: string) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 
 /**
- * The single full-screen canvas fixed behind the whole page. It hosts the ambient
- * background and the project CRT screens (all in one world, no View/portal needed).
+ * The single fixed canvas behind the whole page. It hosts the ambient backdrop and every
+ * screen of the scroll journey (all in one world, driven by the shared journey state).
  */
 export function Scene({ onProgress }: SceneProps) {
-  const reduced = useReducedMotion();
   const visible = useSyncExternalStore(
     subscribeVisibility,
     () => !document.hidden,
@@ -49,19 +47,14 @@ export function Scene({ onProgress }: SceneProps) {
       <Canvas
         camera={{ position: [0, 0, 5], fov: 50 }}
         dpr={[1, 1.5]}
-        frameloop={reduced ? "demand" : visible ? "always" : "never"}
+        gl={{ antialias: false, alpha: false }}
+        frameloop={visible ? "always" : "never"}
         style={{ pointerEvents: "none" }}
         onCreated={() => setReady(true)}
       >
-        <BackgroundField color={colors.primary} animated={!reduced} />
-        {projects.map((project, index) => (
-          <CrtScreen
-            key={project.id}
-            image={project.image}
-            index={index}
-            sectionId={projectsSectionId}
-            tint={index % 2 === 0 ? colors.primary : colors.accent}
-          />
+        <AmbientBackdrop color={colors.primary} />
+        {screens.map((def, index) => (
+          <JourneyScreen key={def.id} index={index} def={def} primary={colors.primary} accent={colors.accent} />
         ))}
       </Canvas>
     </div>

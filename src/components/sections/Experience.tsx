@@ -5,8 +5,8 @@ import { Card } from "@/components/ui/Card";
 
 export function Experience() {
   return (
-    <section id="experience" className="px-4 py-24">
-      <div className="mx-auto max-w-5xl">
+    <section id="experience" className="flex min-h-screen items-center px-4 py-24">
+      <div className="mx-auto w-full max-w-5xl">
         <SectionTitle>{experienceTitle}</SectionTitle>
         <ScrollReveal stagger className="flex flex-col gap-4">
           {experience.map((entry) => (

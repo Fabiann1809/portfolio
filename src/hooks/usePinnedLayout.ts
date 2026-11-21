@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { hasWebGL } from "@/lib/webgl";
 
 const query = "(min-width: 768px) and (prefers-reduced-motion: no-preference)";
 
@@ -10,7 +11,12 @@ function subscribe(onChange: () => void) {
   return () => mq.removeEventListener("change", onChange);
 }
 
-/** True when the pinned, scroll-driven 3D layout applies (md+ and motion allowed). */
-export function usePinnedLayout(): boolean {
-  return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false);
+const getSnapshot = () => window.matchMedia(query).matches && hasWebGL();
+
+/**
+ * True when the WebGL scroll journey applies: md+, motion allowed and WebGL available.
+ * `serverValue` is what server rendering / hydration assumes (default: no journey).
+ */
+export function usePinnedLayout(serverValue = false): boolean {
+  return useSyncExternalStore(subscribe, getSnapshot, () => serverValue);
 }

@@ -3,34 +3,32 @@ import type { Project } from "@/types";
 
 interface ProjectIndexProps {
   projects: Project[];
-  activeIndex: number;
   onSelect: (index: number) => void;
 }
 
 const pad = (n: number) => String(n + 1).padStart(2, "0");
 
-/** Left rail: [01] [02] ... highlighting the active project. */
-export function ProjectIndex({ projects, activeIndex, onSelect }: ProjectIndexProps) {
+/**
+ * Left rail: [01] [02] ... The active item is marked by the parent through the
+ * `data-active` attribute (updated every frame, no React state).
+ */
+export function ProjectIndex({ projects, onSelect }: ProjectIndexProps) {
   return (
     <ol className="flex flex-col gap-3 font-mono text-sm">
-      {projects.map((project, index) => {
-        const active = index === activeIndex;
-        return (
-          <li key={project.id}>
-            <button
-              type="button"
-              onClick={() => onSelect(index)}
-              aria-current={active ? "true" : undefined}
-              aria-label={`${projectLabels.indexAriaLabel} ${project.title}`}
-              className={`transition-[opacity,color,transform] duration-500 ${
-                active ? "text-primary translate-x-1 opacity-100" : "opacity-40 hover:opacity-70"
-              }`}
-            >
-              [{pad(index)}]
-            </button>
-          </li>
-        );
-      })}
+      {projects.map((project, index) => (
+        <li key={project.id}>
+          <button
+            type="button"
+            data-index-item
+            data-active={index === 0}
+            onClick={() => onSelect(index)}
+            aria-label={`${projectLabels.indexAriaLabel} ${project.title}`}
+            className="opacity-40 transition-[opacity,transform] duration-500 hover:opacity-70 data-[active=true]:text-primary data-[active=true]:translate-x-1 data-[active=true]:opacity-100"
+          >
+            [{pad(index)}]
+          </button>
+        </li>
+      ))}
     </ol>
   );
 }
