@@ -6,7 +6,6 @@ import { Color, Vector2, Vector3, Vector4 } from "three";
 import type { DataTexture, ShaderMaterial } from "three";
 import { hero } from "@/data/hero";
 import { MASK_DOMAIN } from "@/lib/heroMask";
-import { lightState } from "@/lib/studioLight";
 import { heroRig as rig } from "@/lib/heroRig";
 import type { HeroTint, SlotRect } from "@/types";
 import { gridWallFragment, gridWallVertex } from "../shaders/gridWall";
@@ -72,7 +71,7 @@ export function GridWall({ slot, mask, tint }: GridWallProps) {
     u.uTime.value = rig.time;
     u.uReveal.value = rig.reveal;
     u.uSlot.value.set(s.x / rig.width, 1 - (s.y + s.h) / rig.height, s.w / rig.width, s.h / rig.height);
-    u.uLight.value.set(lightState.x, 1 - lightState.y);
+    u.uLight.value.set(rig.lightX, 1 - rig.lightY);
     u.uLightOn.value = rig.lightOn;
   });
 

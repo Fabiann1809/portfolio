@@ -1,5 +1,5 @@
 export interface HeroPortrait {
-  /** Path of the cut-out (transparent WebP/PNG) that the mosaic is built from. */
+  /** Path of the cut-out (transparent WebP/PNG): shown as is on the hero, mosaic-ed on the screen texture. */
   src: string;
   alt: string;
   width: number;
@@ -19,29 +19,28 @@ export interface HeroStatus {
   yearsLabel: string;
 }
 
-/** Desktop layout (>= lg) of the hero, in % of the stage, plus the giant-name tunables. */
+/** Desktop layout (>= lg) of the hero, in % of the stage, plus the light CRT treatment of the photo. */
 export interface HeroStudio {
-  /** Advance width of the display name in em (Doto 900, with tracking); fits the name to the stage width. */
-  nameWidthEm: number;
-  /** Name width as % of the stage width. */
-  nameFit: number;
-  /** Letter spacing of the name (em). */
-  nameTracking: number;
-  /** Vertical center of the name as % of the stage height (the name sits in front of the portrait). */
-  nameCenterY: number;
-  /** Distance (em) from the name center up to the top of its capitals; keeps the name below the side blocks. */
-  nameRiseEm: number;
-  /** Portrait slot: top edge and height as % of the stage height (width follows the photo aspect). */
-  portraitTop: number;
+  /** Portrait height as % of the stage height (bottom-anchored; width follows the photo aspect). */
   portraitHeight: number;
   /** Vertical center of the left / right text blocks as % of the stage height. */
   blockCenterY: number;
-  /** Delay between letters of the entrance (ms). */
-  letterStaggerMs: number;
-  /** Light radius that lights a letter, as a fraction of the stage width. */
-  letterRadius: number;
-  /** Letter proximity (0..1) without a fine pointer or with reduced motion. */
-  letterRest: number;
+  /** Share of the portrait height (from the bottom) that fades into the background. */
+  photoBottomFade: number;
+  /** Opacity (0..1) of the scanline overlay on the photo (keep it at 0.05 or less). */
+  photoScanAlpha: number;
+  /** Strength (0..1) of the tiny vignette on the photo. */
+  photoVignette: number;
+}
+
+/** Look of the hero texture drawn on the curved screen (wall + pixel mosaic + giant name). */
+export interface HeroScreen {
+  /** Name width as % of the texture width. */
+  nameFit: number;
+  /** Letter spacing of the name (em). */
+  nameTracking: number;
+  /** Vertical center of the name as % of the texture height. */
+  nameCenterY: number;
 }
 
 /** Barrel-distorted wireframe wall with quadtree subdivision around the figure. */
@@ -73,51 +72,24 @@ export interface HeroGrid {
   maskBlur: number;
 }
 
-/** Pixel / voxel mosaic of the portrait. */
+/** Pixel mosaic of the portrait on the screen texture. */
 export interface HeroMosaic {
-  /** Tile size (CSS px) at 1440px of stage width; scaled with the stage width within `cellScale`. */
-  cellPx: number;
-  cellScale: [number, number];
-  /** Tile size (CSS px) on touch / narrow screens. */
-  cellPxMobile: number;
-  /** Gap between tiles and corner radius, as a fraction of the tile. */
+  /** Gap between tiles, as a fraction of the tile. */
   gap: number;
-  radius: number;
   /** Tone curve of the photo luminance. */
   contrast: number;
   gamma: number;
-  /** Height of the plane mesh (segments) and relief amplitude as a fraction of the portrait width. */
-  segments: [number, number];
-  depth: number;
-  /** Glitch amount (0 = none, 1 = default) and RGB fringe (CSS px). */
-  glitch: number;
-  fringePx: number;
-  /** Fraction of the portrait height (from the bottom) that dissolves into the dark. */
+  /** Fraction of the portrait height (from the bottom) that dissolves. */
   bottomFade: number;
-  /** Cursor light: radius as a fraction of the portrait height and extra brightness. */
-  lightRadius: number;
-  lightGain: number;
-}
-
-/** Head turn toward the cursor (degrees) and idle sway without a cursor. */
-export interface HeroHead {
-  maxYawDeg: number;
-  maxPitchDeg: number;
-  /** Damping time (s) of the turn. */
-  followSeconds: number;
-  idleSwayDeg: number;
-  /** Camera distance as a multiple of the stage height (perspective strength). */
-  focal: number;
 }
 
 export interface HeroScene {
   /** Max device pixel ratio of the hero canvas. */
   maxDpr: number;
-  /** Seconds of the scan-in once the loader leaves. */
+  /** Seconds of the scan-in of the grid wall once the loader leaves. */
   revealSeconds: number;
   grid: HeroGrid;
   mosaic: HeroMosaic;
-  head: HeroHead;
 }
 
 /** CRT colors of one tone, read from the --crt-* tokens (hex strings). */
@@ -150,10 +122,7 @@ export interface HeroRig {
   time: number;
   /** Scan-in progress 0..1. */
   reveal: number;
-  /** Head yaw / pitch (rad), damped toward the cursor. */
-  yaw: number;
-  pitch: number;
-  /** Cursor light from the stage center in CSS px (y up), and how strongly it is on (0..1). */
+  /** Pointer highlight on the wall: position across the stage (0..1, y down) and how strongly it is on (0..1). */
   lightX: number;
   lightY: number;
   lightOn: number;
@@ -174,10 +143,9 @@ export interface HeroData {
   workTargetId: string;
   cvLabel: string;
   cvPath: string;
-  /** Label next to the light cursor while over the hero. */
-  lightLabel: string;
   portrait: HeroPortrait;
   studio: HeroStudio;
   scene: HeroScene;
+  screen: HeroScreen;
   status: HeroStatus;
 }

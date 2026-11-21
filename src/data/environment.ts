@@ -59,16 +59,6 @@ export const environment: EnvironmentConfig = {
       tintStrength: 0.05,
       isDarkText: true,
     },
-    signal: {
-      center: "#fff1e6",
-      edge: "#e6b99c",
-      floorFar: "#ffe4d1",
-      floorNear: "#d9a583",
-      text: "#4a2410",
-      tint: "#ff8a4a",
-      tintStrength: 0.12,
-      isDarkText: true,
-    },
   },
   target: { maxWidth: 1280, maxHeight: 720 },
   scene: {

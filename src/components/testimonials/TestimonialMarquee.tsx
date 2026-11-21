@@ -72,7 +72,7 @@ export function TestimonialMarquee({ items, config }: TestimonialMarqueeProps) {
           type="button"
           aria-pressed={paused}
           onClick={() => setPaused((p) => !p)}
-          className="font-display text-xs tracking-[0.1em] text-muted uppercase transition-colors hover:text-foreground focus-visible:text-foreground"
+          className="font-display text-xs tracking-[0.1em] overlay-text overlay-muted uppercase"
         >
           {paused ? config.playLabel : config.pauseLabel}
         </button>

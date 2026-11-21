@@ -2,6 +2,8 @@ import type { Project, ProjectLabels } from "@/types";
 
 // PLACEHOLDER content. Technologies: frameworks/libraries only.
 export const projectsTitle = "Proyectos";
+/** Display title of the left overlay while the projects stream is on screen (words stack on lines). PLACEHOLDER copy. */
+export const projectsSideTitle = "Trabajo seleccionado";
 /** Must match the id of the Projects section (and the navigation entry). */
 export const projectsSectionId = "projects";
 

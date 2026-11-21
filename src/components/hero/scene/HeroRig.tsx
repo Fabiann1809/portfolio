@@ -3,65 +3,68 @@
 import { useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { damp } from "maath/easing";
-import { MathUtils } from "three";
 import { hero } from "@/data/hero";
-import { lightState } from "@/lib/studioLight";
 import { heroRig as rig } from "@/lib/heroRig";
-import type { SlotRect } from "@/types";
 
-const { head, revealSeconds } = hero.scene;
-const DEG = Math.PI / 180;
+const { revealSeconds } = hero.scene;
+/** Where the highlight rests without a mouse (top-left, as on touch devices). */
+const REST = { x: 0.3, y: 0.22 };
+
+/** Latest pointer position over the canvas (module scope: written by events, read per frame). */
+const pointer = { x: REST.x, y: REST.y, active: false };
 
 interface HeroRigProps {
-  slot: React.RefObject<SlotRect>;
   /** The preloader has left: start the scan-in. */
   loaded: boolean;
-  /** Static frame: no time, no head movement, scene fully revealed. */
+  /** Static frame: no time, no pointer highlight, wall fully revealed. */
   reduced: boolean;
   /** Changes whenever a static frame has to be drawn again. */
   redrawKey: string;
 }
 
 /**
- * Updates the shared per-frame values before the meshes read them: time, scan-in, damped light
- * state and the head turn (toward the cursor, or an idle sway without one).
+ * Updates the shared per-frame values before the wall reads them: time, scan-in and the pointer
+ * highlight (a damped copy of the mouse position over the canvas, no state).
  */
-export function HeroRig({ slot, loaded, reduced, redrawKey }: HeroRigProps) {
+export function HeroRig({ loaded, reduced, redrawKey }: HeroRigProps) {
   const invalidate = useThree((state) => state.invalidate);
+  const element = useThree((state) => state.gl.domElement);
   // A demand-mode canvas (reduced motion) redraws when the layout, the tone or the activity change.
   useEffect(() => invalidate(), [invalidate, redrawKey]);
+
+  useEffect(() => {
+    rig.lightX = REST.x;
+    rig.lightY = REST.y;
+    rig.lightOn = 0;
+    if (reduced) return;
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      const r = element.getBoundingClientRect();
+      pointer.x = Math.min(1, Math.max(0, (event.clientX - r.left) / (r.width || 1)));
+      pointer.y = Math.min(1, Math.max(0, (event.clientY - r.top) / (r.height || 1)));
+      pointer.active = true;
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [element, reduced]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     rig.width = state.size.width;
     rig.height = state.size.height;
     rig.dpr = state.viewport.dpr;
-    rig.lightX = (lightState.x - 0.5) * rig.width;
-    rig.lightY = (0.5 - lightState.y) * rig.height;
 
     if (reduced) {
       rig.time = 0;
       rig.reveal = 1;
-      rig.yaw = 0;
-      rig.pitch = 0;
       rig.lightOn = 0;
       return;
     }
     rig.time += dt;
     rig.reveal = loaded ? Math.min(1, rig.reveal + dt / revealSeconds) : 0;
-    damp(rig, "lightOn", lightState.active ? 1 : 0, 0.25, dt);
-
-    // Head: look at the cursor (relative to the head), or sway gently without one.
-    const s = slot.current;
-    const headX = s.x + s.w / 2 - rig.width / 2;
-    const headY = rig.height / 2 - (s.y + s.h * 0.38);
-    const dx = MathUtils.clamp((rig.lightX - headX) / (rig.width * 0.5), -1, 1);
-    const dy = MathUtils.clamp((rig.lightY - headY) / (rig.height * 0.5), -1, 1);
-    const sway = head.idleSwayDeg * DEG;
-    const idleYaw = Math.sin(rig.time * 0.6) * sway;
-    const idlePitch = Math.sin(rig.time * 0.45 + 1.3) * sway * 0.4;
-    damp(rig, "yaw", MathUtils.lerp(idleYaw, dx * head.maxYawDeg * DEG, rig.lightOn), head.followSeconds, dt);
-    damp(rig, "pitch", MathUtils.lerp(idlePitch, -dy * head.maxPitchDeg * DEG, rig.lightOn), head.followSeconds, dt);
+    damp(rig, "lightX", pointer.active ? pointer.x : REST.x, 0.14, dt);
+    damp(rig, "lightY", pointer.active ? pointer.y : REST.y, 0.14, dt);
+    damp(rig, "lightOn", pointer.active ? 1 : 0, 0.25, dt);
   }, -1);
 
   return null;

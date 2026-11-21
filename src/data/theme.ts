@@ -1,16 +1,14 @@
 import type { ThemeData } from "@/types";
 
-// Swatches show the key color of each [data-backdrop] tone in app/globals.css (cyan phosphor / white studio / amber phosphor). PLACEHOLDER Spanish UI labels.
+// PLACEHOLDER Spanish UI labels. "ink" is the dark mode, "bone" the light one (see app/globals.css).
 export const theme: ThemeData = {
   storageKey: "portfolio-backdrop",
   options: [
-    { id: "ink", label: "Tinta", swatch: "#7ddcff" },
-    { id: "bone", label: "Hueso", swatch: "#e9ecf0" },
-    { id: "signal", label: "Señal", swatch: "#ffb347" },
+    { id: "bone", label: "Modo claro" },
+    { id: "ink", label: "Modo oscuro" },
   ],
   defaultForDark: "ink",
   defaultForLight: "bone",
-  pickerLabel: "Fondo del sitio",
-  pickerCaption: "Fondo",
-  hint: "Mueve la luz · clic para cambiar el fondo",
+  migrate: { signal: "ink" },
+  switchLabel: "Tema del sitio",
 };

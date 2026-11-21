@@ -6,7 +6,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { Reveal } from "@/components/loader/Reveal";
 import { HamburgerIcon } from "@/components/ui/HamburgerIcon";
-import { BackdropPicker } from "@/components/theme/BackdropPicker";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { MobileMenu } from "./MobileMenu";
 
 const ids = navigation.map((item) => item.id);
@@ -76,7 +76,9 @@ export function Navbar({ homeHref }: NavbarProps) {
               ))}
             </ul>
           </nav>
-          <BackdropPicker variant="compact" className="hidden md:inline-flex" />
+          <div className="hidden md:block">
+            <ThemeToggle />
+          </div>
           <button
             ref={toggleRef}
             type="button"

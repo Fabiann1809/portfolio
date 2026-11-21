@@ -10,7 +10,7 @@ import type { Mesh, Texture } from "three";
 import { journeyConfig } from "@/data/chapters";
 import { environment } from "@/data/environment";
 import { hero } from "@/data/hero";
-import { drawHeroTexture } from "@/lib/heroTexture";
+import { drawHeroTexture, whenPortraitReady } from "@/lib/heroTexture";
 import type { ThemeColors } from "@/types";
 import { getJourneyState, stepJourney } from "@/lib/journey";
 import { live, poses, screenInView } from "@/lib/journeyModel";
@@ -148,7 +148,8 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     };
 
     apply();
-    // Draw again once Doto is really loaded, so the canvas never uses the fallback.
+    // Draw again once the portrait (mosaic) and Doto is really loaded, so the canvas never uses the fallback.
+    whenPortraitReady().then(apply);
     const family = getComputedStyle(document.documentElement).getPropertyValue("--font-doto").trim();
     if (family) document.fonts?.load(`900 100px ${family}`).then(apply, () => {});
     document.fonts?.ready.then(apply);

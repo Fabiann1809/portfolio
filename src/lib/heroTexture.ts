@@ -3,7 +3,7 @@ import type { ThemeColors } from "@/types";
 
 /** Barrel strength and line setup used by the 2D approximation of the hero wall. */
 const { grid, mosaic } = hero.scene;
-const { studio, portrait } = hero;
+const { studio, screen, portrait } = hero;
 
 interface HeroTextureOptions {
   text: string;
@@ -22,6 +22,12 @@ function getPortrait(): HTMLImageElement | null {
     portraitImage.src = portrait.src;
   }
   return portraitImage.complete && portraitImage.naturalWidth > 0 ? portraitImage : null;
+}
+
+/** Resolves once the portrait used by the mosaic is decoded (the caller then redraws the texture). */
+export function whenPortraitReady(): Promise<void> {
+  if (getPortrait()) return Promise.resolve();
+  return (portraitImage as HTMLImageElement).decode().catch(() => {});
 }
 
 function token(name: string, fallback: string): string {
@@ -128,10 +134,10 @@ export function drawHeroTexture(canvas: HTMLCanvasElement, { text, fontFamily, c
 
   drawWall(ctx, w, h, token("--crt-line", colors.foreground));
 
-  // Portrait slot: same % layout as the DOM hero.
+  // Portrait slot: same % layout as the DOM hero (centered, bottom-anchored), so the photo dissolves into the mosaic in place.
   const slotH = (studio.portraitHeight / 100) * h;
   const slotW = (slotH * portrait.width) / portrait.height;
-  drawMosaic(ctx, { x: (w - slotW) / 2, y: (studio.portraitTop / 100) * h, w: slotW, h: slotH }, [
+  drawMosaic(ctx, { x: (w - slotW) / 2, y: h - slotH, w: slotW, h: slotH }, [
     token("--crt-shadow", bg),
     token("--crt-mid", colors.foreground),
     token("--crt-high", colors.foreground),
@@ -143,8 +149,8 @@ export function drawHeroTexture(canvas: HTMLCanvasElement, { text, fontFamily, c
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, w, h);
 
-  // Name: Doto 900 with tracking, width fit and vertical center, like the DOM name (in front).
-  const { nameFit, nameCenterY, nameTracking } = studio;
+  // Name: Doto 900 with tracking, width fit and vertical center, in front of the mosaic.
+  const { nameFit, nameCenterY, nameTracking } = screen;
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
   const setFont = (size: number) => {

@@ -9,12 +9,12 @@ interface ProjectIndexProps {
 const pad = (n: number) => String(n + 1).padStart(2, "0");
 
 /**
- * Left rail: [01] [02] ... The active item is marked by the parent through the
- * `data-active` attribute (updated every frame, no React state).
+ * Left rail: "[01] PROJECT NAME" rows. The active row is marked by the parent through the
+ * `data-active` attribute (updated every frame, no React state); css prefixes it with a bullet.
  */
 export function ProjectIndex({ projects, onSelect }: ProjectIndexProps) {
   return (
-    <ol className="flex flex-col gap-3 font-mono text-sm">
+    <ol className="side-index">
       {projects.map((project, index) => (
         <li key={project.id}>
           <button
@@ -23,9 +23,10 @@ export function ProjectIndex({ projects, onSelect }: ProjectIndexProps) {
             data-active={index === 0}
             onClick={() => onSelect(index)}
             aria-label={`${projectLabels.indexAriaLabel} ${project.title}`}
-            className="opacity-40 transition-[opacity,transform] duration-500 hover:opacity-70 data-[active=true]:text-emphasis data-[active=true]:translate-x-1 data-[active=true]:opacity-100"
           >
-            [{pad(index)}]
+            <span aria-hidden="true">
+              [{pad(index)}] {project.title}
+            </span>
           </button>
         </li>
       ))}

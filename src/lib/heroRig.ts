@@ -7,8 +7,6 @@ export const heroRig: HeroRig = {
   dpr: 1,
   time: 0,
   reveal: 0,
-  yaw: 0,
-  pitch: 0,
   lightX: 0,
   lightY: 0,
   lightOn: 0,

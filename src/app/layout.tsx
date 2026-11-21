@@ -6,7 +6,6 @@ import { LoaderProvider } from "@/components/loader/LoaderProvider";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/loader/Preloader";
 import { RetroOverlay } from "@/components/layout/RetroOverlay";
-import { LightCursor } from "@/components/cursor/LightCursor";
 import { themeInitScript } from "@/lib/themeScript";
 
 // Dot-matrix display face (variable, weights 400-900) for names, titles, labels and UI.
@@ -41,7 +40,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SmoothScroll>
             <Preloader />
             {children}
-            <LightCursor />
             <RetroOverlay />
           </SmoothScroll>
         </LoaderProvider>

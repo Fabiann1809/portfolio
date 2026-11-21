@@ -9,7 +9,7 @@ function subscribeTab(onChange: () => void) {
 
 /**
  * True while the hero scene should render: the stage intersects the viewport, the tab is
- * visible and the journey has not faded the stage out (it removes data-light-zone then).
+ * visible and the journey has not faded the stage out (it removes data-hero-live then).
  */
 export function useHeroActive(stage: HTMLElement | null): boolean {
   const tabVisible = useSyncExternalStore(
@@ -21,10 +21,10 @@ export function useHeroActive(stage: HTMLElement | null): boolean {
     (onChange) => {
       if (!stage) return () => {};
       const observer = new MutationObserver(onChange);
-      observer.observe(stage, { attributes: true, attributeFilter: ["data-light-zone"] });
+      observer.observe(stage, { attributes: true, attributeFilter: ["data-hero-live"] });
       return () => observer.disconnect();
     },
-    () => stage?.dataset.lightZone === "true",
+    () => stage?.dataset.heroLive === "true",
     () => false,
   );
   const [intersecting, setIntersecting] = useState(true);

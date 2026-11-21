@@ -1,12 +1,10 @@
-/** Ids of the site-wide backdrop tones (the user's light/dark theme). */
-export type BackdropId = "ink" | "bone" | "signal";
+/** Ids of the two site modes: "ink" = dark (Tinta), "bone" = light (Hueso). */
+export type BackdropId = "ink" | "bone";
 
 export interface BackdropOption {
   id: BackdropId;
-  /** UI label shown in the picker. */
+  /** Accessible / visible label of the mode switch option. */
   label: string;
-  /** Swatch color of the picker (mirrors the tokens declared in globals.css). */
-  swatch: string;
 }
 
 export interface ThemeData {
@@ -17,12 +15,10 @@ export interface ThemeData {
   defaultForDark: BackdropId;
   /** Used when nothing is stored and the OS prefers a light scheme. */
   defaultForLight: BackdropId;
-  /** Accessible name of the radio group. */
-  pickerLabel: string;
-  /** Visible caption of the full picker. */
-  pickerCaption: string;
-  /** Hint pill of the hero. */
-  hint: string;
+  /** Stored values of removed tones mapped to the mode they become. */
+  migrate: Record<string, BackdropId>;
+  /** Accessible name of the mode switch group. */
+  switchLabel: string;
 }
 
 /** CSS custom properties of the active theme, read for canvas / WebGL use. */
@@ -31,10 +27,8 @@ export interface ThemeColors {
   foreground: string;
   primary: string;
   accent: string;
-  lightTint: string;
   vignette: string;
-  /** Giant name color near / far from the light, and the phosphor glow color. */
+  /** Giant name color and the phosphor glow color. */
   nameLit: string;
-  nameDim: string;
   glow: string;
 }

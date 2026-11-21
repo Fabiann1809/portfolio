@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { featuredProjects as projects, projectsSectionId, projectsTitle } from "@/data/projects";
+import { featuredProjects as projects, projectsSectionId, projectsSideTitle } from "@/data/projects";
 import { getJourneyState, registerTrack } from "@/lib/journey";
 import { chapterScreens, clamp01 } from "@/lib/journeyModel";
 import { useJourneyFrame } from "@/hooks/useJourneyFrame";
@@ -75,17 +75,21 @@ export function ProjectsPinned() {
       className="relative"
       style={{ height: projects.length * 100 + "vh" }}
     >
-      <div ref={hudRef} className="sticky top-0 h-screen overflow-hidden px-8">
-        <p className="absolute top-20 left-8 font-display text-sm font-bold tracking-[0.3em] uppercase opacity-80">
-          {projectsTitle}
-        </p>
-        <div className="absolute top-1/2 left-8 -translate-y-1/2">
+      <div ref={hudRef} className="overlay-text sticky top-0 h-screen overflow-hidden px-[var(--edge-x)]">
+        <div className="absolute top-1/2 left-[var(--edge-x)] max-w-[18rem] -translate-y-1/2">
+          <h2 className="side-title mb-6">
+            {projectsSideTitle.split(" ").map((word) => (
+              <span key={word} className="block">
+                {word}
+              </span>
+            ))}
+          </h2>
           <ProjectIndex projects={projects} onSelect={handleSelect} />
         </div>
-        <div data-view-all className="absolute bottom-12 left-8" style={{ opacity: 0 }}>
+        <div data-view-all className="absolute bottom-12 left-[var(--edge-x)]" style={{ opacity: 0 }}>
           <ViewAllLink />
         </div>
-        <div className="absolute right-8 bottom-12 h-64 w-full max-w-sm">
+        <div className="absolute right-[var(--edge-x)] bottom-12 h-64 w-full max-w-sm">
           {projects.map((project) => (
             <ProjectInfo key={project.id} project={project} />
           ))}

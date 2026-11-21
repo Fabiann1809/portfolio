@@ -1,3 +1,5 @@
+import type { BackdropId } from "./theme";
+
 /** How a chapter is shown while it is current. */
 export type ChapterLayout = "backdrop" | "stream";
 
@@ -168,7 +170,7 @@ export interface EnvironmentConfig {
     scrollSpeed: number;
     idleSpeed: number;
   };
-  palettes: Record<"ink" | "bone" | "signal", StudioPalette>;
+  palettes: Record<BackdropId, StudioPalette>;
   /** Render target of the procedural scenes. */
   target: { maxWidth: number; maxHeight: number };
   /** Scene look: exposure / fog per theme brightness. */
