@@ -19,6 +19,8 @@
   --shadow-color: rgba(0, 0, 0, 0.6);
   --light-tint: rgba(255, 244, 220, 0.16);
   --vignette: rgba(0, 0, 0, 0.55);
+  --portrait-shadow-opacity: 0.18;
+  --portrait-shadow-blend: normal;
 }
 
 :root[data-backdrop="bone"] {
@@ -32,6 +34,8 @@
   --shadow-color: rgba(52, 38, 16, 0.38);
   --light-tint: rgba(255, 255, 255, 0.7);
   --vignette: rgba(98, 78, 44, 0.24);
+  --portrait-shadow-opacity: 0.24;
+  --portrait-shadow-blend: multiply;
 }
 
 :root[data-backdrop="signal"] {
@@ -45,6 +49,8 @@
   --shadow-color: rgba(90, 20, 0, 0.5);
   --light-tint: rgba(255, 224, 170, 0.4);
   --vignette: rgba(120, 20, 0, 0.35);
+  --portrait-shadow-opacity: 0.3;
+  --portrait-shadow-blend: multiply;
 }
 
 @theme {

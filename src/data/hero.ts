@@ -19,6 +19,18 @@ export const hero: HeroData = {
     width: 1145,
     height: 1374,
   },
+  portraitShadow: {
+    baseX: -34,
+    baseY: -14,
+    travelX: 70,
+    travelY: 40,
+    maxOffset: 90,
+    blurMin: 6,
+    blurMax: 14,
+    scale: 1.04,
+    skewBase: 2,
+    skewPer100: 3,
+  },
   status: {
     availability: "Disponible para trabajar",
     city: "Ciudad, País", // PLACEHOLDER

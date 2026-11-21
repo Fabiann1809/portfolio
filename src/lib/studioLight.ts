@@ -1,5 +1,7 @@
 /** Pure math of the hero "studio light": where shadows fall for a given light position. */
 
+import { hero } from "@/data/hero";
+
 export interface LightPoint {
   /** 0..1 across the stage. */
   x: number;
@@ -31,6 +33,15 @@ export function lightVars(light: LightPoint, width: number, height: number): Rec
     "--light-x": light.x * 100 + "%",
     "--light-y": light.y * 100 + "%",
   };
+  // Cast silhouette: static at the resting light, slides opposite to the light's movement.
+  const cfg = hero.portraitShadow;
+  const clamp = (v: number) => Math.max(-cfg.maxOffset, Math.min(cfg.maxOffset, v));
+  const sx = clamp(cfg.baseX - (light.x - restingLight.x) * 2 * cfg.travelX);
+  const sy = clamp(cfg.baseY - (light.y - restingLight.y) * 2 * cfg.travelY);
+  vars["--shadow-x"] = sx.toFixed(1) + "px";
+  vars["--shadow-y"] = sy.toFixed(1) + "px";
+  vars["--shadow-skew"] = (cfg.skewBase + (sx / 100) * cfg.skewPer100).toFixed(2) + "deg";
+  vars["--shadow-blur"] = (cfg.blurMin + (cfg.blurMax - cfg.blurMin) * strength).toFixed(1) + "px";
   for (const [key, range] of [["p", shadowRange.portrait], ["n", shadowRange.name]] as const) {
     vars[`--${key}-sx`] = (ux * range.offset * strength).toFixed(1) + "px";
     vars[`--${key}-sy`] = (uy * range.offset * strength).toFixed(1) + "px";
