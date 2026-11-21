@@ -6,6 +6,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { Reveal } from "@/components/loader/Reveal";
 import { HamburgerIcon } from "@/components/ui/HamburgerIcon";
+import { BackdropPicker } from "@/components/theme/BackdropPicker";
 import { MobileMenu } from "./MobileMenu";
 
 const ids = navigation.map((item) => item.id);
@@ -43,9 +44,9 @@ export function Navbar({ homeHref }: NavbarProps) {
     <Reveal as="header" className={
         "fixed inset-x-0 top-0 z-50 " +
         (external
-          ? "bg-black/40 text-neutral-100 backdrop-blur"
+          ? "bg-background/60 backdrop-blur"
           : open
-            ? "text-neutral-100 md:text-inherit"
+            ? ""
             : "bg-background/90 backdrop-blur")
       }>
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
@@ -58,7 +59,7 @@ export function Navbar({ homeHref }: NavbarProps) {
                   href={hrefPrefix + "#" + item.id}
                   onClick={(e) => handleAnchor(e, item.id)}
                   aria-current={activeId === item.id ? "true" : undefined}
-                  className={activeId === item.id ? "text-primary" : ""}
+                  className={activeId === item.id ? "text-emphasis" : ""}
                 >
                   {item.label}
                 </a>
@@ -66,6 +67,7 @@ export function Navbar({ homeHref }: NavbarProps) {
             ))}
           </ul>
         </nav>
+        <BackdropPicker variant="compact" className="hidden md:inline-flex" />
         <button
           ref={toggleRef}
           type="button"

@@ -195,7 +195,7 @@ export function SnapWheelGallery({ projects, mode = "page", className }: SnapWhe
       onTouchEnd={onTouchEnd}
       onKeyDown={onKeyDown}
       className={cn(
-        "gallery-enter overflow-hidden bg-neutral-950 text-neutral-100 [touch-action:pan-y]",
+        "gallery-enter overflow-hidden bg-background text-foreground [touch-action:pan-y]",
         classes.root,
         className,
       )}

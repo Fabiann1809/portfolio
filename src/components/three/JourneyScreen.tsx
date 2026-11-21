@@ -3,9 +3,12 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { damp } from "maath/easing";
-import { Color, MathUtils, SRGBColorSpace, TextureLoader } from "three";
+import { CanvasTexture, Color, MathUtils, SRGBColorSpace, TextureLoader } from "three";
 import type { Mesh, ShaderMaterial, Texture } from "three";
 import { journeyConfig } from "@/data/chapters";
+import { hero } from "@/data/hero";
+import { drawHeroTexture } from "@/lib/heroTexture";
+import type { ThemeColors } from "@/types";
 import { getJourneyState, stepJourney } from "@/lib/journey";
 import { poses } from "@/lib/journeyModel";
 import type { ScreenDef } from "@/lib/journeyModel";
@@ -14,8 +17,7 @@ import { screenFragmentShader, screenVertexShader } from "./shaders/screen";
 interface JourneyScreenProps {
   index: number;
   def: ScreenDef;
-  primary: string;
-  accent: string;
+  theme: ThemeColors;
 }
 
 const { stream, screen, fx, smooth } = journeyConfig;
@@ -24,7 +26,7 @@ const { stream, screen, fx, smooth } = journeyConfig;
  * One curved CRT screen of the journey. Its pose (stream position, fill, opacity) comes from
  * the shared journey model; every value is damped per frame before it reaches the mesh.
  */
-export function JourneyScreen({ index, def, primary, accent }: JourneyScreenProps) {
+export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
   const mesh = useRef<Mesh>(null);
   const material = useRef<ShaderMaterial>(null);
   const texture = useRef<Texture | null>(null);
@@ -51,11 +53,63 @@ export function JourneyScreen({ index, def, primary, accent }: JourneyScreenProp
       uDim: { value: 0 },
       uSeed: { value: seed },
       uDrift: { value: 0 },
-      uColorA: { value: new Color(index % 2 === 0 ? primary : accent) },
-      uColorB: { value: new Color(index % 2 === 0 ? accent : primary) },
+      uColorA: { value: new Color() },
+      uColorB: { value: new Color() },
+      uBg: { value: new Color() },
+      uFg: { value: new Color() },
     }),
-    [index, seed, primary, accent],
+    [seed],
   );
+
+  // Theme changes update the uniforms in place (no re-mount).
+  useEffect(() => {
+    const even = index % 2 === 0;
+    uniforms.uColorA.value.set(even ? theme.primary : theme.accent);
+    uniforms.uColorB.value.set(even ? theme.accent : theme.primary);
+    uniforms.uBg.value.set(theme.background);
+    uniforms.uFg.value.set(theme.foreground);
+  }, [uniforms, index, theme]);
+
+  // Generated hero screen: backdrop + giant name drawn to a canvas, redrawn on theme / resize.
+  useEffect(() => {
+    if (def.generated !== "hero") return;
+    const canvas = document.createElement("canvas");
+    const tex = new CanvasTexture(canvas);
+    tex.colorSpace = SRGBColorSpace;
+    let timer = 0;
+    let cancelled = false;
+
+    const apply = () => {
+      if (cancelled) return;
+      drawHeroTexture(canvas, {
+        text: hero.displayName,
+        fontFamily: getComputedStyle(document.body).fontFamily,
+        colors: theme,
+        viewport: { width: window.innerWidth, height: window.innerHeight },
+      });
+      tex.needsUpdate = true;
+      const mat = material.current;
+      if (mat) {
+        mat.uniforms.uTexture.value = tex;
+        mat.uniforms.uHasTexture.value = 1;
+        mat.uniforms.uTexAspect.value = canvas.width / canvas.height;
+      }
+    };
+    const onResize = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(apply, 250);
+    };
+
+    apply();
+    document.fonts?.ready.then(apply);
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      window.removeEventListener("resize", onResize);
+      tex.dispose();
+    };
+  }, [def.generated, theme]);
 
   useEffect(() => {
     if (!def.visual) return;
@@ -154,7 +208,7 @@ export function JourneyScreen({ index, def, primary, accent }: JourneyScreenProp
     un.uOpacity.value = c.opacity;
     un.uCurve.value = screen.curve * Math.pow(Math.max(0, 1 - c.fill), 1.5);
     un.uBezel.value = 1 - MathUtils.smoothstep(c.fill, 0.35, 0.95);
-    un.uDim.value = fx.dimFilled * c.fill;
+    un.uDim.value = def.generated ? 0 : fx.dimFilled * c.fill;
     un.uSmear.value = journey.smear;
     un.uRgb.value = fx.rgbBase + journey.smear * fx.rgbGain;
     un.uDrift.value = journey.drift + state.clock.elapsedTime * 0.05;

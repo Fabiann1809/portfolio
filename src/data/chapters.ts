@@ -7,7 +7,7 @@ import { featuredProjects, projectsSectionId } from "@/data/projects";
  * PLACEHOLDER: no visuals yet, a generated gradient is used. Set `visual` to an image path.
  */
 export const chapters: Chapter[] = [
-  { id: "hero", layout: "backdrop" },
+  { id: "hero", layout: "backdrop", generated: "hero" },
   { id: "about", layout: "backdrop", transition: { mode: "stream", lengthVh: 170 } },
   { id: projectsSectionId, layout: "stream", transition: { mode: "stream", lengthVh: 150 } },
   { id: "testimonials", layout: "backdrop", transition: { mode: "expand", lengthVh: 170 } },

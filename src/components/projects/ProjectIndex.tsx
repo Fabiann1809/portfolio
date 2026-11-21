@@ -23,7 +23,7 @@ export function ProjectIndex({ projects, onSelect }: ProjectIndexProps) {
             data-active={index === 0}
             onClick={() => onSelect(index)}
             aria-label={`${projectLabels.indexAriaLabel} ${project.title}`}
-            className="opacity-40 transition-[opacity,transform] duration-500 hover:opacity-70 data-[active=true]:text-primary data-[active=true]:translate-x-1 data-[active=true]:opacity-100"
+            className="opacity-40 transition-[opacity,transform] duration-500 hover:opacity-70 data-[active=true]:text-emphasis data-[active=true]:translate-x-1 data-[active=true]:opacity-100"
           >
             [{pad(index)}]
           </button>

@@ -11,3 +11,4 @@ export * from "./stack";
 export * from "./loader";
 export * from "./chapter";
 export * from "./gallery";
+export * from "./theme";

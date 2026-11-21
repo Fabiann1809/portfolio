@@ -11,14 +11,14 @@ function Details({ project }: { project: Project }) {
   return (
     <>
       {project.collaborative && (
-        <span className="mb-2 inline-block rounded-full border border-white/30 px-2.5 py-0.5 text-[10px] tracking-[0.25em] uppercase">
+        <span className="mb-2 inline-block rounded-full border border-foreground/30 px-2.5 py-0.5 text-[10px] tracking-[0.25em] uppercase">
           {projectLabels.collaborative}
         </span>
       )}
-      <p className="text-sm leading-relaxed text-neutral-300">{project.description}</p>
+      <p className="text-sm leading-relaxed text-muted">{project.description}</p>
       <ul aria-label={galleryLabels.technologies} className="mt-3 flex flex-wrap gap-2 text-xs">
         {project.technologies.map((tech) => (
-          <li key={tech} className="rounded border border-white/25 px-2 py-0.5">
+          <li key={tech} className="rounded border border-foreground/25 px-2 py-0.5">
             {tech}
           </li>
         ))}

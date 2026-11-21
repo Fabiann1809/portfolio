@@ -10,13 +10,15 @@ interface RevealProps {
   /** Stagger delay in ms, applied once loading is done. */
   delay?: number;
   className?: string;
+  /** How far the element rises from: "sm" (default) or "lg" for large elements. */
+  rise?: "sm" | "lg";
 }
 
 /** Fades in and rises slightly when the preloader leaves. */
-export function Reveal({ children, as = "div", delay = 0, className = "" }: RevealProps) {
+export function Reveal({ children, as = "div", delay = 0, className = "", rise = "sm" }: RevealProps) {
   const { loaded } = useLoader();
   const reduced = useReducedMotion();
-  const state = loaded ? "translate-y-0 opacity-100" : reduced ? "opacity-0" : "translate-y-3 opacity-0";
+  const state = loaded ? "translate-y-0 opacity-100" : reduced ? "opacity-0" : rise === "lg" ? "translate-y-24 opacity-0" : "translate-y-3 opacity-0";
 
   return createElement(
     as,

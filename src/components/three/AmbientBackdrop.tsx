@@ -1,24 +1,33 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Color } from "three";
 import type { ShaderMaterial } from "three";
+import type { ThemeColors } from "@/types";
 import { getJourneyState, stepJourney } from "@/lib/journey";
 import { ambientFragmentShader, ambientVertexShader } from "./shaders/screen";
 
-/** Dark full-viewport backdrop behind the screens (radial falloff + faint drifting grid). */
-export function AmbientBackdrop({ color }: { color: string }) {
+/** Full-viewport backdrop behind the screens, tinted from the theme (radial falloff + faint grid). */
+export function AmbientBackdrop({ theme }: { theme: ThemeColors }) {
   const material = useRef<ShaderMaterial>(null);
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
       uScroll: { value: 0 },
       uAspect: { value: 1 },
-      uColor: { value: new Color(color) },
+      uColor: { value: new Color() },
+      uBg: { value: new Color() },
+      uFg: { value: new Color() },
     }),
-    [color],
+    [],
   );
+
+  useEffect(() => {
+    uniforms.uColor.value.set(theme.primary);
+    uniforms.uBg.value.set(theme.background);
+    uniforms.uFg.value.set(theme.foreground);
+  }, [uniforms, theme]);
 
   useFrame((state, delta) => {
     stepJourney(state.clock.elapsedTime, delta);

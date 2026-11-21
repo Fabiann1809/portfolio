@@ -62,8 +62,8 @@ export function GalleryWheel({ projects, index, geometry: g, reduced, labels, ti
               className={
                 "block size-full cursor-pointer overflow-hidden rounded-md border transition-[border-color,box-shadow] duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) " +
                 (active
-                  ? "border-white/70 shadow-[0_0_24px_color-mix(in_srgb,var(--color-primary)_55%,transparent)]"
-                  : "border-white/15")
+                  ? "border-foreground/70 shadow-[0_0_24px_color-mix(in_srgb,var(--color-primary)_55%,transparent)]"
+                  : "border-foreground/15")
               }
             >
               <ProjectMedia project={project} />

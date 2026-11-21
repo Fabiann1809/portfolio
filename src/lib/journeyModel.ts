@@ -1,5 +1,5 @@
 import { chapters, chapterStreams, journeyConfig } from "@/data/chapters";
-import type { PhaseRange } from "@/types";
+import type { GeneratedVisual, PhaseRange } from "@/types";
 
 /**
  * Pure model of the scroll journey. The journey is one scalar J in [0, screens - 1]:
@@ -14,6 +14,7 @@ export interface ScreenDef {
   chapterIndex: number;
   layout: "backdrop" | "stream";
   visual?: string;
+  generated?: GeneratedVisual;
 }
 
 export interface Interval {
@@ -43,7 +44,7 @@ export const screens: ScreenDef[] = chapters.flatMap((chapter, chapterIndex): Sc
       visual: item.visual,
     }));
   }
-  return [{ id: chapter.id, chapterId: chapter.id, chapterIndex, layout: "backdrop" as const, visual: chapter.visual }];
+  return [{ id: chapter.id, chapterId: chapter.id, chapterIndex, layout: "backdrop" as const, visual: chapter.visual, generated: chapter.generated }];
 });
 
 export const intervals: Interval[] = screens.slice(0, -1).map((from, k) => {

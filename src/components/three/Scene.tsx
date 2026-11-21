@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
+import { useThemeColors } from "@/hooks/useThemeColors";
 import { screens } from "@/lib/journeyModel";
 import { AmbientBackdrop } from "./AmbientBackdrop";
 import { JourneyScreen } from "./JourneyScreen";
@@ -17,9 +18,6 @@ function subscribeVisibility(onChange: () => void) {
   return () => document.removeEventListener("visibilitychange", onChange);
 }
 
-const readCssColor = (name: string, fallback: string) =>
-  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-
 /**
  * The single fixed canvas behind the whole page. It hosts the ambient backdrop and every
  * screen of the scroll journey (all in one world, driven by the shared journey state).
@@ -32,11 +30,7 @@ export function Scene({ onProgress }: SceneProps) {
   );
   const { progress, active } = useProgress();
   const [ready, setReady] = useState(false);
-  // Scene only renders on the client (dynamic import, ssr: false), so reading CSS here is safe.
-  const [colors] = useState(() => ({
-    primary: readCssColor("--color-primary", "#3b82f6"),
-    accent: readCssColor("--color-accent", "#f59e0b"),
-  }));
+  const theme = useThemeColors();
 
   useEffect(() => {
     onProgress(ready ? (active ? progress / 100 : 1) : 0.2);
@@ -52,9 +46,9 @@ export function Scene({ onProgress }: SceneProps) {
         style={{ pointerEvents: "none" }}
         onCreated={() => setReady(true)}
       >
-        <AmbientBackdrop color={colors.primary} />
+        <AmbientBackdrop theme={theme} />
         {screens.map((def, index) => (
-          <JourneyScreen key={def.id} index={index} def={def} primary={colors.primary} accent={colors.accent} />
+          <JourneyScreen key={def.id} index={index} def={def} theme={theme} />
         ))}
       </Canvas>
     </div>

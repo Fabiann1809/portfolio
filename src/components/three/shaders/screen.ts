@@ -33,6 +33,8 @@ export const screenFragmentShader = /* glsl */ `
   uniform float uDrift;
   uniform vec3 uColorA;
   uniform vec3 uColorB;
+  uniform vec3 uBg;
+  uniform vec3 uFg;
   varying vec2 vUv;
 
   float hash21(vec2 p) {
@@ -61,10 +63,10 @@ export const screenFragmentShader = /* glsl */ `
   vec3 pattern(vec2 uv) {
     vec2 q = uv * vec2(uPlaneAspect, 1.0) * 2.2 + uSeed * 7.0;
     float n = vnoise(q + uTime * 0.04) * 0.6 + vnoise(q * 2.3 - uTime * 0.03) * 0.4;
-    vec3 col = mix(uColorA * 0.22, uColorB * 0.5, smoothstep(0.0, 1.0, uv.y * 0.7 + n * 0.55));
-    col += uColorA * 0.25 * smoothstep(0.55, 1.0, n);
+    vec3 col = mix(mix(uBg, uColorA, 0.16), mix(uBg, uColorB, 0.36), smoothstep(0.0, 1.0, uv.y * 0.7 + n * 0.55));
+    col = mix(col, uColorA, 0.22 * smoothstep(0.55, 1.0, n));
     vec2 g = abs(fract(uv * vec2(uPlaneAspect, 1.0) * 14.0) - 0.5);
-    col += smoothstep(0.47, 0.5, max(g.x, g.y)) * 0.05;
+    col = mix(col, uFg, smoothstep(0.47, 0.5, max(g.x, g.y)) * 0.06);
     return col;
   }
 
@@ -113,7 +115,7 @@ export const screenFragmentShader = /* glsl */ `
 
     float vig = smoothstep(1.45, 0.3, length(w * vec2(0.9, 1.0)));
     col *= mix(1.0 - uVignette, 1.0, vig);
-    col *= 1.0 - uDim;
+    col = mix(col, uBg, uDim);
 
     // Bezel: dark rounded frame with a soft inner shadow and a faint rim light.
     float rim = smoothstep(-bez, 0.0, dOuter);
@@ -141,20 +143,22 @@ export const ambientFragmentShader = /* glsl */ `
   uniform float uScroll;
   uniform float uAspect;
   uniform vec3 uColor;
+  uniform vec3 uBg;
+  uniform vec3 uFg;
   varying vec2 vUv;
 
   void main() {
     vec2 c = (vUv - 0.5) * vec2(uAspect, 1.0);
     float r = length(c);
-    vec3 col = vec3(0.012, 0.012, 0.018);
-    col += uColor * 0.06 * smoothstep(1.1, 0.0, r);
+    vec3 col = uBg;
+    col = mix(col, uColor, 0.08 * smoothstep(1.1, 0.0, r));
 
     // Grid on a dome: lines converge towards the horizon at the top.
     float depth = 1.0 / max(0.12, vUv.y + 0.35);
     vec2 g = vec2(c.x * depth * 2.0, depth * 1.6 + uScroll * 0.35 + uTime * 0.01);
     vec2 f = abs(fract(g) - 0.5);
     float line = smoothstep(0.485, 0.5, max(f.x, f.y));
-    col += line * 0.035 * smoothstep(0.9, 0.2, r);
+    col = mix(col, uFg, line * 0.05 * smoothstep(0.9, 0.2, r));
 
     gl_FragColor = vec4(col, 1.0);
     #include <colorspace_fragment>

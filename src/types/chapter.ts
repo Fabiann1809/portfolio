@@ -14,6 +14,9 @@ export interface ChapterTransition {
   lengthVh: number;
 }
 
+/** Visual drawn in code instead of loaded from an image. */
+export type GeneratedVisual = "hero";
+
 export interface Chapter {
   /** Same id as the section element and the navigation entry. */
   id: string;
@@ -21,6 +24,8 @@ export interface Chapter {
   layout: ChapterLayout;
   /** Optional image path. Without it a generated gradient/noise texture is used. */
   visual?: string;
+  /** Visual generated in code (takes the theme into account). */
+  generated?: GeneratedVisual;
   /** Absent for the first chapter. */
   transition?: ChapterTransition;
 }

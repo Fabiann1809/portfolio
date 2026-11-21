@@ -1,28 +1,67 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Site-wide backdrop themes. <html data-backdrop="ink|bone|signal"> is set before paint by an
+ * inline script (see lib/themeScript.ts). Default (no attribute) = ink. Keep the swatches in
+ * data/theme.ts in sync with --background below.
+ * Tokens: --background, --foreground, --muted, --surface, --line, --emphasis (accent text that
+ * stays legible on the tone), --shadow-color, --light-tint, --vignette.
+ */
+:root,
+:root[data-backdrop="ink"] {
+  color-scheme: dark;
+  --background: #0b0b0c;
+  --foreground: #f2efe9;
+  --muted: #9a968e;
+  --surface: #161618;
+  --line: rgba(242, 239, 233, 0.16);
+  --emphasis: var(--color-primary);
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --light-tint: rgba(255, 244, 220, 0.16);
+  --vignette: rgba(0, 0, 0, 0.55);
+}
+
+:root[data-backdrop="bone"] {
+  color-scheme: light;
+  --background: #ece7dd;
+  --foreground: #14130f;
+  --muted: #655f54;
+  --surface: #f7f3ea;
+  --line: rgba(20, 19, 15, 0.16);
+  --emphasis: var(--color-primary);
+  --shadow-color: rgba(52, 38, 16, 0.38);
+  --light-tint: rgba(255, 255, 255, 0.7);
+  --vignette: rgba(98, 78, 44, 0.24);
+}
+
+:root[data-backdrop="signal"] {
+  color-scheme: light;
+  --background: #ff5a1f;
+  --foreground: #140a05;
+  --muted: #4a1f0b;
+  --surface: #ff7a45;
+  --line: rgba(20, 10, 5, 0.25);
+  --emphasis: #140a05;
+  --shadow-color: rgba(90, 20, 0, 0.5);
+  --light-tint: rgba(255, 224, 170, 0.4);
+  --vignette: rgba(120, 20, 0, 0.35);
 }
 
 @theme {
-  /* PLACEHOLDER palette: design not defined yet. */
-  --color-primary: #3b82f6;
-  --color-accent: #f59e0b;
+  /* Strong colors that work on all three backdrops (black / white are not primary colors). */
+  --color-primary: #ff5a1f;
+  --color-accent: #ffc233;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-emphasis: var(--emphasis);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -31,9 +70,13 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Journey layout: sections sit over the dark WebGL canvas, so text is light. */
-html[data-journey="true"] body {
-  color: #ededed;
+/* Custom light cursor (only mounted on fine pointers); native cursor stays for text fields. */
+html[data-light-cursor="true"],
+html[data-light-cursor="true"] * {
+  cursor: none;
+}
+html[data-light-cursor="true"] :is(input, textarea, select, [contenteditable="true"]) {
+  cursor: text;
 }
 
 /* Variant for the WebGL journey layout (flag set on <html> by JourneyRoot). */
@@ -142,3 +185,76 @@ html[data-journey="true"] body {
 [data-reduced="true"] .gallery-fade-in { animation: gallery-fade-plain-in 0.15s linear both; }
 [data-reduced="true"] .gallery-lens-out,
 [data-reduced="true"] .gallery-fade-out { animation: gallery-fade-out 0.15s linear both; }
+
+/* Light cursor: glowing dot with a label over the hero, subtle ring elsewhere. Mode via data-mode. */
+html,
+body {
+  overflow-x: clip;
+}
+
+.light-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+.light-cursor[data-mode="light"],
+.light-cursor[data-mode="ring"],
+.light-cursor[data-mode="hover"] {
+  opacity: 1;
+}
+.light-cursor__dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.light-cursor[data-mode="light"] .light-cursor__dot {
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 0 16px 5px color-mix(in srgb, var(--color-accent) 75%, transparent),
+    0 0 44px 14px color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+.light-cursor[data-mode="ring"] .light-cursor__dot {
+  transform: scale(1.2);
+  border-color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+.light-cursor[data-mode="hover"] .light-cursor__dot {
+  transform: scale(2.6);
+  border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  background: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+.light-cursor[data-pressed="true"] .light-cursor__dot {
+  transform: scale(0.8);
+}
+.light-cursor__label {
+  position: absolute;
+  left: 14px;
+  top: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+.light-cursor[data-mode="light"] .light-cursor__label {
+  opacity: 0.85;
+  transform: none;
+}

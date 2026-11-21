@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { menuLabels, navigation } from "@/data/navigation";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { BackdropPicker } from "@/components/theme/BackdropPicker";
 
 interface MobileMenuProps {
   open: boolean;
@@ -60,7 +61,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
       aria-label={menuLabels.panel}
       data-menu
       data-reduced={reduced}
-      className="fixed inset-0 z-40 overflow-y-auto bg-neutral-950 px-6 pt-24 pb-10 text-neutral-100 md:hidden"
+      className="fixed inset-0 z-40 overflow-y-auto bg-background px-6 pt-24 pb-10 text-foreground md:hidden"
     >
       <ul className="flex min-h-full flex-col justify-center gap-2">
         {navigation.map((item, index) => (
@@ -73,7 +74,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
               style={{ "--i": index } as React.CSSProperties}
               className={
                 "block py-3 text-4xl font-semibold tracking-tight " +
-                (activeId === item.id ? "text-primary" : "")
+                (activeId === item.id ? "text-emphasis" : "")
               }
             >
               {item.label}
@@ -81,6 +82,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
           </li>
         ))}
       </ul>
+      <BackdropPicker variant="full" className="mt-6" />
     </nav>,
     document.body,
   );
