@@ -1,5 +1,5 @@
 /**
- * Frameless warped panel. One ShaderMaterial per screen: the vertex shader bends a subdivided
+ * Frameless warped panel of the rotating sphere. One ShaderMaterial per screen: the vertex shader bends a subdivided
  * plane like a slice of a cylinder / sphere (uBendX, uBendY, uCornerCurl: edges and corners curl
  * away from the camera), the fragment shader draws the picture with scanlines, an RGB fringe,
  * horizontal tearing at the edges that grows with scroll speed, and a 1px antialiased edge.
@@ -37,8 +37,6 @@ export const screenFragmentShader = /* glsl */ `
   uniform float uSeed;
   uniform float uDrift;
   uniform float uTear;
-  uniform float uSeam;
-  uniform float uGlitch;
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform vec3 uBg;
@@ -91,12 +89,6 @@ export const screenFragmentShader = /* glsl */ `
     float edgeAmt = smoothstep(0.35, 1.0, abs(vUv.x - 0.5) * 2.0);
     float shift = jitter * uTear * (0.35 + band * 1.65) * (0.2 + 0.8 * edgeAmt) * (1.0 - 0.85 * uFill);
 
-    // Glitch band hugging the edge that touches the neighbouring screen during a vertical pan.
-    float seamDist = uSeam > 0.5 ? 1.0 - vUv.y : (uSeam < -0.5 ? vUv.y : 1.0);
-    float seamBand = 1.0 - smoothstep(0.0, 0.07, seamDist);
-    float seamJitter = hash21(vec2(floor(vUv.y * 140.0), tt + uSeed * 3.0)) - 0.5;
-    shift += seamJitter * 0.09 * seamBand * uGlitch;
-
     vec2 uv = vUv + vec2(shift, 0.0);
 
     // Crisp 1px antialiased edge on the (torn) silhouette; no border, no frame.
@@ -119,11 +111,6 @@ export const screenFragmentShader = /* glsl */ `
     float vig = smoothstep(1.45, 0.3, length(w * vec2(0.9, 1.0)) * 0.7);
     col *= mix(1.0 - uVignette, 1.0, vig);
     col = mix(col, uBg, uDim);
-
-    // Seam: a thin bright scanline right on the edge plus a few brighter torn rows.
-    float seamLine = 1.0 - smoothstep(0.0, 0.004, seamDist);
-    col += vec3(0.22) * seamLine * uGlitch;
-    col += vec3(0.07) * seamBand * step(0.82, hash21(vec2(row, tt + uSeed))) * uGlitch;
 
     gl_FragColor = vec4(col, edge * uOpacity);
     #include <colorspace_fragment>

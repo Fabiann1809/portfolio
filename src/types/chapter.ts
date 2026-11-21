@@ -4,17 +4,11 @@ import type { BackdropId } from "./theme";
 export type ChapterLayout = "backdrop" | "stream";
 
 /**
- * How the journey moves from the previous chapter into this one.
- * "conveyor": frameless bent panels ride one diagonal conveyor (bottom-right to top-left).
- * "conveyor-fill": same conveyor, but the entering panel rises to the centre, then scales up and flattens to fill the viewport.
- * "vertical-pan": full-bleed to full-bleed; a continuous vertical camera move with a glitch seam and a slight roll.
- * "fly-in": the entering scene flies in from depth as a small panel and grows to fill the viewport.
+ * Transition zone placed BEFORE a chapter, between it and the previous one. Every transition is a
+ * "pass and expand": the leaving section shrinks into a panel on the rotating sphere, the sphere
+ * turns it away (top-left) and brings the next panel around (from bottom-right) before it expands.
  */
-export type TransitionMode = "conveyor" | "conveyor-fill" | "vertical-pan" | "fly-in";
-
-/** Transition zone placed BEFORE a chapter, between it and the previous one. */
 export interface ChapterTransition {
-  mode: TransitionMode;
   /** Scroll length of the zone, in viewport heights. */
   lengthVh: number;
 }
@@ -57,43 +51,33 @@ export interface JourneyConfig {
     position: number;
     shape: number;
     smear: number;
-    /** Fast follow-up used by transitions that must keep two screens glued together (pan, fly-in). */
-    transition: number;
   };
   phases: {
-    /** A full-bleed screen bends into a panel (conveyor entry). */
+    /** A full-bleed screen bends into a panel on the sphere. */
     shrink: PhaseRange;
-    /** Conveyor movement across a transition zone. */
+    /** Sphere rotation across a transition zone. */
     stream: PhaseRange;
-    /** "conveyor-fill": the entering panel scales up and flattens. */
+    /** The entering panel scales up and flattens to fill the viewport. */
     expand: PhaseRange;
-    /** Conveyor movement between two screens of the same stream chapter. */
+    /** Sphere rotation between two screens of the same stream chapter. */
     streamInner: PhaseRange;
-    /** "vertical-pan" progress. */
-    pan: PhaseRange;
-    /** "fly-in" progress. */
-    flyIn: PhaseRange;
   };
   stream: {
-    /** Direction of the conveyor, in degrees from vertical (bottom-right to top-left). */
+    /** Direction of the great-circle path, in degrees from vertical (bottom-right to top-left). */
     pathAngle: number;
-    /** Distance between neighbours as a share of the touching distance (below 1: they overlap slightly). */
+    /** Sphere radius, as a multiple of the viewport height at the screen plane. */
+    radius: number;
+    /** Angular distance between neighbours as a share of the touching distance (below 1: they overlap slightly). */
     spacing: number;
     /** Panel size multiplier. */
     scale: number;
-    /** Rightward shift of the whole stream, as a fraction of the viewport width (room for the left text column). */
+    /** Rightward shift of the whole sphere, as a fraction of the viewport width (room for the left text column). */
     shiftX: number;
     /** Same as shiftX for viewports narrower than `narrowPx` (the column is a larger share of the width). */
     shiftXNarrow: number;
     narrowPx: number;
-    /** World units pushed back per unit of distance from the centre. */
-    depth: number;
-    /** Scale lost per unit of distance from the centre. */
-    scaleFalloff: number;
-    /** Radians of rotation per unit of distance (panels face the centre). */
-    tiltX: number;
-    tiltY: number;
-    tiltZ: number;
+    /** Panels further than this many panels from the centre are not drawn. */
+    viewRange: number;
     /** Bend of a panel at rest: share of the panel width pulled back at the edges (cylinder x / y, plus corner curl). */
     bend: { x: number; y: number; corner: number };
     /** Deterministic per-panel variation (radians for angles, share for bend). */
@@ -105,29 +89,6 @@ export interface JourneyConfig {
     aspect: number;
     /** Filled screens overscan the viewport by this factor. */
     overscan: number;
-  };
-  transitions: {
-    pan: {
-      /** Peak roll (radians) of the camera in the middle of the pan. */
-      roll: number;
-      /** Extra zoom at the middle of the pan (keeps the rotated screens covering the viewport). */
-      zoom: number;
-      /** Share of a screen height the two screens overlap at the seam. */
-      overlap: number;
-    };
-    flyIn: {
-      /** Scale of the entering panel at the start. */
-      startScale: number;
-      /** Starting yaw / roll (radians) of the entering panel. */
-      yaw: number;
-      roll: number;
-      /** World units the entering panel starts behind the plane. */
-      depth: number;
-      /** Scale lost by the leaving scene, its roll (radians) and the share it fades to the background. */
-      outZoom: number;
-      outRoll: number;
-      outDim: number;
-    };
   };
   fx: {
     /** Screens per second of stream speed that maps to a full smear. */

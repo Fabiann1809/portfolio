@@ -3,8 +3,8 @@ import type { MenuLabels, NavItem, NavbarBrand } from "@/types";
 // PLACEHOLDER content. Ids must match the section ids in components/sections.
 export const navigation: NavItem[] = [
   { id: "hero", label: "Inicio" },
-  { id: "projects", label: "Proyectos" },
   { id: "about", label: "Sobre mí" },
+  { id: "projects", label: "Proyectos" },
   { id: "testimonials", label: "Testimonios" },
   { id: "experience", label: "Experiencia" },
   { id: "education", label: "Educación" },

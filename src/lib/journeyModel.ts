@@ -1,11 +1,13 @@
 import { chapters, chapterStreams, journeyConfig } from "@/data/chapters";
-import type { GeneratedVisual, PhaseRange, ProceduralScene, TransitionMode } from "@/types";
+import type { GeneratedVisual, PhaseRange, ProceduralScene } from "@/types";
 
 /**
  * Pure model of the scroll journey. The journey is one scalar J in [0, screens - 1]:
  * integer values mean "screen k rests at the centre", the fraction is the progress of the
- * interval k -> k + 1. Each interval has a mode (conveyor, conveyor-fill, vertical-pan,
- * fly-in) that decides how its two screens move. Nothing here touches the DOM or three.js.
+ * interval k -> k + 1. Screens are mounted on a big rotating sphere: J drives the rotation, each
+ * screen sits at an angular distance `r` (in panels) from the centre along a tilted great circle.
+ * A backdrop screen shrinks into a panel when it leaves and expands when it arrives
+ * (pass-and-expand). Nothing here touches the DOM or three.js.
  */
 
 export interface ScreenDef {
@@ -19,41 +21,20 @@ export interface ScreenDef {
 }
 
 export interface Interval {
-  mode: TransitionMode;
   /** Both screens belong to the same stream chapter. */
   inner: boolean;
-  /** The leaving screen is a full-bleed backdrop that bends into a conveyor panel. */
+  /** The leaving screen is a full-bleed backdrop that shrinks into a sphere panel. */
   shrinkFrom: boolean;
-  /** The entering screen is a backdrop that scales up and flattens at the end of the conveyor. */
+  /** The entering screen is a backdrop that expands and flattens at the front of the sphere. */
   expandTo: boolean;
 }
 
 export interface ScreenPose {
-  /** Signed distance from the centre along the conveyor, in panels (negative: exited top-left, positive: incoming). */
+  /** Signed distance from the centre along the great circle, in panels (negative: left the front towards the top-left, positive: still coming from the bottom-right). */
   r: number;
-  /** 0 = bent panel, 1 = fills the viewport. */
+  /** 0 = bent panel on the sphere, 1 = fills the viewport. */
   fill: number;
   opacity: number;
-  /** Draw order bias: lower is drawn first. */
-  layer: number;
-  /** 1 when the panel follows the conveyor lane (side shift, per-panel variation). */
-  lane: number;
-  /** Vertical offset in filled-screen heights (vertical pan). */
-  oy: number;
-  /** Camera roll (radians) and zoom applied around the viewport centre. */
-  roll: number;
-  zoom: number;
-  /** Extra yaw (radians) and depth (world units behind the plane). */
-  yaw: number;
-  depth: number;
-  /** Share of the picture dimmed towards the background. */
-  dim: number;
-  /** Which edge touches a neighbour at a pan seam: 1 = top, -1 = bottom, 0 = none. */
-  seam: number;
-  /** 0..1 intensity of the seam glitch band. */
-  glitch: number;
-  /** True while two screens must stay glued together (pan, fly-in): damped with a short time. */
-  direct: boolean;
 }
 
 export const screens: ScreenDef[] = chapters.flatMap((chapter, chapterIndex): ScreenDef[] => {
@@ -69,40 +50,24 @@ export const screens: ScreenDef[] = chapters.flatMap((chapter, chapterIndex): Sc
   return [{ id: chapter.id, chapterId: chapter.id, chapterIndex, layout: "backdrop" as const, visual: chapter.visual, generated: chapter.generated, scene: chapter.scene }];
 });
 
-const isConveyor = (mode: TransitionMode) => mode === "conveyor" || mode === "conveyor-fill";
-
-/** Transition mode that leads into screen `s` (always the conveyor inside a stream chapter). */
-function modeInto(s: number): TransitionMode {
-  const from = screens[s - 1];
-  const to = screens[s];
-  if (from.chapterIndex === to.chapterIndex) return "conveyor";
-  return chapters[to.chapterIndex].transition?.mode ?? "conveyor";
-}
-
 export const intervals: Interval[] = screens.slice(0, -1).map((from, k) => {
   const to = screens[k + 1];
-  const mode = modeInto(k + 1);
   return {
-    mode,
     inner: from.chapterIndex === to.chapterIndex,
-    shrinkFrom: isConveyor(mode) && from.layout === "backdrop",
-    expandTo: mode === "conveyor-fill" && to.layout === "backdrop",
+    shrinkFrom: from.layout === "backdrop",
+    expandTo: to.layout === "backdrop",
   };
 });
 
-/** Screens that ride the conveyor: stream panels plus the backdrops directly before / after a stream. */
+/** Screens that stay on the sphere: stream panels plus the backdrops directly before / after a stream. */
 const chained: boolean[] = screens.map((screen, s) => {
   if (screen.layout === "stream") return true;
-  const before = s > 0 && screens[s - 1].layout === "stream" && isConveyor(modeInto(s));
-  const after = s < screens.length - 1 && screens[s + 1].layout === "stream" && isConveyor(modeInto(s + 1));
-  return before || after;
+  return (s > 0 && screens[s - 1].layout === "stream") || (s < screens.length - 1 && screens[s + 1].layout === "stream");
 });
 
 export const maxJourney = Math.max(0, screens.length - 1);
 
 export const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
-
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export function easeInOutCubic(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -126,31 +91,16 @@ export function chapterScreens(chapterId: string): { first: number; count: numbe
   return { first, count };
 }
 
-const makePose = (): ScreenPose => ({
-  r: 0,
-  fill: 0,
-  opacity: 1,
-  layer: 0,
-  lane: 1,
-  oy: 0,
-  roll: 0,
-  zoom: 1,
-  yaw: 0,
-  depth: 0,
-  dim: 0,
-  seam: 0,
-  glitch: 0,
-  direct: false,
-});
+const makePose = (): ScreenPose => ({ r: 0, fill: 0, opacity: 1 });
 
 export const poses: ScreenPose[] = screens.map(makePose);
 
 /**
  * Writes the pose of every screen for journey value J into `poses` and returns the
- * (eased) conveyor coordinate G: the screen index that currently sits at the centre.
+ * (eased) sphere coordinate G: the screen index that currently sits at the front.
  */
 export function samplePoses(journey: number): number {
-  const { phases, transitions } = journeyConfig;
+  const { phases } = journeyConfig;
   const count = screens.length;
   if (count < 2) {
     Object.assign(poses[0], makePose(), { fill: screens[0]?.layout === "backdrop" ? 1 : 0 });
@@ -161,64 +111,16 @@ export function samplePoses(journey: number): number {
   const k = Math.min(count - 2, Math.floor(j));
   const f = j - k;
   const iv = intervals[k];
-  const conveyor = isConveyor(iv.mode);
-
-  let g = k;
-  if (conveyor) g = k + phase(f, iv.inner ? phases.streamInner : phases.stream);
-  else if (f >= 1) g = k + 1;
+  const g = k + phase(f, iv.inner ? phases.streamInner : phases.stream);
 
   for (let s = 0; s < count; s++) {
     const pose = Object.assign(poses[s], makePose());
-    const layout = screens[s].layout;
     pose.r = s - g;
-    pose.fill = layout === "backdrop" && s === 0 && j <= 0 ? 1 : 0;
-
-    if (conveyor) {
-      if (layout === "backdrop") {
-        if (s === k) pose.fill = iv.shrinkFrom ? 1 - phase(f, phases.shrink) : 0;
-        else if (s === k + 1) pose.fill = iv.expandTo ? phase(f, phases.expand) : 0;
-      }
-      if (s !== k && s !== k + 1 && !chained[s]) pose.opacity = 0;
-      continue;
+    if (screens[s].layout === "backdrop") {
+      if (s === k) pose.fill = iv.shrinkFrom ? 1 - phase(f, phases.shrink) : 0;
+      else if (s === k + 1) pose.fill = iv.expandTo ? phase(f, phases.expand) : 0;
     }
-
-    // Vertical pan / fly-in: only the two screens of the interval exist.
-    if (s !== k && s !== k + 1) {
-      pose.opacity = 0;
-      continue;
-    }
-    pose.r = 0;
-    pose.direct = true;
-    pose.fill = 1;
-    const leaving = s === k;
-
-    if (iv.mode === "vertical-pan") {
-      const t = phase(f, phases.pan);
-      const bell = Math.sin(Math.PI * t);
-      pose.oy = leaving ? t : t - 1 + transitions.pan.overlap;
-      pose.roll = transitions.pan.roll * bell;
-      pose.zoom = 1 + transitions.pan.zoom * bell;
-      pose.seam = leaving ? -1 : 1;
-      pose.glitch = Math.sqrt(bell);
-    } else {
-      const t = phase(f, phases.flyIn);
-      const fly = transitions.flyIn;
-      if (leaving) {
-        pose.zoom = 1 - fly.outZoom * t;
-        pose.roll = fly.outRoll * t;
-        pose.dim = fly.outDim * t;
-      } else {
-        const grow = clamp01((t - 0.15) / 0.85);
-        pose.fill = grow * grow * (3 - 2 * grow);
-        pose.lane = 0;
-        pose.zoom = lerp(fly.startScale, 1, t);
-        pose.yaw = (1 - t) * fly.yaw;
-        pose.roll = (1 - t) * fly.roll;
-        pose.depth = (1 - t) * fly.depth;
-        pose.opacity = clamp01(t / 0.12);
-        pose.layer = 1;
-      }
-    }
+    if (s !== k && s !== k + 1 && !chained[s]) pose.opacity = 0;
   }
   return g;
 }
@@ -241,24 +143,10 @@ export function updateStudio() {
   live.studio = 1 - clamp01(max);
 }
 
-/** Conveyor distance beyond which a panel is certainly outside the viewport. */
-const VIEW_RANGE = 1.75;
-
 /** True when the screen is close enough to the centre (and opaque enough) to be drawn. */
 export function screenInView(index: number): boolean {
   const pose = poses[index];
-  return Math.abs(pose.r) < VIEW_RANGE && pose.opacity > 0.002;
-}
-
-/** True when `other` fully hides `pose` (a filled, centred, opaque screen drawn at least as late). */
-function covers(other: ScreenPose, pose: ScreenPose): boolean {
-  return (
-    other.fill >= 0.999 &&
-    other.opacity >= 0.999 &&
-    other.zoom >= 0.995 &&
-    Math.abs(other.oy) < 0.02 &&
-    other.layer >= pose.layer
-  );
+  return Math.abs(pose.r) < journeyConfig.stream.viewRange && pose.opacity > 0.002;
 }
 
 /**
@@ -270,7 +158,7 @@ export function screenActiveForTarget(index: number): boolean {
   const pose = poses[index];
   if (pose.fill >= 0.5) return true;
   for (let other = 0; other < poses.length; other++) {
-    if (other !== index && covers(poses[other], pose)) return false;
+    if (other !== index && poses[other].fill >= 0.999 && poses[other].opacity >= 0.999) return false;
   }
   return true;
 }

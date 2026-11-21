@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { damp } from "maath/easing";
-import { CanvasTexture, Color, DoubleSide, MathUtils, ShaderMaterial, SRGBColorSpace, TextureLoader, VideoTexture } from "three";
+import { CanvasTexture, Color, DoubleSide, Euler, MathUtils, Quaternion, ShaderMaterial, SRGBColorSpace, TextureLoader, VideoTexture, Vector3 } from "three";
 import type { Mesh, Texture } from "three";
 import { journeyConfig } from "@/data/chapters";
 import { hero } from "@/data/hero";
@@ -27,12 +27,21 @@ const { stream, screen, fx, smooth } = journeyConfig;
 const PATH = (stream.pathAngle * Math.PI) / 180;
 const PATH_SIN = Math.sin(PATH);
 const PATH_COS = Math.cos(PATH);
+/** Rotation axis of the sphere (in the screen plane, perpendicular to the path) and the path direction at the front (towards the bottom-right). */
+const AXIS = new Vector3(PATH_COS, PATH_SIN, 0);
+const TANGENT_X = PATH_SIN;
+const TANGENT_Y = -PATH_COS;
+const sphereQuat = new Quaternion();
+const localQuat = new Quaternion();
+const localEuler = new Euler();
 const VIDEO_PATTERN = /\.(mp4|webm|ogv|mov)(\?.*)?$/i;
 
 /**
- * One frameless warped panel of the journey. Its pose (conveyor position, fill, opacity, pan /
- * fly-in transform) comes from the shared journey model; every value is damped per frame
- * before it reaches the mesh. Its picture is, in priority order: an image / video URL
+ * One frameless warped panel mounted on the big rotating sphere of the journey. The shared journey
+ * model gives its angular distance `r` from the front, its fill (shrunk panel .. full-bleed) and
+ * opacity; the damped angle is rotated around the sphere centre, so the panel travels along an
+ * arc and stays tangent to the sphere surface (it faces the camera at the front and turns away
+ * towards the edges). Every value is damped per frame before it reaches the mesh. Its picture is, in priority order: an image / video URL
  * (`def.visual`), a procedural 3D scene rendered to a texture (`def.scene`), a generated
  * hero texture or a generated gradient.
  */
@@ -42,7 +51,7 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
   const videoPlaying = useRef(false);
   const texture = useRef<Texture | null>(null);
   const seen = useRef(false);
-  const cur = useRef({ x: 0, y: 0, z: 0, w: 1, h: 1, sc: 1, rx: 0, ry: 0, rz: 0, fill: 0, opacity: 0 });
+  const cur = useRef({ arc: 0, w: 1, h: 1, fill: 0, opacity: 0 });
 
   const seed = (index * 0.37 + 0.11) % 1;
   const seedB = (seed * 7.31 + 0.3) % 1;
@@ -68,8 +77,6 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       uTime: { value: 0 },
       uBlur: { value: 0 },
       uTear: { value: fx.tear },
-      uSeam: { value: 0 },
-      uGlitch: { value: 0 },
       uDim: { value: 0 },
       uSeed: { value: seed },
       uDrift: { value: 0 },
@@ -234,42 +241,26 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
 
     const dt = Math.min(delta, journeyConfig.maxDelta);
     const vp = state.viewport;
-    const camZ = state.camera.position.z;
     const c = cur.current;
     const k = 1 - pose.fill;
     const dist = Math.min(Math.abs(pose.r), 2);
-    // Deterministic per-panel variation: neighbours vary more than the one resting at the centre.
-    const variance = pose.lane * k * (0.35 + 0.65 * Math.min(1, dist));
+    // Deterministic per-panel variation: neighbours vary more than the one resting at the front.
+    const variance = k * (0.35 + 0.65 * Math.min(1, dist));
     const vary = stream.variation;
 
-    // Conveyor: panels sit along a diagonal, spaced so neighbours almost touch.
+    // Panels are spaced along the great circle so neighbours almost touch at the front.
     const shiftX = state.size.width < stream.narrowPx ? stream.shiftXNarrow : stream.shiftX;
     const restW = Math.min(vp.width * screen.widthRatio, vp.height * screen.maxHeightRatio * screen.aspect) * stream.scale;
     const restH = restW / screen.aspect;
     const fullW = vp.width * screen.overscan;
     const fullH = vp.height * screen.overscan;
     const reach = Math.min(restW / Math.max(PATH_SIN, 1e-3), restH / Math.max(PATH_COS, 1e-3)) * stream.spacing;
-    const dz = -dist * stream.depth * k;
-    // Positions grow with depth so the screen-space layout stays the designed one.
-    const persp = (camZ - dz) / camZ;
-    const laneX = (pose.r * reach * PATH_SIN * persp + pose.lane * shiftX * vp.width) * k;
-    const laneY = -pose.r * reach * PATH_COS * persp * k + pose.oy * fullH;
-    // Camera roll / zoom around the viewport centre (vertical pan, fly-in).
-    const cosR = Math.cos(pose.roll);
-    const sinR = Math.sin(pose.roll);
-    const px = laneX * pose.zoom;
-    const py = laneY * pose.zoom;
+    const radius = stream.radius * vp.height;
 
     const target = {
-      x: px * cosR - py * sinR,
-      y: px * sinR + py * cosR,
-      z: dz - pose.depth,
+      arc: (pose.r * reach) / radius,
       w: MathUtils.lerp(restW, fullW, pose.fill),
       h: MathUtils.lerp(restH, fullH, pose.fill),
-      sc: (1 - stream.scaleFalloff * dist * k) * pose.zoom,
-      rx: -pose.r * stream.tiltX * k + (seedC - 0.5) * 2 * vary.pitch * variance,
-      ry: -pose.r * stream.tiltY * k + (seedB - 0.5) * 2 * vary.yaw * variance + pose.yaw,
-      rz: pose.r * stream.tiltZ * k + (seed - 0.5) * 2 * vary.roll * variance + pose.roll,
       fill: pose.fill,
       opacity: pose.opacity,
     };
@@ -278,26 +269,35 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
       Object.assign(c, target);
       seen.current = true;
     } else {
-      const tp = pose.direct ? smooth.transition : smooth.position;
-      const ts = pose.direct ? smooth.transition : smooth.shape;
-      damp(c, "x", target.x, tp, dt);
-      damp(c, "y", target.y, tp, dt);
-      damp(c, "z", target.z, tp, dt);
-      damp(c, "rx", target.rx, tp, dt);
-      damp(c, "ry", target.ry, tp, dt);
-      damp(c, "rz", target.rz, tp, dt);
-      damp(c, "sc", target.sc, ts, dt);
-      damp(c, "w", target.w, ts, dt);
-      damp(c, "h", target.h, ts, dt);
-      damp(c, "fill", target.fill, ts, dt);
-      damp(c, "opacity", target.opacity, ts, dt);
+      // The arc angle (not x / y / z) is damped, so the motion always follows the sphere.
+      damp(c, "arc", target.arc, smooth.position, dt);
+      damp(c, "w", target.w, smooth.shape, dt);
+      damp(c, "h", target.h, smooth.shape, dt);
+      damp(c, "fill", target.fill, smooth.shape, dt);
+      damp(c, "opacity", target.opacity, smooth.shape, dt);
     }
 
-    m.position.set(c.x, c.y, c.z);
-    m.rotation.set(c.rx, c.ry, c.rz);
-    m.scale.set(c.w * c.sc, c.h * c.sc, 1);
-    // Farther panels draw first; the entering fly-in screen draws on top.
-    m.renderOrder = pose.layer * 100 + 50 - Math.round(dist * 10);
+    // Sphere rotation applied to the anchor (surface point + outward normal). A filled panel
+    // sits at the front with no rotation.
+    const kk = 1 - c.fill;
+    const angle = c.arc * kk;
+    const sinA = Math.sin(angle);
+    m.position.set(
+      TANGENT_X * radius * sinA + shiftX * vp.width * kk,
+      TANGENT_Y * radius * sinA,
+      radius * (Math.cos(angle) - 1),
+    );
+    sphereQuat.setFromAxisAngle(AXIS, angle);
+    localEuler.set(
+      (seedC - 0.5) * 2 * vary.pitch * variance,
+      (seedB - 0.5) * 2 * vary.yaw * variance,
+      (seed - 0.5) * 2 * vary.roll * variance,
+    );
+    localQuat.setFromEuler(localEuler);
+    m.quaternion.copy(sphereQuat).multiply(localQuat);
+    m.scale.set(c.w, c.h, 1);
+    // Farther panels draw first; the filled one draws on top.
+    m.renderOrder = 50 - Math.round(dist * 10) + Math.round(c.fill * 100);
 
     const journey = getJourneyState();
     const un = uniforms;
@@ -305,7 +305,7 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     const bendK = Math.pow(Math.max(0, 1 - c.fill), 1.5);
     const bendVar = 1 + (seedC - 0.5) * 2 * vary.bend;
     un.uTime.value = state.clock.elapsedTime;
-    un.uSize.value = c.w * c.sc;
+    un.uSize.value = c.w;
     un.uPlaneAspect.value = c.w / c.h;
     un.uFill.value = c.fill;
     un.uOpacity.value = c.opacity;
@@ -314,12 +314,10 @@ export function JourneyScreen({ index, def, theme }: JourneyScreenProps) {
     un.uCornerCurl.value = stream.bend.corner * bendK * bendVar;
     live.cover[index] = MathUtils.smoothstep(c.fill, 0.92, 1) * c.opacity;
     const baseDim = def.generated ? 0 : fx.dimFilled * c.fill;
-    un.uDim.value = Math.min(0.9, baseDim + pose.dim);
+    un.uDim.value = Math.min(0.9, baseDim);
     un.uBlur.value = blurred ? fx.blurFilled * c.fill : 0;
     un.uSmear.value = journey.smear;
     un.uTear.value = fx.tear + journey.smear * fx.tearGain;
-    un.uSeam.value = pose.seam;
-    un.uGlitch.value = pose.glitch;
     un.uRgb.value = fx.rgbBase + journey.smear * fx.rgbGain;
     un.uDrift.value = journey.drift + state.clock.elapsedTime * 0.05;
   });
