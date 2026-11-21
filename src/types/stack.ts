@@ -14,11 +14,13 @@ export interface Ability {
 export interface ExtraData {
   /** Section label, shown as "// LABEL". */
   label: string;
-  /** Prefix of the ability codes, e.g. "PWR" gives PWR-01. */
-  codePrefix: string;
-  activeLabel: string;
-  scanLabel: string;
   technologiesLabel: string;
+  /** Wheel accessibility labels and counter separator. */
+  wheelAria: string;
+  select: string;
+  previous: string;
+  next: string;
+  counterSeparator: string;
   abilities: Ability[];
 }
 
