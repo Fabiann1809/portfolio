@@ -8,6 +8,7 @@ import { Reveal } from "@/components/loader/Reveal";
 import { HamburgerIcon } from "@/components/ui/HamburgerIcon";
 import { BackdropPicker } from "@/components/theme/BackdropPicker";
 import { MobileMenu } from "./MobileMenu";
+import { PillNav } from "./PillNav";
 
 const ids = navigation.map((item) => item.id);
 
@@ -41,48 +42,15 @@ export function Navbar({ homeHref }: NavbarProps) {
   }
 
   return (
-    <Reveal as="header" className={
-        "fixed inset-x-0 top-0 z-50 " +
-        (external
-          ? "bg-background/60 backdrop-blur"
-          : open
-            ? ""
-            : "bg-background/90 backdrop-blur")
-      }>
-      <div className="flex items-center justify-between px-[var(--edge-x)] py-3">
-        <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-lg font-black tracking-[0.12em] uppercase">{navbarBrand.label}</a>
-        <div className="flex items-center gap-4 xl:gap-6">
-          <a
-            href={hrefPrefix + "#" + navbarBrand.cta.targetId}
-            onClick={(e) => handleAnchor(e, navbarBrand.cta.targetId)}
-            className="label flex items-center gap-2 text-xs xl:text-sm"
-          >
-            {navbarBrand.cta.label}
-            <span aria-hidden="true" className="status-dot" />
-          </a>
-          <nav className="hidden xl:block" aria-label="Secciones">
-            <ul className="label flex gap-6 text-sm">
-              {navigation.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={hrefPrefix + "#" + item.id}
-                    onClick={(e) => handleAnchor(e, item.id)}
-                    aria-current={activeId === item.id ? "true" : undefined}
-                    className={activeId === item.id ? "text-emphasis" : ""}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <div className="hidden xl:block">
-            <BackdropPicker variant="compact" />
-          </div>
+    <Reveal as="header" className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <div className="relative flex items-start justify-between px-[var(--edge-x)] pt-6">
+        {/* Mobile / tablet: compact pill with logo + hamburger. Desktop: logo alone, pill centered. */}
+        <div className="pointer-events-auto flex w-full items-center justify-between rounded-full border border-line bg-surface/70 py-1.5 pr-2 pl-5 backdrop-blur-md xl:w-auto xl:border-0 xl:bg-transparent xl:p-0 xl:backdrop-blur-none">
+          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-base font-black tracking-[0.12em] uppercase xl:text-lg">{navbarBrand.label}</a>
           <button
             ref={toggleRef}
             type="button"
-            className="-mr-2 p-2 xl:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full xl:hidden"
             aria-label={open ? menuLabels.close : menuLabels.open}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -90,6 +58,20 @@ export function Navbar({ homeHref }: NavbarProps) {
           >
             <HamburgerIcon open={open} />
           </button>
+        </div>
+        <div className="pointer-events-auto absolute top-6 left-1/2 hidden -translate-x-1/2 xl:block">
+          <PillNav activeId={activeId} hrefPrefix={hrefPrefix} onAnchor={handleAnchor} />
+        </div>
+        <div className="pointer-events-auto hidden items-center gap-4 xl:flex">
+          <BackdropPicker variant="compact" />
+          <a
+            href={hrefPrefix + "#" + navbarBrand.cta.targetId}
+            onClick={(e) => handleAnchor(e, navbarBrand.cta.targetId)}
+            className="label flex items-center gap-2 rounded-full border border-line bg-surface/70 px-4 py-2 text-xs backdrop-blur-md transition-colors hover:border-emphasis hover:text-emphasis"
+          >
+            {navbarBrand.cta.label}
+            <span aria-hidden="true" className="status-dot" />
+          </a>
         </div>
       </div>
       <MobileMenu

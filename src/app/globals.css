@@ -376,3 +376,20 @@ body {
 .tunnel-ring[data-hot="true"] {
   border-color: var(--emphasis);
 }
+
+/* Nav mascot: hops whenever it lands on a new section; blinks now and then. */
+@keyframes nav-mascot-hop {
+  0% { transform: translateY(0) scale(1, 1); }
+  30% { transform: translateY(-10px) scale(0.94, 1.08); }
+  60% { transform: translateY(0) scale(1.1, 0.88); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes nav-mascot-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+.nav-mascot { animation: nav-mascot-hop 0.55s ease-out both; transform-origin: 50% 100%; }
+.nav-mascot-eyes { animation: nav-mascot-blink 5s infinite; transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: reduce) {
+  .nav-mascot, .nav-mascot-eyes { animation: none; }
+}
