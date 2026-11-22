@@ -2,8 +2,7 @@ import type { Localized, Social } from "@/types";
 
 export const socials: Social[] = [
   { id: "github", label: "GitHub", url: "https://github.com/Fabiann1809" },
-  // PLACEHOLDER: replace with the real LinkedIn profile URL.
-  { id: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/PLACEHOLDER" },
+  { id: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/leider-fabian-chipu-erazo-971319368/" },
 ];
 
 export const footer: Localized<{ text: string }> = {
