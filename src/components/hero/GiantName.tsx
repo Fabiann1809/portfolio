@@ -7,10 +7,10 @@ export function GiantName() {
     <Reveal
       rise="lg"
       delay={140}
-      className="relative z-0 px-2 pt-10 xl:absolute xl:inset-x-0 xl:bottom-[40%] xl:pt-0"
+      className="relative z-0 px-2 pt-10 xl:absolute xl:inset-x-0 xl:bottom-[45%] xl:pt-0"
     >
       <h1
-        className="block text-center text-[clamp(4.5rem,27vw,34rem)] xl:text-[clamp(4.5rem,min(22vw,30svh),34rem)] leading-[0.8] font-black tracking-[-0.05em] whitespace-nowrap text-foreground uppercase select-none"
+        className="block text-center text-[clamp(4.5rem,27vw,34rem)] xl:text-[clamp(4.5rem,min(24vw,32svh),34rem)] leading-[0.8] font-black tracking-[-0.05em] whitespace-nowrap text-foreground uppercase select-none"
         style={{ textShadow: "0px 8px 12px var(--shadow-color)" }}
       >
         {hero.displayName}

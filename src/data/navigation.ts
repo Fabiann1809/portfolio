@@ -18,7 +18,7 @@ export const menuLabels: MenuLabels = {
 
 export const navbarBrand: NavbarBrand = {
   /** Small wordmark at the left of the header. */
-  label: "FABIÁN",
+  label: "FABIAN",
   /** "Let's talk" link with a green status dot, before the section links. */
   cta: { label: "Hablemos", targetId: "contact" },
 };

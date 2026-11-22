@@ -7,5 +7,5 @@ export const socials: Social[] = [
 ];
 
 export const footer = {
-  text: "© 2026 Fabián. Hecho con Next.js y Tailwind CSS",
+  text: "© 2026 Fabian. Hecho con Next.js y Tailwind CSS",
 };

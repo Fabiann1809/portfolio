@@ -18,13 +18,13 @@ export const testimonials: Testimonial[] = [
     id: "t-1",
     name: "PLACEHOLDER: nombre",
     role: "Compañero",
-    quote: "PLACEHOLDER: cita de un compañero de equipo sobre cómo es trabajar con Fabián.",
+    quote: "PLACEHOLDER: cita de un compañero de equipo sobre cómo es trabajar con Fabian.",
   },
   {
     id: "t-2",
     name: "PLACEHOLDER: nombre",
     role: "Docente",
-    quote: "PLACEHOLDER: cita de un docente sobre el trabajo y la constancia de Fabián.",
+    quote: "PLACEHOLDER: cita de un docente sobre el trabajo y la constancia de Fabian.",
   },
   {
     id: "t-3",

@@ -34,7 +34,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fabián — Software Engineer Full Stack & AI",
+  title: "Fabian — Software Engineer Full Stack & AI",
   description: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
 };
 

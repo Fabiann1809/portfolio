@@ -2,10 +2,10 @@ import type { HeroData } from "@/types";
 import { projectsSectionId } from "@/data/projects";
 
 export const hero: HeroData = {
-  greeting: "Hola, soy Fabián",
-  displayName: "FABIÁN",
-  role: "Ingeniería de Software Full Stack & AI Engineering",
-  roleLines: ["Ingeniería de Software", "Full Stack & AI Engineering"],
+  greeting: "Hola, soy Fabian",
+  displayName: "FABIAN",
+  role: "Ingeniero de Software Full Stack & AI Engineering",
+  roleLines: ["Ingeniero de Software", "Full Stack & AI Engineering"],
   metaLabel: "// PORTFOLIO",
   copyrightYear: 2026,
   tagline: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
@@ -16,7 +16,7 @@ export const hero: HeroData = {
   cvPath: "/cv/fabian-cv.pdf",
   portrait: {
     src: "/images/hero/portrait.webp",
-    alt: "Fabián",
+    alt: "Fabian",
     width: 1145,
     height: 1374,
   },
