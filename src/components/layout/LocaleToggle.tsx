@@ -34,7 +34,7 @@ export function LocaleToggle({ variant = "pill", className }: LocaleToggleProps)
             hrefLang={option.htmlLang}
             aria-label={labels.switchTo[option.id]}
             aria-current={active ? "true" : undefined}
-            scroll={!active}
+            scroll={false}
             onClick={active ? undefined : markSkipLoader}
             className={cn(
               "label block rounded-full transition-colors duration-300",
