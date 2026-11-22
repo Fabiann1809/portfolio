@@ -159,9 +159,9 @@ export function ArtWheel() {
             index={index}
             count={count}
             separator={galleryLabels.counterSeparator}
-            className="lg:absolute lg:top-[40%] lg:left-0 lg:-translate-y-1/2"
+            className="lg:absolute lg:top-[47%] lg:left-0 lg:-translate-y-1/2"
           />
-          <div className="text-right lg:absolute lg:top-[40%] lg:right-0 lg:max-w-[18vw] lg:-translate-y-1/2">
+          <div className="text-right lg:absolute lg:top-[47%] lg:right-0 lg:max-w-[18vw] lg:-translate-y-1/2">
             <div aria-hidden="true" className="grid">
               {leaving && (
                 <p
@@ -186,7 +186,7 @@ export function ArtWheel() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-[min(100%,calc(36svh*1.6))] shrink-0 lg:absolute lg:top-[40%] lg:left-1/2 lg:w-[min(52vw,720px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
+        <div className="relative mx-auto w-[min(100%,calc(36svh*1.6))] shrink-0 lg:absolute lg:top-[47%] lg:left-1/2 lg:w-[min(44vw,600px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
           <div
             ref={lensRef}
             className="relative aspect-[16/10] w-full rounded-[10%/14%]"
