@@ -419,3 +419,11 @@ html[data-skip-loader] .preloader {
 .stack-marquee {
   animation: stack-marquee linear infinite;
 }
+
+/* Art gallery: text swap (clip + slide up), keyed by the active index. */
+@keyframes gallery-text-swap {
+  from { opacity: 0; transform: translateY(60%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.gallery-text-swap { animation: gallery-text-swap 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+[data-reduced="true"] .gallery-text-swap { animation: none; }

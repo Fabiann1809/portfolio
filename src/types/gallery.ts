@@ -49,3 +49,26 @@ export interface GalleryConfig {
   ease: string;
   wheel: { page: WheelGeometry; embedded: WheelGeometry };
 }
+
+/** Tuning of the scroll-driven artwork gallery (WebGL lens + 3D thumbnail ring). */
+export interface ArtGalleryConfig {
+  lens: {
+    distortion: number;
+    chromatic: number;
+    glow: number;
+    /** Max tilt (deg) of the lens toward the pointer. */
+    tilt: number;
+    /** Crossfade between two artworks. */
+    fadeMs: number;
+  };
+  ring: {
+    perspective: number;
+    /** X rotation (deg) of the whole ring. */
+    tiltDeg: number;
+    /** Easing speed of the ring rotation: 1 - exp(-speed * dt). */
+    snapSpeed: number;
+    gap: number;
+    page: { thumbWidth: number; thumbHeight: number };
+    embedded: { thumbWidth: number; thumbHeight: number };
+  };
+}
