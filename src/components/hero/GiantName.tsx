@@ -12,10 +12,11 @@ export function GiantName() {
       <h1
         className="block text-center text-[clamp(4.5rem,27vw,34rem)] xl:text-[clamp(4.5rem,min(24vw,32svh),34rem)] leading-[0.8] font-black tracking-[-0.05em] whitespace-nowrap text-foreground uppercase select-none"
         style={{
-          textShadow: "0px 8px 12px var(--shadow-color)",
+          // Shadow falls away from the pointer, like a light following the cursor.
+          textShadow: "calc(var(--px, 0) * -36px) calc(8px + var(--py, 0) * -28px) 18px var(--shadow-color)",
           transform:
             "perspective(1200px) translate3d(calc(var(--px, 0) * -28px), calc(var(--py, 0) * -16px), 0) rotateX(calc(var(--py, 0) * -8deg)) rotateY(calc(var(--px, 0) * 10deg))",
-          transition: "transform 700ms cubic-bezier(0.22, 1, 0.36, 1)",
+          transition: "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), text-shadow 700ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         {heroShared.displayName}
