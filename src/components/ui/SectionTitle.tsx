@@ -7,15 +7,12 @@ interface SectionTitleProps {
   className?: string;
 }
 
-/** Large section heading with an optional small accent readout above it, so each section change is obvious. */
+/** Section heading in the condensed display face, with an optional small accent readout above it. */
 export function SectionTitle({ children, trailing, className = "" }: SectionTitleProps) {
   return (
-    <ScrollReveal className={`font-sans ${className}`}>
-      {trailing !== undefined && <p className="mb-2 text-sm font-medium text-emphasis tabular-nums">({trailing})</p>}
-      <h2 className="text-[clamp(44px,7vw,104px)] leading-[0.95] font-bold tracking-tight">
-        {children}
-        <span className="text-emphasis">.</span>
-      </h2>
+    <ScrollReveal className={className}>
+      {trailing !== undefined && <p className="mb-2 font-sans text-sm font-medium text-emphasis tabular-nums">({trailing})</p>}
+      <h2 className="giant-title text-[clamp(30px,4vw,56px)]">{children}</h2>
     </ScrollReveal>
   );
 }
