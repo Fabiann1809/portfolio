@@ -81,13 +81,4 @@ export const projects: Project[] = [
     year: "2026",
     links: { github: "https://github.com/Fabiann1809/vyro" },
   },
-  {
-    id: "fabify",
-    title: "Fabify",
-    description: "Proyecto práctico sobre estructuras de datos y algoritmos, centrado en una lista doblemente enlazada.",
-    technologies: ["PLACEHOLDER: tecnologías"],
-    collaborative: false,
-    year: "2026",
-    links: { github: "https://github.com/Fabiann1809" },
-  },
 ];
