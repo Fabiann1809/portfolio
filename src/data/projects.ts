@@ -65,6 +65,8 @@ const projectBases: ProjectBase[] = [
   },
   {
     id: "isla-espejo",
+    image: "/images/projects/isla-espejo-poster.jpg",
+    video: "/videos/projects/isla-espejo-demo.mp4",
     technologies: ["Godot 4"],
     collaborative: true,
     year: "2026",
