@@ -44,4 +44,7 @@ export interface ProjectLabels {
   download: string;
   /** Accessible name of the progress ticks list. */
   progressAria: string;
+  /** Small badge on demo videos: pointer devices / touch screens. */
+  hoverHint: string;
+  tapHint: string;
 }

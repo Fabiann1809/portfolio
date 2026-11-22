@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { placeholderGradient } from "@/lib/gradient";
+import { projectLabels } from "@/data/projects";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import type { Project } from "@/types";
 
 interface ProjectMediaProps {
@@ -20,6 +22,7 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const labels = useLocalized(projectLabels);
 
   useEffect(() => {
     const video = ref.current;
@@ -129,6 +132,19 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
           className="pointer-events-none absolute inset-0 size-full object-cover"
           style={{ opacity: playing ? 0 : 1, transition: `opacity ${POSTER_FADE_MS}ms ease` }}
         />
+      )}
+      {!reduced && (
+        <span
+          aria-hidden="true"
+          className="mono-label pointer-events-none absolute right-2 bottom-2 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white backdrop-blur-sm"
+          style={{ opacity: playing ? 0 : 1, transition: `opacity ${POSTER_FADE_MS}ms ease` }}
+        >
+          <svg viewBox="0 0 10 10" className="size-2 fill-current" aria-hidden="true">
+            <path d="M2 1l7 4-7 4z" />
+          </svg>
+          <span className="[@media(hover:none)]:hidden">{labels.hoverHint}</span>
+          <span className="hidden [@media(hover:none)]:inline">{labels.tapHint}</span>
+        </span>
       )}
     </div>
   );

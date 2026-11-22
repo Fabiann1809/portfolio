@@ -14,6 +14,8 @@ export const projectLabels: Localized<ProjectLabels> = {
     demo: "Demo",
     download: "APK",
     progressAria: "Progreso de proyectos",
+    hoverHint: "Pasa el cursor para ver la demo",
+    tapHint: "Toca para ver la demo",
   },
   en: {
     heading: "Mission files",
@@ -24,6 +26,8 @@ export const projectLabels: Localized<ProjectLabels> = {
     demo: "Demo",
     download: "APK",
     progressAria: "Projects progress",
+    hoverHint: "Hover to play the demo",
+    tapHint: "Tap to play the demo",
   },
 };
 
