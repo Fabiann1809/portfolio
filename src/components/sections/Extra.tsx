@@ -55,7 +55,7 @@ export function Extra() {
         </ScrollReveal>
 
         <ScrollReveal delay={120}>
-          <div className="border border-line p-6 md:p-8">
+          <div className="rounded-3xl border border-line bg-surface/40 p-6 backdrop-blur-sm md:p-8">
             <p className="mono-label mb-6 flex justify-between text-muted">
               <span>{extra.scanLabel}</span>
               <span className="text-emphasis">{codeOf(activeIndex)}</span>

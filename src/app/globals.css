@@ -133,7 +133,8 @@ body {
     letter-spacing: 0.14em;
     text-transform: uppercase;
     border: 1px solid var(--line);
-    padding: 0.55rem 0.9rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 9999px;
     transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
   }
   .bracket-link:is(:hover, :focus-visible) {

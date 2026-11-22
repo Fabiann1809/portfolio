@@ -4,7 +4,7 @@ import type { Project } from "@/types";
 /** Project image in a framed panel with an accent border and faint scanlines. */
 export function MissionFrame({ project, code, className = "" }: { project: Project; code: string; className?: string }) {
   return (
-    <div className={`relative aspect-[16/10] overflow-hidden border border-emphasis bg-surface ${className}`}>
+    <div className={`relative aspect-[16/10] overflow-hidden rounded-2xl border border-emphasis bg-surface ${className}`}>
       <ProjectMedia project={project} />
       <div
         aria-hidden="true"

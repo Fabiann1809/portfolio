@@ -46,7 +46,7 @@ export function HeroIntro() {
           className="gap-3 py-1.5 pr-1.5 pl-4"
         >
           {hero.workLabel} <span aria-hidden="true">↗</span>
-          <span aria-hidden="true" className="ml-1 size-6 bg-emphasis" />
+          <span aria-hidden="true" className="ml-1 size-6 rounded-full bg-emphasis" />
         </LinkButton>
         <LinkButton href={hero.cvPath} download className="gap-2">
           {hero.cvLabel} <span aria-hidden="true">↗</span>

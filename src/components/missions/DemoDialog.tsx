@@ -51,7 +51,7 @@ export function DemoDialog({ open, onClose, src, poster, title, closeLabel }: De
           poster={poster}
           controls
           playsInline
-          className="aspect-video w-full border border-emphasis bg-black object-contain"
+          className="aspect-video w-full rounded-2xl border border-emphasis bg-black object-contain"
         />
       </div>
     </dialog>

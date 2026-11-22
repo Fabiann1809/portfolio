@@ -31,7 +31,7 @@ export function Footer() {
               <li key={item.id}>
                 <a
                   href={"#" + item.id}
-                  className="block rounded-lg bg-foreground px-4 py-2 text-[15px] text-background transition-colors hover:bg-emphasis"
+                  className="block rounded-full bg-foreground px-4 py-2 text-[15px] text-background transition-colors hover:bg-emphasis"
                 >
                   {item.label}
                 </a>
