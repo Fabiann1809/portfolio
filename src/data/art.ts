@@ -12,8 +12,6 @@ export const art: ArtData = {
   yearLabel: "Año",
   galleryAria: "Galería de obras",
   wheelAria: "Selector de obras",
-  previous: "Obra anterior",
-  next: "Obra siguiente",
   select: "Ir a la obra",
   artworks: [1, 2, 3, 4, 5, 6].map((n) => ({
     id: `art-${n}`,

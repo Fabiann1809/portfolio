@@ -18,8 +18,6 @@ export interface ArtData {
   /** Accessible labels of the artwork wheel. */
   galleryAria: string;
   wheelAria: string;
-  previous: string;
-  next: string;
   /** Prefix of a thumbnail accessible name, followed by the artwork title. */
   select: string;
   artworks: Artwork[];
