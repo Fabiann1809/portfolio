@@ -4,56 +4,54 @@ import { contact as contactContent } from "@/data/contact";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { socials } from "@/data/socials";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { SignalHeadline } from "@/components/contact/SignalHeadline";
+import { SocialIcon } from "@/components/contact/SocialIcon";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { SectionLabel } from "@/components/ui/SectionLabel";
 
-/** "Send the signal": giant headline, availability, socials and the contact form. */
+/** Contact: compact headline with email and social pills on the left, the form on the right. */
 export function Contact() {
   const contact = useLocalized(contactContent);
+  const hasEmail = contact.email.includes("@");
   return (
-    <section id="contact" className="px-[var(--edge-x)] pt-24 pb-20 md:pt-32">
-      <SectionLabel>{contact.label}</SectionLabel>
-      <div className="mt-10">
-        <SignalHeadline lines={contact.headlineLines} />
-      </div>
-
-      <div className="mt-16 grid gap-14 border-t border-line pt-12 md:grid-cols-2 md:gap-20">
+    <section id="contact" className="px-[var(--edge-x)] py-24 font-sans md:py-32">
+      <div className="mx-auto grid max-w-6xl gap-14 md:grid-cols-2 md:gap-20">
         <ScrollReveal className="flex flex-col gap-8">
-          <p className="mono-label flex items-center gap-3">
+          <div>
+            <p className="mono-label text-emphasis">{contact.label}</p>
+            <h2 className="mt-3 text-[clamp(48px,7vw,104px)] leading-[0.95] font-bold tracking-tight">
+              {contact.headlineLines.join(" ")}
+              <span className="text-emphasis">.</span>
+            </h2>
+            <p className="mt-5 max-w-md text-muted">{contact.intro}</p>
+          </div>
+          {hasEmail ? (
+            <a
+              href={`mailto:${contact.email}`}
+              className="self-start text-xl break-all underline decoration-emphasis underline-offset-8 transition-colors hover:text-emphasis md:text-2xl"
+            >
+              {contact.email}
+            </a>
+          ) : (
+            <p className="text-xl break-all md:text-2xl">{contact.email}</p>
+          )}
+          <ul className="flex flex-wrap gap-3">
+            {socials.map((social) => (
+              <li key={social.id}>
+                <a
+                  href={social.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2.5 rounded-full border border-line px-5 py-2.5 transition-colors hover:border-emphasis hover:text-emphasis"
+                >
+                  <SocialIcon id={social.id} />
+                  {social.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mono-label flex items-center gap-3 text-muted">
             <span aria-hidden="true" className="status-dot" />
-            {contact.availability}
+            {contact.location}
           </p>
-          <p className="max-w-md text-muted">{contact.intro}</p>
-          <div>
-            <p className="mono-label text-muted">{contact.emailLabel}</p>
-            {contact.email.includes("@") ? (
-              <a
-                href={`mailto:${contact.email}`}
-                className="mt-2 inline-block font-condensed text-[clamp(26px,3vw,44px)] font-bold break-all underline-offset-8 hover:text-emphasis hover:underline"
-              >
-                {contact.email}
-              </a>
-            ) : (
-              <p className="mt-2 font-condensed text-[clamp(26px,3vw,44px)] font-bold break-all">{contact.email}</p>
-            )}
-          </div>
-          <div>
-            <p className="mono-label text-muted">{contact.locationLabel}</p>
-            <p className="mt-2">{contact.location}</p>
-          </div>
-          <div>
-            <p className="mono-label text-muted">{contact.socialsLabel}</p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {socials.map((social) => (
-                <li key={social.id}>
-                  <a className="bracket-link inline-block" href={social.url} target="_blank" rel="noreferrer">
-                    {social.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </ScrollReveal>
 
         <ScrollReveal delay={120}>

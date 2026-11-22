@@ -10,6 +10,8 @@ export interface ContactData {
   location: string;
   locationLabel: string;
   socialsLabel: string;
+  /** Hint text inside each field. */
+  placeholders: { name: string; email: string; subject: string; message: string };
   fields: {
     name: string;
     email: string;

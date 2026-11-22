@@ -10,8 +10,8 @@ const emptyValues: ContactFormValues = { name: "", email: "", subject: "", messa
 type Status = "idle" | "sending" | "success" | "error";
 
 const fieldClass =
-  "w-full border-0 border-b border-line bg-transparent py-3 text-base outline-none transition-colors focus:border-emphasis";
-const labelClass = "mono-label flex flex-col gap-2 text-muted";
+  "w-full rounded-2xl border border-line bg-surface px-5 py-3.5 text-base text-foreground outline-none transition-colors placeholder:text-muted/70 focus:border-emphasis";
+const labelClass = "flex flex-col gap-2.5 text-[15px] font-medium text-foreground";
 const errorClass = "text-sm normal-case tracking-normal text-red-500";
 
 /** Regex-validated contact form (see lib/validation.ts) posting to the Resend route. */
@@ -48,7 +48,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-7">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5 font-sans">
       <label className={labelClass}>
         {contact.fields.name}
         <input
@@ -56,6 +56,7 @@ export function ContactForm() {
           name="name"
           value={values.name}
           onChange={(e) => handleChange("name", e.target.value)}
+          placeholder={contact.placeholders.name}
           aria-invalid={Boolean(errors.name)}
           className={fieldClass}
         />
@@ -72,6 +73,7 @@ export function ContactForm() {
           name="email"
           value={values.email}
           onChange={(e) => handleChange("email", e.target.value)}
+          placeholder={contact.placeholders.email}
           aria-invalid={Boolean(errors.email)}
           className={fieldClass}
         />
@@ -88,6 +90,7 @@ export function ContactForm() {
           name="subject"
           value={values.subject}
           onChange={(e) => handleChange("subject", e.target.value)}
+          placeholder={contact.placeholders.subject}
           aria-invalid={Boolean(errors.subject)}
           className={fieldClass}
         />
@@ -101,9 +104,10 @@ export function ContactForm() {
         {contact.fields.message}
         <textarea
           name="message"
-          rows={4}
+          rows={5}
           value={values.message}
           onChange={(e) => handleChange("message", e.target.value)}
+          placeholder={contact.placeholders.message}
           aria-invalid={Boolean(errors.message)}
           className={fieldClass}
         />
@@ -116,10 +120,9 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="bracket-link flex items-center justify-between self-start gap-6 disabled:opacity-50"
+        className="mt-2 w-full cursor-pointer rounded-full bg-emphasis py-4 text-sm font-semibold tracking-[0.12em] text-background uppercase transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        <span>{status === "sending" ? contact.sendingLabel : contact.submitLabel}</span>
-        <span aria-hidden="true">→</span>
+        {status === "sending" ? contact.sendingLabel : contact.submitLabel}
       </button>
       {status === "success" && (
         <p role="status" className="mono-label text-emphasis">
