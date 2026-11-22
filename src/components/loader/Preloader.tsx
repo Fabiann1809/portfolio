@@ -136,7 +136,7 @@ export function Preloader() {
 
   return (
     <div
-      className={`preloader fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background font-display text-muted ease-[cubic-bezier(0.76,0,0.24,1)] ${stateClass}`}
+      className={`preloader fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background font-sans text-muted ease-[cubic-bezier(0.76,0,0.24,1)] ${stateClass}`}
       style={{ transitionProperty: "transform, opacity", transitionDuration: exitMs + "ms" }}
     >
       <p className="phosphor mb-6 text-2xl font-extrabold tracking-[0.4em] uppercase">{loader.label}</p>

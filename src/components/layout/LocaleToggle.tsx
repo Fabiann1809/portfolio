@@ -6,7 +6,6 @@ import { localeOptions, localeToggleLabels } from "@/data/locale";
 import { useLocale } from "@/components/locale/LocaleProvider";
 import { localizePath, splitLocalePath } from "@/lib/locale";
 import { cn } from "@/lib/utils";
-import { markSkipLoader } from "@/lib/skipLoader";
 
 interface LocaleToggleProps {
   /** "pill": compact links inside the header pill. "menu": larger links in the mobile menu. */
@@ -35,7 +34,14 @@ export function LocaleToggle({ variant = "pill", className }: LocaleToggleProps)
             aria-label={labels.switchTo[option.id]}
             aria-current={active ? "true" : undefined}
             scroll={false}
-            onClick={active ? undefined : markSkipLoader}
+            onClick={(event) => {
+              if (active) return;
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+              // Same page in both languages: swap the URL in place (Next syncs usePathname with
+              // history.pushState) instead of navigating, so the page is not remounted or duplicated.
+              event.preventDefault();
+              window.history.pushState(null, "", localizePath(option.id, path) + window.location.hash);
+            }}
             className={cn(
               "label block rounded-full transition-colors duration-300",
               menu ? "border border-line px-4 py-2 text-sm" : "px-2 py-1.5 text-[11px] 2xl:text-xs",

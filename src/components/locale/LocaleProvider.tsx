@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import type { Locale, Localized } from "@/types";
-import { defaultLocale, localeOptions } from "@/data/locale";
+import { defaultLocale, localeOptions, siteMetadata } from "@/data/locale";
 import { splitLocalePath } from "@/lib/locale";
 
 const LocaleContext = createContext<Locale>(defaultLocale);
@@ -14,6 +14,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = localeOptions.find((option) => option.id === locale)?.htmlLang ?? locale;
+    // In-place language switches skip the route's metadata, so keep the tab title in sync here.
+    document.title = String(siteMetadata[locale].title);
   }, [locale]);
 
   return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
