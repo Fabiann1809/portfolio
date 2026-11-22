@@ -49,7 +49,7 @@ export function Navbar({ homeHref }: NavbarProps) {
       <div className="relative flex items-start justify-between px-[var(--edge-x)] pt-6">
         {/* Mobile / tablet: compact pill with logo + hamburger. Desktop: logo alone, pill centered. */}
         <div className="pointer-events-auto flex w-full items-center justify-between rounded-full border border-line bg-surface/70 py-1.5 pr-2 pl-5 backdrop-blur-md xl:w-auto xl:py-2 xl:pr-5">
-          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-base font-black tracking-[0.12em] uppercase xl:text-lg">{brand.label}</a>
+          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="font-sans text-base font-bold tracking-[0.12em] uppercase xl:text-lg">{brand.label}</a>
           <button
             ref={toggleRef}
             type="button"

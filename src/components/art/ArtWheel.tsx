@@ -14,7 +14,6 @@ import type { Artwork } from "@/types";
 
 const cfg = galleryConfig;
 const artCfg = artGalleryConfig;
-const titleClass = "font-display text-xl font-extrabold tracking-[0.1em] uppercase";
 /** Clip box for the slide-up text swap. */
 const swapWrap = "block overflow-hidden pb-1";
 
@@ -190,24 +189,10 @@ export function ArtWheel() {
           {status}
         </p>
 
-        <div className="relative flex items-end justify-between gap-4 lg:contents">
+        <div className="relative flex items-end justify-center gap-4 lg:contents">
           <div className={`${swapWrap} lg:absolute lg:top-[42%] lg:left-0 lg:-translate-y-1/2`}>
             <div key={index} className="gallery-text-swap">
               <GalleryCounter index={index} count={count} separator={labels.counterSeparator} />
-            </div>
-          </div>
-          <div className="text-right lg:absolute lg:top-[42%] lg:right-0 lg:max-w-[18vw] lg:-translate-y-1/2">
-            <div aria-hidden="true" className={swapWrap}>
-              <p key={work.id} className={`gallery-text-swap ${titleClass}`}>
-                {work.title}
-              </p>
-            </div>
-            <div className={swapWrap}>
-              <p key={work.id} className="gallery-text-swap mono-label mt-2 text-muted">
-                {art.techniqueLabel}: {work.technique}
-                <br />
-                {art.yearLabel}: {work.year}
-              </p>
             </div>
           </div>
         </div>
