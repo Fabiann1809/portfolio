@@ -55,7 +55,6 @@ export interface ProjectLabels {
   technologiesLabel: string;
   personal: string;
   /** Work gallery (coverflow) under the tunnel. */
-  galleryEyebrow: string;
   galleryTitle: string;
   gallerySubtitle: string;
   galleryAria: string;

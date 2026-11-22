@@ -104,8 +104,7 @@ export function WorkGallery() {
       className="overflow-x-clip px-[var(--edge-x)] pt-20 pb-24"
     >
       <header className="max-w-2xl">
-        <p className="mono-label text-emphasis">{labels.galleryEyebrow}</p>
-        <h2 className="giant-title mt-2 text-[clamp(30px,4vw,56px)]">{labels.galleryTitle}</h2>
+        <h2 className="giant-title text-[clamp(30px,4vw,56px)]">{labels.galleryTitle}</h2>
         <p className="mt-2 text-muted">{labels.gallerySubtitle}</p>
       </header>
 
