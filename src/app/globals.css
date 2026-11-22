@@ -72,7 +72,7 @@
   /* Doto (dot-matrix) for display and UI labels; Geist Mono for reading text. */
   --font-display: var(--font-doto), ui-monospace, monospace;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-sans: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   /* Condensed grotesk for the huge uppercase titles of the sections below the hero. */
   --font-condensed: var(--font-condensed-face), "Arial Narrow", sans-serif;
 }
