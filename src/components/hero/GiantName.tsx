@@ -14,7 +14,7 @@ export function GiantName() {
         style={{
           textShadow: "0px 8px 12px var(--shadow-color)",
           transform:
-            "perspective(1200px) translate3d(calc(var(--px, 0) * -40px), calc(var(--py, 0) * -24px), 0) rotateX(calc(var(--py, 0) * -16deg)) rotateY(calc(var(--px, 0) * 22deg))",
+            "perspective(1200px) translate3d(calc(var(--px, 0) * -28px), calc(var(--py, 0) * -16px), 0) rotateX(calc(var(--py, 0) * -8deg)) rotateY(calc(var(--px, 0) * 10deg))",
           transition: "transform 700ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >

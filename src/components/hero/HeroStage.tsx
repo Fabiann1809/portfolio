@@ -23,6 +23,11 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
     const el = ref.current;
     if (!el || event.pointerType === "touch") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Over the header / controls (e.g. the language switch in the top corner) the name rests flat.
+    if ((event.target as HTMLElement).closest("header, nav, " + INTERACTIVE)) {
+      onPointerLeave();
+      return;
+    }
     const rect = el.getBoundingClientRect();
     el.style.setProperty(
       "--px",
