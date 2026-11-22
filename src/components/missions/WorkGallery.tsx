@@ -130,7 +130,7 @@ export function WorkGallery() {
           onPointerCancel={endDrag}
           onClickCapture={onClickCapture}
         >
-          <div className="relative mx-auto w-[78vw] max-w-[460px] md:w-[min(30vw,460px,calc(30svh*1.6))]">
+          <div className="relative mx-auto w-[78vw] max-w-[520px] md:w-[min(34vw,520px,calc(34svh*1.6))]">
             <div className="aspect-[16/10]" aria-hidden="true" />
             {projects.map((project, i) => (
               <WorkCard
