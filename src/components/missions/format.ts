@@ -2,4 +2,4 @@
 export const countOf = (n: number) => String(n).padStart(2, "0");
 
 /** Record code (prefix from the project labels) of the project at index `i`. */
-export const codeOf = (prefix: string, i: number) => `${prefix}-${countOf(i + 1)}`;
+export const codeOf = (prefix: string, i: number) => (prefix ? `${prefix}-` : "") + countOf(i + 1);

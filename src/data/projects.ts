@@ -8,7 +8,7 @@ export const projectLabels: Localized<ProjectLabels> = {
   es: {
     heading: "Mis proyectos",
     countLabel: "proyectos",
-    codePrefix: "MSN",
+    codePrefix: "",
     collaborative: "Colaboré",
     github: "GitHub",
     demo: "Demo",
@@ -20,7 +20,7 @@ export const projectLabels: Localized<ProjectLabels> = {
   en: {
     heading: "My projects",
     countLabel: "projects",
-    codePrefix: "MSN",
+    codePrefix: "",
     collaborative: "Collaborated",
     github: "GitHub",
     demo: "Demo",
