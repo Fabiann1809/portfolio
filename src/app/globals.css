@@ -406,3 +406,15 @@ html[data-skip-loader] .preloader {
     animation: none;
   }
 }
+
+/* Work gallery indicator: the active segment fills over the autoplay interval; full when paused. */
+@keyframes work-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.work-progress {
+  animation: work-progress linear both;
+}
+.work-progress.is-paused {
+  animation: none;
+}

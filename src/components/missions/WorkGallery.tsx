@@ -95,20 +95,18 @@ export function WorkGallery() {
     }
   };
 
-  const navButton =
-    "flex size-11 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur-sm transition-colors hover:border-emphasis hover:text-emphasis focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emphasis";
 
   return (
     <section
       ref={rootRef}
       id="work"
       aria-label={labels.galleryAria}
-      className="overflow-x-clip px-[var(--edge-x)] pt-24 pb-32"
+      className="overflow-x-clip px-[var(--edge-x)] pt-20 pb-24"
     >
       <header className="max-w-2xl">
         <p className="mono-label text-emphasis">{labels.galleryEyebrow}</p>
-        <h2 className="giant-title mt-3 text-[clamp(36px,6vw,88px)]">{labels.galleryTitle}</h2>
-        <p className="mt-4 text-muted">{labels.gallerySubtitle}</p>
+        <h2 className="giant-title mt-2 text-[clamp(30px,4vw,56px)]">{labels.galleryTitle}</h2>
+        <p className="mt-2 text-muted">{labels.gallerySubtitle}</p>
       </header>
 
       <div
@@ -116,7 +114,7 @@ export function WorkGallery() {
         aria-roledescription="carousel"
         aria-label={labels.galleryAria}
         tabIndex={0}
-        className="mt-10 rounded-2xl outline-offset-8 focus-visible:outline-2 focus-visible:outline-emphasis md:mt-14"
+        className="mt-4 rounded-2xl outline-offset-8 focus-visible:outline-2 focus-visible:outline-emphasis md:mt-6"
         onKeyDown={onKeyDown}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
@@ -124,7 +122,7 @@ export function WorkGallery() {
         onBlur={() => setFocused(false)}
       >
         <div
-          className="relative touch-pan-y py-6 select-none md:py-10"
+          className="relative touch-pan-y py-4 select-none md:py-6"
           style={{ perspective: reduced ? undefined : cfg.perspective + "px" }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -132,7 +130,7 @@ export function WorkGallery() {
           onPointerCancel={endDrag}
           onClickCapture={onClickCapture}
         >
-          <div className="relative mx-auto w-[78vw] max-w-[600px] md:w-[min(40vw,600px,calc(42svh*1.6))]">
+          <div className="relative mx-auto w-[78vw] max-w-[460px] md:w-[min(30vw,460px,calc(30svh*1.6))]">
             <div className="aspect-[16/10]" aria-hidden="true" />
             {projects.map((project, i) => (
               <WorkCard
@@ -148,37 +146,36 @@ export function WorkGallery() {
           </div>
         </div>
 
-        <div className="mt-2 flex items-center justify-center gap-4">
-          <button type="button" className={navButton} aria-label={labels.prev} onClick={() => step(-1)}>
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="M15 5l-7 7 7 7" />
-            </svg>
-          </button>
-          <ul aria-label={labels.dotsAria} className="flex items-center">
+        {/* Indicator: counter + one segment per project; the active one fills while autoplay counts down. */}
+        <div className="mx-auto mt-2 flex w-[min(88vw,520px)] items-center gap-4">
+          <p className="font-sans text-sm font-semibold tabular-nums" aria-hidden="true">
+            <span className="text-emphasis">{String(active + 1).padStart(2, "0")}</span>
+            <span className="text-muted"> / {String(count).padStart(2, "0")}</span>
+          </p>
+          <ul aria-label={labels.dotsAria} className="flex flex-1 items-center gap-1.5">
             {projects.map((project, i) => (
-              <li key={project.id}>
+              <li key={project.id} className="flex-1">
                 <button
                   type="button"
                   aria-label={`${labels.goTo} ${project.title}`}
                   aria-current={i === active ? "true" : undefined}
-                  className="group flex size-6 items-center justify-center"
+                  className="group block w-full cursor-pointer py-2"
                   onClick={() => go(i)}
                 >
-                  <span
-                    className={
-                      "block h-2 rounded-full transition-[width,background-color] duration-300 " +
-                      (i === active ? "w-6 bg-emphasis" : "w-2 bg-foreground/25 group-hover:bg-foreground/50")
-                    }
-                  />
+                  <span className="relative block h-1 overflow-hidden rounded-full bg-foreground/15 transition-colors group-hover:bg-foreground/30">
+                    {i < active && <span className="absolute inset-0 bg-emphasis/50" />}
+                    {i === active && (
+                      <span
+                        key={`${active}-${paused}`}
+                        className={"work-progress absolute inset-0 origin-left bg-emphasis" + (paused ? " is-paused" : "")}
+                        style={{ animationDuration: cfg.autoplayMs + "ms" }}
+                      />
+                    )}
+                  </span>
                 </button>
               </li>
             ))}
           </ul>
-          <button type="button" className={navButton} aria-label={labels.next} onClick={() => step(1)}>
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
       </div>
 

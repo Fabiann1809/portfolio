@@ -10,8 +10,8 @@ import { MissionLinks } from "./MissionLinks";
 export function WorkDetails({ project }: { project: Project }) {
   const labels = useLocalized(labelsContent);
   return (
-    <div className="work-details-in mx-auto mt-8 flex max-w-3xl flex-col items-center gap-5 text-center md:mt-12">
-      <h3 className="giant-title text-[clamp(32px,5vw,72px)]">{project.title}</h3>
+    <div className="work-details-in mx-auto mt-5 flex max-w-3xl flex-col items-center gap-3 text-center md:mt-6">
+      <h3 className="giant-title text-[clamp(28px,3.4vw,48px)]">{project.title}</h3>
       <p className="max-w-2xl text-muted">{project.description}</p>
       <p className="mono-label text-muted">
         {project.collaborative ? labels.collaborative : labels.personal} / {project.year}
