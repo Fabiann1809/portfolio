@@ -8,6 +8,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { WorkCard } from "./WorkCard";
 import { WorkDetails } from "./WorkDetails";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 const cfg = motion.gallery;
 const DRAG_START_PX = 8;
@@ -103,9 +104,9 @@ export function WorkGallery() {
       aria-label={labels.galleryAria}
       className="overflow-x-clip px-[var(--edge-x)] pt-20 pb-24"
     >
-      <header className="max-w-2xl">
-        <h2 className="giant-title text-[clamp(30px,4vw,56px)]">{labels.galleryTitle}</h2>
-        <p className="mt-2 text-muted">{labels.gallerySubtitle}</p>
+      <header className="max-w-3xl">
+        <SectionTitle>{labels.galleryTitle}</SectionTitle>
+        <p className="mt-4 font-sans text-muted">{labels.gallerySubtitle}</p>
       </header>
 
       <div

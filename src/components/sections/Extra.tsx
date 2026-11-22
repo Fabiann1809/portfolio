@@ -5,7 +5,7 @@ import { extra as extraContent } from "@/data/extra";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { PowerScan } from "@/components/extra/PowerScan";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 /** "Power profile": abilities list (hover / focus / click activates) next to a scan panel. */
 export function Extra() {
@@ -17,7 +17,7 @@ export function Extra() {
 
   return (
     <section id="extra" className="px-[var(--edge-x)] py-24 md:py-32">
-      <SectionLabel trailing={String(extra.abilities.length).padStart(2, "0")}>{extra.label}</SectionLabel>
+      <SectionTitle trailing={String(extra.abilities.length).padStart(2, "0")}>{extra.label}</SectionTitle>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16">
         <ScrollReveal as="ul" className="flex flex-col">

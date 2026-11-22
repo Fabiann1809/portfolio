@@ -1,29 +1,19 @@
 export interface ExperienceEntry {
   id: string;
+  /** Date range shown above the title (e.g. "2024 — Actualidad"). */
+  period?: string;
   title: string;
+  /** Institution, company or project kind, shown in the accent colour. */
   organization: string;
-  /** Date pill aligned right (e.g. "2024 – Presente"). */
-  period: string;
-  /** Line under the title (place, degree detail, stack). */
-  subtitle?: string;
-  /** Small chips (e.g. "Monitor", "En curso"). */
-  tags?: string[];
-  /** Optional logo (path under /public); falls back to an initials badge. */
-  logo?: string;
-  /** Bullet notes, collapsed under the entry. */
-  notes?: string[];
+  /** City / country, appended to the organization. */
+  place?: string;
+  /** Short, complete description (always visible). */
+  description?: string;
 }
 
 export interface ExperienceGroup {
   id: string;
-  /** Sub-label of the group (e.g. "Académica"). */
+  /** Column label (e.g. "Educación"). */
   label: string;
   entries: ExperienceEntry[];
-}
-
-export interface ExperienceLabels {
-  /** Summary of the collapsed notes. */
-  details: string;
-  /** Accessible name prefix of each timeline list. */
-  timeline: string;
 }
