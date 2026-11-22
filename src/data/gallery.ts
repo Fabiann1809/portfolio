@@ -56,7 +56,7 @@ export const artCloudConfig: ArtCloudConfig = {
   scrollDeg: 340,
   idleDegPerSec: 4,
   scrollEase: 6,
-  openEnd: 0.22,
+  openEnd: 0.07,
   closeStart: 0.78,
   minOpacity: 0.32,
   eagerCount: 4,
