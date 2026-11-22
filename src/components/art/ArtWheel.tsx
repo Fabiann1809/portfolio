@@ -191,12 +191,12 @@ export function ArtWheel() {
         </p>
 
         <div className="relative flex items-end justify-between gap-4 lg:contents">
-          <div className={`${swapWrap} lg:absolute lg:top-[47%] lg:left-0 lg:-translate-y-1/2`}>
+          <div className={`${swapWrap} lg:absolute lg:top-[42%] lg:left-0 lg:-translate-y-1/2`}>
             <div key={index} className="gallery-text-swap">
               <GalleryCounter index={index} count={count} separator={labels.counterSeparator} />
             </div>
           </div>
-          <div className="text-right lg:absolute lg:top-[47%] lg:right-0 lg:max-w-[18vw] lg:-translate-y-1/2">
+          <div className="text-right lg:absolute lg:top-[42%] lg:right-0 lg:max-w-[18vw] lg:-translate-y-1/2">
             <div aria-hidden="true" className={swapWrap}>
               <p key={work.id} className={`gallery-text-swap ${titleClass}`}>
                 {work.title}
@@ -212,7 +212,7 @@ export function ArtWheel() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-[min(100%,calc(36svh*1.6))] shrink-0 lg:absolute lg:top-[47%] lg:left-1/2 lg:w-[min(44vw,600px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
+        <div className="relative mx-auto w-[min(100%,calc(36svh*1.6))] shrink-0 lg:absolute lg:top-[42%] lg:left-1/2 lg:w-[min(44vw,600px,calc((100svh-380px)*1.6))] lg:-translate-x-1/2 lg:-translate-y-1/2">
           <div className="relative aspect-[16/10] w-full">
             {useGL ? (
               <LensCanvas
