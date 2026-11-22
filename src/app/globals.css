@@ -1,11 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Three backdrop tones. <html data-backdrop="ink|bone|signal"> is set before paint by an inline script
+ * Two backdrop tones. <html data-backdrop="ink|bone"> is set before paint by an inline script
  * (see lib/themeScript.ts; default follows prefers-color-scheme). No attribute = ink.
  *   ink    = dark (Tinta): cyan-white phosphor on blue-black
  *   bone   = light (Hueso): paper white, dark ink tiles and grid lines
- *   signal = orange (Señal): light-style tokens (dark text) on orange
  * Studio hero tokens: --portrait-shadow-opacity /
  * --portrait-shadow-blend (cast shadow behind the portrait). Keep the swatches in data/theme.ts in sync.
  * Tokens: --background, --foreground, --muted, --surface, --line, --emphasis (accent text that
@@ -57,31 +56,10 @@
   --retro-vignette: rgba(100, 110, 130, 0.3);
 }
 
-:root[data-backdrop="signal"] {
-  color-scheme: light;
-  --background: #ff5a1f;
-  --foreground: #140a05;
-  --muted: #4a1f0b;
-  --surface: #ff7a45;
-  --line: rgba(20, 10, 5, 0.25);
-  --emphasis: #140a05;
-  --shadow-color: rgba(90, 20, 0, 0.5);
-  --vignette: rgba(120, 20, 0, 0.35);
-  --portrait-shadow-opacity: 0.3;
-  --contour-alpha: 0.3;
-  --portrait-shadow-blend: multiply;
-  --name-lit: #140a05;
-  --glow: rgba(20, 10, 5, 0.18);
-  --glow-soft: rgba(20, 10, 5, 0.07);
-  --status-green: #0b7a3b;
-  --scanline: rgba(40, 10, 0, 1);
-  --retro-vignette: rgba(120, 20, 0, 0.3);
-}
-
 @theme {
   /* Strong colors that work on both modes (black / white are not primary colors). */
-  --color-primary: #ee5a22;
-  --color-accent: #ffc233;
+  --color-primary: #2563eb;
+  --color-accent: #22d3ee;
 }
 
 @theme inline {

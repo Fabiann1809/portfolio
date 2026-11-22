@@ -13,7 +13,7 @@ interface BackdropPickerProps {
   className?: string;
 }
 
-/** Radio group that switches the site-wide backdrop tone (ink / bone / signal). */
+/** Radio group that switches the site-wide backdrop tone (ink / bone). */
 export function BackdropPicker({ variant = "full", className }: BackdropPickerProps) {
   const current = useBackdrop();
   const labels = useLocalized(themeLabels);

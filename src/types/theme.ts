@@ -1,5 +1,5 @@
-/** Ids of the site backdrop tones: "ink" = dark (Tinta), "bone" = light (Hueso), "signal" = orange (Se\u00f1al). */
-export type BackdropId = "ink" | "bone" | "signal";
+/** Ids of the site backdrop tones: "ink" = dark (Tinta), "bone" = light (Hueso). */
+export type BackdropId = "ink" | "bone";
 
 export interface BackdropOption {
   id: BackdropId;
