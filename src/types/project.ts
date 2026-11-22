@@ -28,6 +28,8 @@ export interface Project {
   links: ProjectLinks;
   /** Optional image path. Without it a generated gradient placeholder is shown. */
   image?: string;
+  /** Optional demo video (muted loop); `image` is used as its poster. */
+  video?: string;
 }
 
 export interface ProjectLabels {

@@ -66,7 +66,7 @@ export function GalleryWheel({ projects, index, geometry: g, reduced, labels, ti
                   : "border-foreground/15")
               }
             >
-              <ProjectMedia project={project} />
+              <ProjectMedia project={project} still />
             </button>
           </li>
         );

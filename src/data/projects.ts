@@ -25,6 +25,8 @@ export const projects: Project[] = [
     collaborative: false,
     year: "2026",
     links: { github: "https://github.com/Fabiann1809/stateAI" },
+    image: "/images/projects/stateai-poster.jpg",
+    video: "/videos/projects/stateai-demo.mp4",
   },
   {
     id: "reader",
