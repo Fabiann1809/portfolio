@@ -8,6 +8,7 @@ import { Experience } from "@/components/sections/Experience";
 import { Art } from "@/components/sections/Art";
 import { Extra } from "@/components/sections/Extra";
 import { Contact } from "@/components/sections/Contact";
+import { TextReveal } from "@/components/ui/TextReveal";
 
 /** Home page content (language comes from the LocaleProvider of the root layout). Section order matches data/navigation.ts. */
 export function HomePage() {
@@ -25,6 +26,7 @@ export function HomePage() {
         <Contact />
       </main>
       <Footer />
+      <TextReveal />
     </>
   );
 }
