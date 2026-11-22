@@ -4,7 +4,7 @@ import type { Localized, MenuLabels, NavItem, NavbarBrand } from "@/types";
 export const navigation: Localized<NavItem[]> = {
   es: [
     { id: "hero", label: "Inicio" },
-    { id: "about", label: "Acerca de mí" },
+    { id: "about", label: "Sobre mí" },
     { id: "projects", label: "Proyectos" },
     { id: "testimonials", label: "Testimonios" },
     { id: "experience", label: "Experiencia" },

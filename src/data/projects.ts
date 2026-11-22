@@ -6,8 +6,8 @@ export const projectsSectionId = "projects";
 
 export const projectLabels: Localized<ProjectLabels> = {
   es: {
-    heading: "Archivos de misión",
-    countLabel: "registros",
+    heading: "Mis proyectos",
+    countLabel: "proyectos",
     codePrefix: "MSN",
     collaborative: "Colaboré",
     github: "GitHub",
@@ -18,8 +18,8 @@ export const projectLabels: Localized<ProjectLabels> = {
     tapHint: "Toca para ver la demo",
   },
   en: {
-    heading: "Mission files",
-    countLabel: "records",
+    heading: "My projects",
+    countLabel: "projects",
     codePrefix: "MSN",
     collaborative: "Collaborated",
     github: "GitHub",

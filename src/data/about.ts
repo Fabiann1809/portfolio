@@ -2,7 +2,7 @@ import type { AboutData, Localized } from "@/types";
 
 export const about: Localized<AboutData> = {
   es: {
-    label: "Historia de origen",
+    label: "Sobre mí",
     statement: [
       { text: "Soy de Túquerres, Nariño, y estudio ingeniería de software en Pasto. Me gusta entender el " },
       { text: "porqué", emphasis: true },
@@ -23,7 +23,7 @@ export const about: Localized<AboutData> = {
     stackTitle: "Stack",
   },
   en: {
-    label: "Origin story",
+    label: "About me",
     statement: [
       { text: "I'm from Túquerres, Nariño, and I study software engineering in Pasto. I like to understand the " },
       { text: "why", emphasis: true },
