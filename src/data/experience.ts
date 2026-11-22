@@ -14,7 +14,7 @@ const education: Localized<ExperienceEntry[]> = {
       title: "Ingeniería de Software",
       organization: "Universidad Cooperativa de Colombia",
       description:
-        "5.º semestre. Beca por el mejor promedio de toda la carrera y monitor de la carrera (materias: PLACEHOLDER).",
+        "5.º semestre. Beca por el mejor promedio de toda la carrera y monitor académico del programa.",
     },
     {
       id: "sena",
@@ -47,7 +47,7 @@ const education: Localized<ExperienceEntry[]> = {
       title: "Software Engineering",
       organization: "Universidad Cooperativa de Colombia",
       description:
-        "5th semester. Scholarship for the highest GPA of the entire program and teaching assistant for the program (subjects: PLACEHOLDER).",
+        "5th semester. Scholarship for the highest GPA of the entire program and program teaching assistant.",
     },
     {
       id: "sena",
@@ -75,9 +75,33 @@ const education: Localized<ExperienceEntry[]> = {
   ],
 };
 
+const freelance: Localized<ExperienceEntry> = {
+  es: {
+    id: "freelance",
+    period: "2024 — Actualidad",
+    title: "Desarrollador de software Full Stack e IA",
+    organization: "Freelance",
+    place: "Remoto",
+    description: "Diseño, desarrollo y despliegue de productos web, móviles, de escritorio y de IA, de la interfaz al despliegue.",
+  },
+  en: {
+    id: "freelance",
+    period: "2024 — Present",
+    title: "Full Stack & AI Software Developer",
+    organization: "Freelance",
+    place: "Remote",
+    description: "Design, development and deployment of web, mobile, desktop and AI products, from the interface to production.",
+  },
+};
+
+const languages: Localized<ExperienceEntry> = {
+  es: { id: "english", title: "Inglés B2", organization: "Idiomas", description: "Español nativo e inglés de nivel B2." },
+  en: { id: "english", title: "English B2", organization: "Languages", description: "Native Spanish and B2-level English." },
+};
+
 const groupLabels: Localized<{ education: string; development: string; personalProject: string }> = {
-  es: { education: "Educación", development: "Desarrollo de software", personalProject: "Proyecto personal" },
-  en: { education: "Education", development: "Software development", personalProject: "Personal project" },
+  es: { education: "Educación", development: "Freelance", personalProject: "Proyecto personal" },
+  en: { education: "Education", development: "Freelance", personalProject: "Personal project" },
 };
 
 /** One entry per project of data/projects.ts. */
@@ -92,8 +116,8 @@ const development = (locale: Locale): ExperienceEntry[] =>
   }));
 
 const buildGroups = (locale: Locale): ExperienceGroup[] => [
-  { id: "education", label: groupLabels[locale].education, entries: education[locale] },
-  { id: "development", label: groupLabels[locale].development, entries: development(locale) },
+  { id: "education", label: groupLabels[locale].education, entries: [...education[locale], languages[locale]] },
+  { id: "development", label: groupLabels[locale].development, entries: [freelance[locale], ...development(locale)] },
 ];
 
 export const experienceGroups: Localized<ExperienceGroup[]> = {
