@@ -47,4 +47,7 @@ export interface ProjectLabels {
   /** Small badge on demo videos: pointer devices / touch screens. */
   hoverHint: string;
   tapHint: string;
+  /** Button that opens the full demo video, and its dialog's close button. */
+  watchDemo: string;
+  closeDemo: string;
 }

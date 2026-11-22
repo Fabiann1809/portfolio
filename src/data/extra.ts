@@ -2,9 +2,9 @@ import type { ExtraData, Localized } from "@/types";
 
 // Technologies name items of data/stack.ts (shared across languages).
 const technologies = {
-  "full-stack": ["React", "Next.js", "Tailwind CSS", "Supabase", "Electron"],
+  "full-stack": ["React", "Next.js", "Tailwind CSS", "Electron", "Spring Boot", "Supabase", "PostgreSQL"],
   mobile: ["Jetpack Compose", "Android", "Wear OS", "Firebase"],
-  "ai-engineering": ["TensorFlow Lite", "scikit-learn"],
+  "ai-engineering": ["TensorFlow Lite", "scikit-learn", "LangGraph"],
   games: ["Godot"],
 };
 

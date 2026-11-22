@@ -20,12 +20,17 @@ export function PowerScan({ ability }: { ability: Ability }) {
 
       <div>
         <p className="mono-label text-muted">{extra.technologiesLabel}</p>
-        <ul className="mt-3 flex flex-wrap gap-3">
-          {technologies.map((tech) => (
-            <li key={tech.name} className="mono-label flex items-center gap-2 border border-line px-3 py-2">
+        {/* Keyed by ability: the tiles replay their staggered entrance on every switch. */}
+        <ul key={ability.id} className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+          {technologies.map((tech, i) => (
+            <li
+              key={tech.name}
+              className="tech-tile flex aspect-square flex-col items-center justify-center gap-3 rounded-xl border border-line bg-surface p-3 text-center transition-colors hover:border-emphasis"
+              style={{ animationDelay: `${i * 70}ms` }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={tech.icon} alt="" width={20} height={20} />
-              <span>{tech.name}</span>
+              <img src={tech.icon} alt="" width={44} height={44} className="size-10 md:size-11" />
+              <span className="mono-label text-[10px] leading-tight">{tech.name}</span>
             </li>
           ))}
         </ul>
