@@ -8,6 +8,7 @@ import { RetroOverlay } from "@/components/layout/RetroOverlay";
 import { LocaleProvider } from "@/components/locale/LocaleProvider";
 import { localeOptions } from "@/data/locale";
 import { themeInitScript } from "@/lib/themeScript";
+import { skipLoaderInitScript } from "@/lib/skipLoader";
 import type { Locale } from "@/types";
 
 // Dot-matrix display face (variable, weights 400-900) for names, titles, labels and UI.
@@ -45,7 +46,7 @@ export function RootDocument({ locale, children }: { locale: Locale; children: R
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + skipLoaderInitScript }} />
       </head>
       <body className="min-h-full flex flex-col">
         <LocaleProvider locale={locale}>

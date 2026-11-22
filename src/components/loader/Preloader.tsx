@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { loader } from "@/data/loader";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { prefersReducedMotion } from "@/lib/motion";
+import { consumeSkipLoader } from "@/lib/skipLoader";
 import { useLoader } from "./LoaderProvider";
 
 const { timings } = loader;
@@ -20,6 +21,7 @@ export function Preloader() {
   const dotRef = useRef<HTMLSpanElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const skipRef = useRef<boolean | null>(null);
   const lenis = useLenisInstance();
   const locked = phase !== "done";
 
@@ -50,6 +52,16 @@ export function Preloader() {
   // Loading: ease the counter toward real progress, then move to "exiting". A timer (not rAF)
   // guarantees the exit even if animation frames are throttled or progress never completes.
   useEffect(() => {
+    // Language switch: the page was just shown, so skip the overlay entirely.
+    // Read once: the ref survives the dev double-run of effects.
+    skipRef.current ??= consumeSkipLoader();
+    if (skipRef.current) {
+      const id = window.setTimeout(() => {
+        completeLoading();
+        setPhase("done");
+      }, 0);
+      return () => window.clearTimeout(id);
+    }
     const timers: number[] = [];
     const start = performance.now();
     let last = start;
@@ -124,7 +136,7 @@ export function Preloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background font-display text-muted ease-[cubic-bezier(0.76,0,0.24,1)] ${stateClass}`}
+      className={`preloader fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background font-display text-muted ease-[cubic-bezier(0.76,0,0.24,1)] ${stateClass}`}
       style={{ transitionProperty: "transform, opacity", transitionDuration: exitMs + "ms" }}
     >
       <p className="phosphor mb-6 text-2xl font-extrabold tracking-[0.4em] uppercase">{loader.label}</p>
