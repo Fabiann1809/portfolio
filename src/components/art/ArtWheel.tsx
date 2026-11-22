@@ -212,8 +212,16 @@ export function ArtWheel() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-[min(100%,calc(36svh*1.6))] shrink-0 lg:absolute lg:top-[42%] lg:left-1/2 lg:w-[min(44vw,600px,calc((100svh-380px)*1.6))] lg:-translate-x-1/2 lg:-translate-y-1/2">
-          <div className="relative aspect-[16/10] w-full">
+        {/* Max box for the lens; the lens inside takes the artwork's own proportions and animates between them. */}
+        <div className="relative mx-auto flex h-[36svh] w-full max-w-[calc(36svh*1.6)] shrink-0 items-center justify-center lg:absolute lg:top-[42%] lg:left-1/2 lg:h-[min(calc(100svh-420px),540px)] lg:w-[min(52vw,760px)] lg:max-w-none lg:-translate-x-1/2 lg:-translate-y-1/2 [container-type:size]">
+          <div
+            className="relative"
+            style={{
+              aspectRatio: String(work.aspect ?? 1.6),
+              width: `min(100cqw, calc(100cqh * ${work.aspect ?? 1.6}))`,
+              transition: reduced ? undefined : "width 0.9s cubic-bezier(.7,0,.2,1)",
+            }}
+          >
             {useGL ? (
               <LensCanvas
                 artId={work.id}

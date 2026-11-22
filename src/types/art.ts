@@ -6,6 +6,8 @@ export interface Artwork {
   year: string;
   /** Optional image path under public/images/art. Without it a generated gradient is shown. */
   image?: string;
+  /** Width / height of the image; the lens takes this shape (16/10 when missing). */
+  aspect?: number;
 }
 
 export interface ArtData {

@@ -1,7 +1,13 @@
 import type { ArtData, Localized } from "@/types";
 
 /** Language-neutral part of each artwork (photo in public/images/art). Years are still PLACEHOLDER. */
-const artworkBases = [1, 2, 3, 4].map((n) => ({ id: `art-${n}`, image: `/images/art/art-${n}.jpg`, year: "PLACEHOLDER" }));
+const artworkAspects = [1098 / 1322, 1138 / 1444, 1280 / 940, 1600 / 1116];
+const artworkBases = artworkAspects.map((aspect, i) => ({
+  id: `art-${i + 1}`,
+  image: `/images/art/art-${i + 1}.jpg`,
+  aspect,
+  year: "PLACEHOLDER",
+}));
 
 const artworkTexts = {
   es: [
