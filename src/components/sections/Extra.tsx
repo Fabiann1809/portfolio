@@ -16,7 +16,7 @@ export function Extra() {
   const active = extra.abilities[activeIndex];
 
   return (
-    <section id="extra" className="px-[var(--edge-x)] py-24 md:py-32">
+    <section id="extra" className="section-glow glow-right px-[var(--edge-x)] py-24 md:py-32">
       <SectionTitle trailing={String(extra.abilities.length).padStart(2, "0")}>{extra.label}</SectionTitle>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16">

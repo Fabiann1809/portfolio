@@ -102,7 +102,7 @@ export function WorkGallery() {
       ref={rootRef}
       id="work"
       aria-label={labels.galleryAria}
-      className="overflow-x-clip px-[var(--edge-x)] pt-20 pb-24"
+      className="section-glow glow-left overflow-x-clip px-[var(--edge-x)] pt-20 pb-24"
     >
       <header className="max-w-3xl">
         <SectionTitle>{labels.galleryTitle}</SectionTitle>

@@ -12,7 +12,7 @@ export function Contact() {
   const contact = useLocalized(contactContent);
   const hasEmail = contact.email.includes("@");
   return (
-    <section id="contact" className="px-[var(--edge-x)] py-24 font-sans md:py-32">
+    <section id="contact" className="section-glow glow-right px-[var(--edge-x)] py-24 font-sans md:py-32">
       <div className="mx-auto grid max-w-6xl gap-14 md:grid-cols-2 md:gap-20">
         <ScrollReveal className="flex flex-col gap-8">
           <div>

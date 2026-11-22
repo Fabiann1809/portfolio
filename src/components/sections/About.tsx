@@ -11,7 +11,7 @@ export function About() {
   const intro = about.statement.map((part) => part.text).join("");
 
   return (
-    <section id="about" className="px-[var(--edge-x)] py-24 font-sans md:py-32">
+    <section id="about" className="section-glow glow-right px-[var(--edge-x)] py-24 font-sans md:py-32">
       <div className="mx-auto max-w-2xl">
         <ScrollReveal as="h2" className="text-[clamp(32px,4vw,48px)] font-bold tracking-tight">
           {about.label}

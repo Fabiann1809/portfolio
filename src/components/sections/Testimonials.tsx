@@ -11,7 +11,7 @@ export function Testimonials() {
   const testimonialsMarquee = useLocalized(marquee);
   const testimonialsTitle = useLocalized(titleContent);
   return (
-    <section id="testimonials" className="py-24 md:py-32">
+    <section id="testimonials" className="section-glow glow-left py-24 md:py-32">
       <div className="px-[var(--edge-x)]">
         <SectionTitle trailing={String(testimonials.length).padStart(2, "0")}>{testimonialsTitle}</SectionTitle>
       </div>

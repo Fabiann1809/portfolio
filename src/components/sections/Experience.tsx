@@ -10,7 +10,7 @@ export function Experience() {
   const experienceGroups = useLocalized(groups);
   const experienceTitle = useLocalized(titleContent);
   return (
-    <section id="experience" className="px-[var(--edge-x)] py-20 md:py-28">
+    <section id="experience" className="section-glow glow-left px-[var(--edge-x)] py-20 md:py-28">
       <SectionTitle>{experienceTitle}</SectionTitle>
       <div className="mt-10 grid gap-x-16 gap-y-12 lg:grid-cols-2">
         {experienceGroups.map((group) => (

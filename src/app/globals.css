@@ -438,3 +438,21 @@ html[data-skip-loader] .preloader {
 @media (prefers-reduced-motion: reduce) {
   .swipe-hint-arrow { animation: none; }
 }
+
+/* Soft ambient glow behind plain sections, matching the art cloud's radial light. Alternate sides with .glow-left/.glow-right. */
+.section-glow {
+  position: relative;
+  isolation: isolate;
+}
+.section-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at var(--glow-x, 20%) 35%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 35% at calc(100% - var(--glow-x, 20%)) 85%, color-mix(in srgb, var(--color-accent, var(--color-primary)) 7%, transparent), transparent 70%);
+}
+.glow-left { --glow-x: 15%; }
+.glow-right { --glow-x: 85%; }
