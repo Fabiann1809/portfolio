@@ -29,6 +29,8 @@ export const projects: Project[] = [
   {
     id: "reader",
     title: "Asistente de lectura (Android)",
+    image: "/images/projects/reader-poster.jpg",
+    video: "/videos/projects/reader-demo.mp4",
     description:
       "Biblioteca personal con IA: fotografías un párrafo difícil y te lo explica con analogías cotidianas, y después te evalúa con quizzes. Tus datos se quedan en tu dispositivo.",
     technologies: ["Jetpack Compose", "Room", "ML Kit", "Readium", "Firebase", "LLM API"],
