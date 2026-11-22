@@ -1,5 +1,6 @@
 "use client";
 
+import { glass } from "@/lib/glass";
 import { useCallback, useRef, useState } from "react";
 import { menuLabels, navbarBrand, navigationIds } from "@/data/navigation";
 import { useLocalized } from "@/components/locale/LocaleProvider";
@@ -48,12 +49,12 @@ export function Navbar({ homeHref }: NavbarProps) {
     <Reveal as="header" className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="relative flex items-start justify-between px-[var(--edge-x)] pt-6">
         {/* Mobile / tablet: compact pill with logo + hamburger. Desktop: logo alone, pill centered. */}
-        <div className="pointer-events-auto flex w-full items-center justify-between rounded-full border border-line bg-surface/70 py-1.5 pr-2 pl-5 backdrop-blur-md xl:w-auto xl:py-2 xl:pr-5">
-          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="font-sans text-base font-bold tracking-[0.12em] uppercase xl:text-lg">{brand.label}</a>
+        <div className={`${glass} pointer-events-auto flex w-full items-center justify-between rounded-full py-2 pr-2.5 pl-6 xl:w-auto xl:py-3 xl:pr-6`}>
+          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="font-sans text-lg font-bold tracking-[0.12em] uppercase xl:text-xl">{brand.label}</a>
           <button
             ref={toggleRef}
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-full xl:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full xl:hidden"
             aria-label={open ? labels.close : labels.open}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -70,7 +71,7 @@ export function Navbar({ homeHref }: NavbarProps) {
           <a
             href={hrefPrefix + "#" + brand.cta.targetId}
             onClick={(e) => handleAnchor(e, brand.cta.targetId)}
-            className="label flex items-center gap-2 rounded-full border border-line bg-surface/70 px-4 py-2 text-xs backdrop-blur-md transition-colors hover:border-emphasis hover:text-emphasis"
+            className={`${glass} label flex items-center gap-2 rounded-full px-5 py-3 text-xs transition-colors hover:border-emphasis hover:text-emphasis`}
           >
             {brand.cta.label}
             <span aria-hidden="true" className="status-dot" />
