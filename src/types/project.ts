@@ -30,6 +30,8 @@ export interface Project {
   image?: string;
   /** Optional demo video (muted loop); `image` is used as its poster. */
   video?: string;
+  /** Shown in the pinned tunnel (in data order); every project appears in the work gallery. */
+  featured?: boolean;
 }
 
 export interface ProjectLabels {
@@ -50,8 +52,16 @@ export interface ProjectLabels {
   /** Button that opens the full demo video, and its dialog's close button. */
   watchDemo: string;
   closeDemo: string;
-  /** Project library under the tunnel. */
-  libraryHeading: string;
   technologiesLabel: string;
   personal: string;
+  /** Work gallery (coverflow) under the tunnel. */
+  galleryEyebrow: string;
+  galleryTitle: string;
+  gallerySubtitle: string;
+  galleryAria: string;
+  prev: string;
+  next: string;
+  /** Dot indicators: accessible name of the list and of each dot's action prefix. */
+  dotsAria: string;
+  goTo: string;
 }

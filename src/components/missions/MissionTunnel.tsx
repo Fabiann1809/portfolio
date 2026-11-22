@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { motion } from "@/data/motion";
-import { projectLabels as labelsContent, projects as projectsContent } from "@/data/projects";
+import { projectLabels as labelsContent, featuredProjects as projectsContent } from "@/data/projects";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePinnedProgress } from "@/hooks/usePinnedProgress";

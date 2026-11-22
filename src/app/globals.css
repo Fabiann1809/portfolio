@@ -386,3 +386,23 @@ html[data-skip-loader] .preloader {
   transform: translateY(14px);
   filter: blur(4px);
 }
+
+/* Work gallery: details swap with a short fade/slide when the active project changes. */
+@keyframes work-details-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.work-details-in {
+  animation: work-details-in 450ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .work-details-in {
+    animation: none;
+  }
+}

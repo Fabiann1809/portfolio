@@ -18,9 +18,16 @@ export const projectLabels: Localized<ProjectLabels> = {
     tapHint: "Toca para ver la demo",
     watchDemo: "Ver demo",
     closeDemo: "Cerrar demo",
-    libraryHeading: "Biblioteca de proyectos",
     technologiesLabel: "Tecnologías",
     personal: "Proyecto personal",
+    galleryEyebrow: "Proyectos seleccionados",
+    galleryTitle: "Galería de proyectos",
+    gallerySubtitle: "Una colección de sistemas, apps y proyectos que he construido.",
+    galleryAria: "Galería de proyectos",
+    prev: "Proyecto anterior",
+    next: "Proyecto siguiente",
+    dotsAria: "Elegir proyecto",
+    goTo: "Ir a",
   },
   en: {
     heading: "My projects",
@@ -35,9 +42,16 @@ export const projectLabels: Localized<ProjectLabels> = {
     tapHint: "Tap to play the demo",
     watchDemo: "Watch demo",
     closeDemo: "Close demo",
-    libraryHeading: "Project library",
     technologiesLabel: "Technologies",
     personal: "Personal project",
+    galleryEyebrow: "Selected work",
+    galleryTitle: "Work gallery",
+    gallerySubtitle: "A collection of systems, apps and projects I've built.",
+    galleryAria: "Work gallery",
+    prev: "Previous project",
+    next: "Next project",
+    dotsAria: "Choose project",
+    goTo: "Go to",
   },
 };
 
@@ -47,6 +61,7 @@ type ProjectBase = Omit<Project, "title" | "description">;
 const projectBases: ProjectBase[] = [
   {
     id: "vyro",
+    featured: true,
     technologies: ["Electron", "React", "Tailwind CSS", "MediaPipe", "Supabase", "Zustand"],
     collaborative: false,
     year: "2026",
@@ -54,6 +69,7 @@ const projectBases: ProjectBase[] = [
   },
   {
     id: "reader",
+    featured: true,
     image: "/images/projects/reader-poster.jpg",
     video: "/videos/projects/reader-demo.mp4",
     technologies: ["Jetpack Compose", "Room", "ML Kit", "Readium", "Firebase", "LLM API"],
@@ -84,6 +100,7 @@ const projectBases: ProjectBase[] = [
   },
   {
     id: "finanzia",
+    featured: true,
     image: "/images/projects/finanzia-poster.jpg",
     video: "/videos/projects/finanzia-demo.mp4",
     technologies: ["Next.js", "React", "Tailwind CSS", "Spring Boot", "PostgreSQL", "LangGraph"],
@@ -164,4 +181,10 @@ const buildProjects = (locale: keyof typeof projectTexts): Project[] =>
 export const projects: Localized<Project[]> = {
   es: buildProjects("es"),
   en: buildProjects("en"),
+};
+
+/** Projects shown in the pinned tunnel, in data order. */
+export const featuredProjects: Localized<Project[]> = {
+  es: projects.es.filter((p) => p.featured),
+  en: projects.en.filter((p) => p.featured),
 };

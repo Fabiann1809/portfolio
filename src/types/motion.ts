@@ -13,6 +13,26 @@ export interface TunnelConfig {
   panelMaxPx: number;
 }
 
+/** Coverflow of the work gallery; arrays are indexed by distance from the active card (0..3). */
+export interface WorkGalleryConfig {
+  /** Horizontal offset in card widths, scale, Y rotation (deg), depth (px) and opacity. */
+  x: number[];
+  scale: number[];
+  rotate: number[];
+  depth: number[];
+  opacity: number[];
+  /** Same offsets on phones, where fewer neighbours are visible. */
+  xCompact: number[];
+  /** Neighbours shown on each side (desktop / compact). */
+  visible: number;
+  visibleCompact: number;
+  perspective: number;
+  transitionMs: number;
+  autoplayMs: number;
+  /** Horizontal drag distance (px) that changes the project. */
+  swipePx: number;
+}
+
 export interface MotionData {
   /** Lenis smooth scroll tuning. */
   lenis: { lerp: number; wheelMultiplier: number };
@@ -21,6 +41,7 @@ export interface MotionData {
   /** Screens of scroll per project in the pinned mission tunnel. */
   missionScreensPerProject: number;
   tunnel: TunnelConfig;
+  gallery: WorkGalleryConfig;
   /** Scroll reveal: delay between staggered children (ms) and how far items rise (px). */
   reveal: { stagger: number; rise: number };
 }
