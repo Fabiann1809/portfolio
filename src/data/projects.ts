@@ -54,6 +54,8 @@ export const projects: Project[] = [
   {
     id: "finanzia",
     title: "finanzIA",
+    image: "/images/projects/finanzia-poster.jpg",
+    video: "/videos/projects/finanzia-demo.mp4",
     description:
       "Asistente financiero personal con chat: registra y consulta tus ingresos y gastos conversando con un agente de IA. Colaboré en esta plataforma dividida en interfaz web, API segura con búsqueda semántica y el agente.",
     technologies: ["Next.js", "React", "Tailwind CSS", "Spring Boot", "PostgreSQL", "LangGraph"],
