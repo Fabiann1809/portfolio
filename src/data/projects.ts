@@ -17,16 +17,14 @@ export const projectLabels: ProjectLabels = {
 
 export const projects: Project[] = [
   {
-    id: "state-ai",
-    title: "stateAI (Smartwatch)",
+    id: "vyro",
+    title: "VYRO",
     description:
-      "Aplicación para Wear OS que mide tu energía y concentración con la variabilidad del ritmo cardíaco. Una mascota te guía y, con pulsos hápticos, te avisa cuándo respirar o pausar.",
-    technologies: ["Wear OS", "Jetpack Compose", "Room", "TensorFlow Lite", "scikit-learn"],
+      "Entrenador de habilidades de escritorio: observa tu técnica con la cámara y te corrige en tiempo real, con seguimiento de tu progreso. Todo se procesa en tu computador.",
+    technologies: ["Electron", "React", "Tailwind CSS", "MediaPipe", "Supabase", "Zustand"],
     collaborative: false,
     year: "2026",
-    links: { github: "https://github.com/Fabiann1809/stateAI" },
-    image: "/images/projects/stateai-poster.jpg",
-    video: "/videos/projects/stateai-demo.mp4",
+    links: { github: "https://github.com/Fabiann1809/vyro" },
   },
   {
     id: "reader",
@@ -40,6 +38,18 @@ export const projects: Project[] = [
       github: "https://github.com/Fabiann1809/reader",
       download: "https://github.com/Fabiann1809/reader/releases/download/v0.6.0/app-release.apk",
     },
+  },
+  {
+    id: "state-ai",
+    title: "stateAI (Smartwatch)",
+    description:
+      "Aplicación para Wear OS que mide tu energía y concentración con la variabilidad del ritmo cardíaco. Una mascota te guía y, con pulsos hápticos, te avisa cuándo respirar o pausar.",
+    technologies: ["Wear OS", "Jetpack Compose", "Room", "TensorFlow Lite", "scikit-learn"],
+    collaborative: false,
+    year: "2026",
+    links: { github: "https://github.com/Fabiann1809/stateAI" },
+    image: "/images/projects/stateai-poster.jpg",
+    video: "/videos/projects/stateai-demo.mp4",
   },
   {
     id: "isla-espejo",
@@ -70,15 +80,5 @@ export const projects: Project[] = [
       ],
       vercel: "https://frontend-sooty-five-52.vercel.app",
     },
-  },
-  {
-    id: "vyro",
-    title: "VYRO",
-    description:
-      "Entrenador de habilidades de escritorio: observa tu técnica con la cámara y te corrige en tiempo real, con seguimiento de tu progreso. Todo se procesa en tu computador.",
-    technologies: ["Electron", "React", "Tailwind CSS", "MediaPipe", "Supabase", "Zustand"],
-    collaborative: false,
-    year: "2026",
-    links: { github: "https://github.com/Fabiann1809/vyro" },
   },
 ];
