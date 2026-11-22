@@ -14,7 +14,7 @@ const education: Localized<ExperienceEntry[]> = {
       title: "Ingeniería de Software",
       organization: "Universidad Cooperativa de Colombia",
       description:
-        "5.º semestre. Beca por el mejor promedio de toda la carrera y monitor académico del programa.",
+        "5.º semestre. Beca por el mejor promedio de toda la carrera y monitor académico del programa desde 2025.",
     },
     {
       id: "sena",
@@ -47,7 +47,7 @@ const education: Localized<ExperienceEntry[]> = {
       title: "Software Engineering",
       organization: "Universidad Cooperativa de Colombia",
       description:
-        "5th semester. Scholarship for the highest GPA of the entire program and program teaching assistant.",
+        "5th semester. Scholarship for the highest GPA of the entire program and program teaching assistant since 2025.",
     },
     {
       id: "sena",
