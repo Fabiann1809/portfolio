@@ -1,83 +1,48 @@
 "use client";
 
-import { useRef } from "react";
-import { theme, themeLabels } from "@/data/theme";
+import { themeLabels } from "@/data/theme";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useBackdrop } from "@/hooks/useBackdrop";
 import { applyBackdrop } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 interface BackdropPickerProps {
-  /** "full": pill with caption and labels (hero). "compact": swatches only (navbar, menu). */
+  /** "full": icon plus the target mode's label (menu). "compact": icon only (navbar). */
   variant?: "full" | "compact";
   className?: string;
 }
 
-/** Radio group that switches the site-wide backdrop tone (ink / bone). */
+/** Light / dark toggle: shows a sun on the dark backdrop and a moon on the light one. */
 export function BackdropPicker({ variant = "full", className }: BackdropPickerProps) {
   const current = useBackdrop();
   const labels = useLocalized(themeLabels);
-  const refs = useRef<Array<HTMLButtonElement | null>>([]);
-  const full = variant === "full";
-  const { options } = theme;
-
-  function onKeyDown(event: React.KeyboardEvent, index: number) {
-    const step = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
-    if (!step) return;
-    event.preventDefault();
-    const next = (index + step + options.length) % options.length;
-    applyBackdrop(options[next].id);
-    refs.current[next]?.focus();
-  }
+  const dark = current === "ink";
+  const next = dark ? "bone" : "ink";
+  const label = `${labels.pickerLabel}: ${labels.options[next]}`;
 
   return (
-    <div
-      role="radiogroup"
-      aria-label={labels.pickerLabel}
+    <button
+      type="button"
+      aria-label={label}
+      title={labels.options[next]}
+      onClick={() => applyBackdrop(next)}
       className={cn(
-        "inline-flex items-center",
-        full
-          ? "gap-3 rounded-full border border-line bg-surface/70 py-1.5 pr-2 pl-4 backdrop-blur"
-          : "gap-1.5",
+        "inline-flex cursor-pointer items-center gap-2 rounded-full text-foreground transition-colors hover:bg-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emphasis",
+        variant === "full" ? "border border-line py-1.5 pr-4 pl-2 text-xs" : "p-1.5",
         className,
       )}
     >
-      {full && <span className="font-mono text-[10px] tracking-[0.25em] text-muted uppercase">{labels.pickerCaption}</span>}
-      {options.map((option, index) => {
-        const checked = option.id === current;
-        return (
-          <button
-            key={option.id}
-            ref={(el) => {
-              refs.current[index] = el;
-            }}
-            type="button"
-            role="radio"
-            aria-checked={checked}
-            aria-label={labels.options[option.id]}
-            title={labels.options[option.id]}
-            tabIndex={checked ? 0 : -1}
-            onClick={() => applyBackdrop(option.id)}
-            onKeyDown={(event) => onKeyDown(event, index)}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emphasis",
-              full ? "py-1 pr-3 pl-1.5 text-xs" : "p-1",
-              checked ? "bg-foreground/10 text-foreground" : "text-muted hover:text-foreground",
-            )}
-          >
-            <span
-              aria-hidden="true"
-              className={cn(
-                "block rounded-full border border-foreground/30",
-                full ? "size-4" : "size-3.5",
-                checked && "ring-2 ring-foreground/70 ring-offset-1 ring-offset-transparent",
-              )}
-              style={{ backgroundColor: option.swatch }}
-            />
-            {full && <span>{labels.options[option.id]}</span>}
-          </button>
-        );
-      })}
-    </div>
+      <svg viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {dark ? (
+          <>
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </>
+        ) : (
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        )}
+      </svg>
+      {variant === "full" && <span>{labels.options[next]}</span>}
+    </button>
   );
 }
