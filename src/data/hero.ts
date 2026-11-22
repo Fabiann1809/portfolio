@@ -50,6 +50,7 @@ export const hero: Localized<HeroData> = {
   },
   en: {
     ...heroShared,
+    cvPath: "/cv/fabian-cv-en.pdf",
     greeting: "Hi, I'm Fabian",
     role: "Software Engineer Full Stack & AI Engineering",
     roleLines: ["Software Engineer", "Full Stack & AI Engineering"],
