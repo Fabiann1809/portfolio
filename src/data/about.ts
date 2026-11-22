@@ -20,7 +20,7 @@ export const about: Localized<AboutData> = {
       { id: "step-3", place: "Pasto · UCC", period: "Ingeniería de Software" },
       { id: "step-4", place: "Full stack & AI", period: "Hoy" },
     ],
-    stackTitle: "Stack",
+    stackTitle: "Tecnologías con las que trabajo",
   },
   en: {
     label: "About me",
@@ -41,6 +41,6 @@ export const about: Localized<AboutData> = {
       { id: "step-3", place: "Pasto · UCC", period: "Software Engineering" },
       { id: "step-4", place: "Full stack & AI", period: "Today" },
     ],
-    stackTitle: "Stack",
+    stackTitle: "Technologies I work with",
   },
 };

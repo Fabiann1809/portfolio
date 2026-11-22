@@ -4,12 +4,12 @@ import { useMemo, useRef } from "react";
 import { about as aboutContent } from "@/data/about";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { motion } from "@/data/motion";
-import { stack } from "@/data/stack";
 import { usePinnedProgress } from "@/hooks/usePinnedProgress";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { tokenizeStatement } from "@/lib/statement";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { StackMarquee } from "@/components/about/StackMarquee";
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
@@ -107,26 +107,17 @@ export function About() {
         </div>
       </div>
 
-      <div className="grid gap-10 border-t border-line px-[var(--edge-x)] py-16 md:grid-cols-2">
+      <div className="flex flex-col gap-16 border-t border-line px-[var(--edge-x)] py-16">
         <ScrollReveal>
-          <div className="flex max-w-xl flex-col gap-6 text-muted">
+          <div className="mx-auto flex max-w-3xl flex-col gap-6 text-center text-muted">
             {about.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
         </ScrollReveal>
-        <div>
-          <ScrollReveal as="h3" className="mono-label text-muted">{about.stackTitle}</ScrollReveal>
-          <ScrollReveal as="ul" stagger className="mt-4 flex flex-wrap gap-3">
-            {stack.map((item) => (
-              <li key={item.name} className="mono-label flex items-center gap-2 border border-line px-3 py-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.icon} alt="" width={20} height={20} />
-                <span>{item.name}</span>
-              </li>
-            ))}
-          </ScrollReveal>
-        </div>
+        <ScrollReveal>
+          <StackMarquee title={about.stackTitle} />
+        </ScrollReveal>
       </div>
     </section>
   );

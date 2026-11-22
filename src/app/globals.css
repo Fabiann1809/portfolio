@@ -409,3 +409,13 @@ body {
 html[data-skip-loader] .preloader {
   display: none;
 }
+
+/* About: endless stack strip; two identical copies, so -50% loops seamlessly (gap included via padding). */
+@keyframes stack-marquee {
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
+  }
+}
+.stack-marquee {
+  animation: stack-marquee linear infinite;
+}
