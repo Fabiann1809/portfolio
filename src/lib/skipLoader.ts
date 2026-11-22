@@ -19,5 +19,5 @@ export function consumeSkipLoader() {
   return skip;
 }
 
-/** Inline, pre-paint: hides the preloader via CSS when the flag is set. */
-export const skipLoaderInitScript = `(function(){try{if(sessionStorage.getItem(${JSON.stringify(SKIP_LOADER_KEY)}))document.documentElement.setAttribute(${JSON.stringify(SKIP_LOADER_ATTR)},"");}catch(e){}})();`;
+/** Inline, pre-paint: hides the preloader when the flag is set or the visit comes from another page of this site (not a reload). */
+export const skipLoaderInitScript = `(function(){try{var skip=false;try{skip=!!sessionStorage.getItem(${JSON.stringify(SKIP_LOADER_KEY)});}catch(e){}if(!skip&&document.referrer){var nav=performance.getEntriesByType("navigation")[0];skip=new URL(document.referrer).origin===location.origin&&!(nav&&nav.type==="reload");}if(skip)document.documentElement.setAttribute(${JSON.stringify(SKIP_LOADER_ATTR)},"");}catch(e){}})();`;
