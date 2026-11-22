@@ -18,6 +18,9 @@ export const projectLabels: Localized<ProjectLabels> = {
     tapHint: "Toca para ver la demo",
     watchDemo: "Ver demo",
     closeDemo: "Cerrar demo",
+    libraryHeading: "Biblioteca de proyectos",
+    technologiesLabel: "Tecnologías",
+    personal: "Proyecto personal",
   },
   en: {
     heading: "My projects",
@@ -32,6 +35,9 @@ export const projectLabels: Localized<ProjectLabels> = {
     tapHint: "Tap to play the demo",
     watchDemo: "Watch demo",
     closeDemo: "Close demo",
+    libraryHeading: "Project library",
+    technologiesLabel: "Technologies",
+    personal: "Personal project",
   },
 };
 

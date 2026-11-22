@@ -50,4 +50,8 @@ export interface ProjectLabels {
   /** Button that opens the full demo video, and its dialog's close button. */
   watchDemo: string;
   closeDemo: string;
+  /** Project library under the tunnel. */
+  libraryHeading: string;
+  technologiesLabel: string;
+  personal: string;
 }

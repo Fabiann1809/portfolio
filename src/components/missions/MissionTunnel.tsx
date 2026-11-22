@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ViewAllLink } from "@/components/gallery/ViewAllLink";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { motion } from "@/data/motion";
 import { projectLabels as labelsContent, projects as projectsContent } from "@/data/projects";
@@ -198,9 +197,6 @@ export function MissionTunnel() {
           <MissionLinks project={project} className={"pointer-events-auto " + (hudRight ? "justify-end" : "")} />
         </div>
 
-        <div className="absolute right-[var(--edge-x)] bottom-[6vh]">
-          <ViewAllLink />
-        </div>
       </div>
     </div>
   );
