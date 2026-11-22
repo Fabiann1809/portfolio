@@ -18,19 +18,19 @@ const education: Localized<ExperienceEntry[]> = {
     },
     {
       id: "sena",
-      period: "PLACEHOLDER: años",
+      period: "2022 — 2023",
       title: "Técnico en Programación de Software",
       organization: "SENA",
       description: "Formación técnica en programación de software.",
     },
     {
       id: "semillero",
-      period: "PLACEHOLDER: años",
+      period: "2021 — 2023",
       title: "Semillero de investigación en Biotecnología",
       organization: "Tecnoacademia",
       place: "Túquerres",
       description:
-        "Reconocimiento por destacarme en un proyecto de biotecnología (PLACEHOLDER: nombre) y participación en tres ocasiones en RedCOLSI a nivel nacional.",
+        "Reconocimiento por destacarme en un proyecto de biotecnología y ponente en el Encuentro Nacional de RedCOLSI en Medellín (2022) y Cartagena (2023).",
     },
     {
       id: "bachiller",
@@ -51,19 +51,19 @@ const education: Localized<ExperienceEntry[]> = {
     },
     {
       id: "sena",
-      period: "PLACEHOLDER: years",
+      period: "2022 — 2023",
       title: "Software Programming Technician",
       organization: "SENA",
       description: "Technical training in software programming.",
     },
     {
       id: "semillero",
-      period: "PLACEHOLDER: years",
+      period: "2021 — 2023",
       title: "Biotechnology research seedbed",
       organization: "Tecnoacademia",
       place: "Túquerres",
       description:
-        "Recognition for standing out in a biotechnology project (PLACEHOLDER: name) and three national-level appearances at RedCOLSI.",
+        "Recognition for standing out in a biotechnology project and speaker at the RedCOLSI National Meeting in Medellín (2022) and Cartagena (2023).",
     },
     {
       id: "bachiller",
