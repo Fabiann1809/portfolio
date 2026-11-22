@@ -6,10 +6,9 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/loader/Preloader";
 import { RetroOverlay } from "@/components/layout/RetroOverlay";
 import { LocaleProvider } from "@/components/locale/LocaleProvider";
-import { localeOptions } from "@/data/locale";
+import { defaultLocale } from "@/data/locale";
 import { themeInitScript } from "@/lib/themeScript";
 import { skipLoaderInitScript } from "@/lib/skipLoader";
-import type { Locale } from "@/types";
 
 // Dot-matrix display face (variable, weights 400-900) for names, titles, labels and UI.
 const doto = Doto({
@@ -36,12 +35,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-/** Root document shared by both language layouts; each one passes its own locale. */
-export function RootDocument({ locale, children }: { locale: Locale; children: React.ReactNode }) {
-  const htmlLang = localeOptions.find((option) => option.id === locale)?.htmlLang ?? locale;
+/** Root document for both languages; LocaleProvider reads the language from the URL. */
+export function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang={htmlLang}
+      lang={defaultLocale}
       className={`${doto.variable} ${condensed.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
@@ -49,7 +47,7 @@ export function RootDocument({ locale, children }: { locale: Locale; children: R
         <script dangerouslySetInnerHTML={{ __html: themeInitScript + skipLoaderInitScript }} />
       </head>
       <body className="min-h-full flex flex-col">
-        <LocaleProvider locale={locale}>
+        <LocaleProvider>
           <LoaderProvider>
             <SmoothScroll>
               <Preloader />
