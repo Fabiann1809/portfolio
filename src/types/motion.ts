@@ -28,9 +28,8 @@ export interface WorkGalleryConfig {
   visibleCompact: number;
   perspective: number;
   transitionMs: number;
-  autoplayMs: number;
-  /** Horizontal drag distance (px) that changes the project. */
-  swipePx: number;
+  /** Scroll length (svh) the pinned gallery spends on each project. */
+  scrollVh: number;
 }
 
 export interface MotionData {
