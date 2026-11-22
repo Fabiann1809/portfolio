@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
 import { Barlow_Condensed, Doto, Geist, Geist_Mono } from "next/font/google";
 import "lenis/dist/lenis.css";
-import "./globals.css";
+import "@/app/globals.css";
 import { LoaderProvider } from "@/components/loader/LoaderProvider";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/loader/Preloader";
 import { RetroOverlay } from "@/components/layout/RetroOverlay";
+import { LocaleProvider } from "@/components/locale/LocaleProvider";
+import { localeOptions } from "@/data/locale";
 import { themeInitScript } from "@/lib/themeScript";
+import type { Locale } from "@/types";
 
 // Dot-matrix display face (variable, weights 400-900) for names, titles, labels and UI.
 const doto = Doto({
@@ -33,15 +35,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Fabian — Software Engineer Full Stack & AI",
-  description: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
-};
-
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/** Root document shared by both language layouts; each one passes its own locale. */
+export function RootDocument({ locale, children }: { locale: Locale; children: React.ReactNode }) {
+  const htmlLang = localeOptions.find((option) => option.id === locale)?.htmlLang ?? locale;
   return (
     <html
-      lang="es"
+      lang={htmlLang}
       className={`${doto.variable} ${condensed.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
@@ -49,13 +48,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-full flex flex-col">
-        <LoaderProvider>
-          <SmoothScroll>
-            <Preloader />
-            {children}
-            <RetroOverlay />
-          </SmoothScroll>
-        </LoaderProvider>
+        <LocaleProvider locale={locale}>
+          <LoaderProvider>
+            <SmoothScroll>
+              <Preloader />
+              {children}
+              <RetroOverlay />
+            </SmoothScroll>
+          </LoaderProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

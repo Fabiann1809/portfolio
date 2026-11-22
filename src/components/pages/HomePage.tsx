@@ -9,8 +9,8 @@ import { Art } from "@/components/sections/Art";
 import { Extra } from "@/components/sections/Extra";
 import { Contact } from "@/components/sections/Contact";
 
-/** Section order matches data/navigation.ts. */
-export default function Home() {
+/** Home page content (language comes from the LocaleProvider of the root layout). Section order matches data/navigation.ts. */
+export function HomePage() {
   return (
     <>
       <Navbar />

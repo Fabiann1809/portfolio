@@ -3,7 +3,8 @@
 import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import type { ExperienceEntry } from "@/types";
-import { experienceLabels } from "@/data/experience";
+import { experienceLabels as labelsContent } from "@/data/experience";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 
 interface TimelineRowProps {
   entry: ExperienceEntry;
@@ -31,6 +32,7 @@ function initials(name: string): string {
 
 /** Timeline item: numbered circle on the scrubbed line, then a card with org, date pill, title, subtitle, tags and notes. */
 export function TimelineRow({ entry, index, active, reached, last, plain, setRef }: TimelineRowProps) {
+  const experienceLabels = useLocalized(labelsContent);
   const innerRef = useRef<HTMLLIElement | null>(null);
   const [entered, setEntered] = useState(false);
   const [open, setOpen] = useState(false);

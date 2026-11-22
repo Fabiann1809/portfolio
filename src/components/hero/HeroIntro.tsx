@@ -1,6 +1,7 @@
 "use client";
 
-import { hero } from "@/data/hero";
+import { hero as heroContent } from "@/data/hero";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { Reveal } from "@/components/loader/Reveal";
 import { LinkButton } from "@/components/ui/Button";
 import { useScrollTo } from "@/hooks/useScrollTo";
@@ -9,6 +10,7 @@ const SHADOW = { textShadow: "0 1px 14px var(--background), 0 0 3px var(--backgr
 
 /** Intro (no card): role as a big heading, short paragraph and the two calls to action, top-left under the navbar. */
 export function HeroIntro() {
+  const hero = useLocalized(heroContent);
   const scrollTo = useScrollTo();
 
   function onWork(event: React.MouseEvent<HTMLAnchorElement>) {

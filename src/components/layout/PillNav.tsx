@@ -1,8 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { navigation } from "@/data/navigation";
+import { menuLabels, navigation } from "@/data/navigation";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { LocaleToggle } from "./LocaleToggle";
 import { NavMascot } from "./NavMascot";
 
 interface PillNavProps {
@@ -19,6 +21,8 @@ interface Box {
 /** Section links in a floating pill; a filled accent pill slides to the active one, a mascot rides on top. */
 export function PillNav({ activeId, hrefPrefix, onAnchor }: PillNavProps) {
   const reduced = useReducedMotion();
+  const items = useLocalized(navigation);
+  const labels = useLocalized(menuLabels);
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<Record<string, HTMLLIElement | null>>({});
   const [box, setBox] = useState<Box | null>(null);
@@ -54,10 +58,10 @@ export function PillNav({ activeId, hrefPrefix, onAnchor }: PillNavProps) {
   });
 
   return (
-    <nav aria-label="Secciones" className="relative rounded-full border border-line bg-surface/70 p-1 backdrop-blur-md">
+    <nav aria-label={labels.sections} className="relative rounded-full border border-line bg-surface/70 p-1 backdrop-blur-md">
       <ul ref={listRef} className="relative flex items-center">
         <span aria-hidden="true" className={`absolute top-0 bottom-0 left-0 rounded-full bg-emphasis ${move}`} style={style()} />
-        {navigation.map((item) => {
+        {items.map((item) => {
           const active = activeId === item.id;
           return (
             <li
@@ -81,6 +85,9 @@ export function PillNav({ activeId, hrefPrefix, onAnchor }: PillNavProps) {
             </li>
           );
         })}
+        <li className="relative ml-1 flex items-center border-l border-line pl-1">
+          <LocaleToggle variant="pill" />
+        </li>
       </ul>
       <span
         aria-hidden="true"

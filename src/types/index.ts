@@ -14,3 +14,4 @@ export * from "./theme";
 export * from "./retro";
 export * from "./motion";
 export * from "./backdrop";
+export * from "./locale";

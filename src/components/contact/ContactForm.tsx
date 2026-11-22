@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { contact } from "@/data/contact";
+import { contact as contactContent } from "@/data/contact";
+import { useLocale, useLocalized } from "@/components/locale/LocaleProvider";
 import { validateContactForm } from "@/lib/validation";
 import type { ContactFormErrors, ContactFormValues } from "@/types";
 
@@ -15,6 +16,8 @@ const errorClass = "text-sm normal-case tracking-normal text-red-500";
 
 /** Regex-validated contact form (see lib/validation.ts) posting to the Resend route. */
 export function ContactForm() {
+  const locale = useLocale();
+  const contact = useLocalized(contactContent);
   const [values, setValues] = useState<ContactFormValues>(emptyValues);
   const [errors, setErrors] = useState<ContactFormErrors>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -25,7 +28,7 @@ export function ContactForm() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const found = validateContactForm(values);
+    const found = validateContactForm(values, locale);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 

@@ -1,8 +1,12 @@
-import { projectLabels } from "@/data/projects";
+"use client";
+
+import { projectLabels as labelsContent } from "@/data/projects";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import type { Project } from "@/types";
 
-/** Meta line: stack / client (or "colaboré") / year. */
+/** Meta line: stack / client (or "collaborated") / year. */
 export function MissionMeta({ project, className = "" }: { project: Project; className?: string }) {
+  const projectLabels = useLocalized(labelsContent);
   const parts = [
     project.technologies.join(", "),
     project.collaborative ? projectLabels.collaborative : (project.client ?? ""),

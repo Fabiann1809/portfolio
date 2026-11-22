@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { galleryConfig, galleryLabels } from "@/data/gallery";
+import { useLocale, useLocalized } from "@/components/locale/LocaleProvider";
+import { localizePath } from "@/lib/locale";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
@@ -56,6 +58,8 @@ const layout = {
 /** Wheel / swipe / keyboard stepped gallery: a lens with the active media and a snap wheel of thumbnails. */
 export function SnapWheelGallery({ projects, mode = "page", className }: SnapWheelGalleryProps) {
   const [index, setIndex] = useState(0);
+  const locale = useLocale();
+  const galleryText = useLocalized(galleryLabels);
   const reduced = useReducedMotion();
   const lenis = useLenisInstance();
   const rootRef = useRef<HTMLElement>(null);
@@ -181,13 +185,13 @@ export function SnapWheelGallery({ projects, mode = "page", className }: SnapWhe
   }
 
   const project = projects[index];
-  const status = galleryLabels.status.replace("{current}", String(index + 1)).replace("{total}", String(count));
+  const status = galleryText.status.replace("{current}", String(index + 1)).replace("{total}", String(count));
 
   return (
     <section
       ref={rootRef}
       aria-roledescription="carousel"
-      aria-label={galleryLabels.galleryAria}
+      aria-label={galleryText.galleryAria}
       data-reduced={reduced}
       data-lenis-prevent={page ? "" : undefined}
       tabIndex={page ? undefined : 0}
@@ -220,14 +224,14 @@ export function SnapWheelGallery({ projects, mode = "page", className }: SnapWhe
 
       <div className={classes.inner}>
         {page && (
-          <Link href="/" className={cn("inline-flex items-center gap-2 opacity-80 hover:opacity-100", classes.back)}>
+          <Link href={localizePath(locale, "/")} className={cn("inline-flex items-center gap-2 opacity-80 hover:opacity-100", classes.back)}>
             <span aria-hidden="true">←</span>
-            {galleryLabels.backHome}
+            {galleryText.backHome}
           </Link>
         )}
 
         <div className={classes.header}>
-          <GalleryCounter index={index} count={count} separator={galleryLabels.counterSeparator} className={classes.counter} />
+          <GalleryCounter index={index} count={count} separator={galleryText.counterSeparator} className={classes.counter} />
           <GalleryTitle project={project} className={classes.title} />
         </div>
 
@@ -241,7 +245,7 @@ export function SnapWheelGallery({ projects, mode = "page", className }: SnapWhe
             index={index}
             geometry={cfg.wheel[mode]}
             reduced={reduced}
-            labels={galleryLabels}
+            labels={galleryText}
             timing={cfg}
             onSelect={goTo}
           />
@@ -253,8 +257,8 @@ export function SnapWheelGallery({ projects, mode = "page", className }: SnapWhe
 
         {!page && (
           <GalleryNav
-            previousLabel={galleryLabels.previous}
-            nextLabel={galleryLabels.next}
+            previousLabel={galleryText.previous}
+            nextLabel={galleryText.next}
             canPrevious={index > 0}
             canNext={index < count - 1}
             onPrevious={() => goTo(index - 1)}

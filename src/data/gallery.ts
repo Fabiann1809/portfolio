@@ -1,21 +1,38 @@
-import type { GalleryConfig, GalleryLabels } from "@/types";
+import type { GalleryConfig, GalleryLabels, Localized } from "@/types";
 
-// PLACEHOLDER copy.
+/** Language-neutral route of the gallery page (see lib/locale.ts for the localized path). */
 export const galleryRoute = "/projects";
 
-export const galleryLabels: GalleryLabels = {
-  counterSeparator: "/",
-  viewAll: "Ver todos los proyectos",
-  backHome: "Volver al inicio",
-  pageTitle: "Proyectos",
-  pageDescription: "Galería de todos los proyectos",
-  galleryAria: "Galería de proyectos",
-  status: "Proyecto {current} de {total}",
-  previous: "Proyecto anterior",
-  next: "Proyecto siguiente",
-  select: "Ir al proyecto",
-  wheelAria: "Selector de proyectos",
-  technologies: "Tecnologías",
+// PLACEHOLDER copy.
+export const galleryLabels: Localized<GalleryLabels> = {
+  es: {
+    counterSeparator: "/",
+    viewAll: "Ver todos los proyectos",
+    backHome: "Volver al inicio",
+    pageTitle: "Proyectos",
+    pageDescription: "Galería de todos los proyectos",
+    galleryAria: "Galería de proyectos",
+    status: "Proyecto {current} de {total}",
+    previous: "Proyecto anterior",
+    next: "Proyecto siguiente",
+    select: "Ir al proyecto",
+    wheelAria: "Selector de proyectos",
+    technologies: "Tecnologías",
+  },
+  en: {
+    counterSeparator: "/",
+    viewAll: "View all projects",
+    backHome: "Back to home",
+    pageTitle: "Projects",
+    pageDescription: "Gallery of all projects",
+    galleryAria: "Project gallery",
+    status: "Project {current} of {total}",
+    previous: "Previous project",
+    next: "Next project",
+    select: "Go to project",
+    wheelAria: "Project selector",
+    technologies: "Technologies",
+  },
 };
 
 export const galleryConfig: GalleryConfig = {

@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { extra } from "@/data/extra";
+import { extra as extraContent } from "@/data/extra";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { PowerScan } from "@/components/extra/PowerScan";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
-const codeOf = (i: number) => `${extra.codePrefix}-${String(i + 1).padStart(2, "0")}`;
-
 /** "Power profile": abilities list (hover / focus / click activates) next to a scan panel. */
 export function Extra() {
+  const extra = useLocalized(extraContent);
+  const codeOf = (i: number) => `${extra.codePrefix}-${String(i + 1).padStart(2, "0")}`;
   const [activeId, setActiveId] = useState(extra.abilities[0].id);
   const activeIndex = Math.max(0, extra.abilities.findIndex((ability) => ability.id === activeId));
   const active = extra.abilities[activeIndex];

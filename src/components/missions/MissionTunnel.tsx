@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { ViewAllLink } from "@/components/gallery/ViewAllLink";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { motion } from "@/data/motion";
-import { projectLabels, projects } from "@/data/projects";
+import { projectLabels as labelsContent, projects as projectsContent } from "@/data/projects";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { usePinnedProgress } from "@/hooks/usePinnedProgress";
 import { scrambleFrame } from "@/lib/scramble";
 import { MissionFrame } from "./MissionFrame";
@@ -22,6 +23,8 @@ const cfg = motion.tunnel;
  * the HUD (index, title, meta, links) switches with a glyph decode.
  */
 export function MissionTunnel() {
+  const projects = useLocalized(projectsContent);
+  const projectLabels = useLocalized(labelsContent);
   const count = projects.length;
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -140,7 +143,7 @@ export function MissionTunnel() {
               className="absolute top-1/2 left-1/2 will-change-transform"
               style={{ width: `min(${cfg.panelWidth * 100}vw, ${cfg.panelMaxPx}px)`, visibility: i === 0 ? "visible" : "hidden" }}
             >
-              <MissionFrame project={p} code={codeOf(i)} />
+              <MissionFrame project={p} code={codeOf(projectLabels.codePrefix, i)} />
             </div>
           ))}
         </div>

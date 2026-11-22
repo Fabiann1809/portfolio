@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useRef } from "react";
-import { about } from "@/data/about";
+import { about as aboutContent } from "@/data/about";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { motion } from "@/data/motion";
 import { stack } from "@/data/stack";
 import { usePinnedProgress } from "@/hooks/usePinnedProgress";
@@ -18,7 +19,8 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
  */
 export function About() {
   const reduced = useReducedMotion();
-  const tokens = useMemo(() => tokenizeStatement(about.statement), []);
+  const about = useLocalized(aboutContent);
+  const tokens = useMemo(() => tokenizeStatement(about.statement), [about.statement]);
   const trackRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);

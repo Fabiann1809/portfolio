@@ -1,23 +1,26 @@
-import type { ContactFormErrors, ContactFormValues } from "@/types";
+import { defaultLocale } from "@/data/locale";
+import { validationMessages } from "@/data/validation";
+import type { ContactFormErrors, ContactFormValues, Locale } from "@/types";
 
 export const NAME_REGEX = /^[\p{L}][\p{L}\s.'-]{1,59}$/u;
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export const SUBJECT_REGEX = /^[p{L}p{N}][p{L}p{N}s.,:;!?¿¡'()-]{2,99}$/u;
 export const MESSAGE_REGEX = /^[\s\S]{10,2000}$/;
 
-export function validateContactForm(values: ContactFormValues): ContactFormErrors {
+export function validateContactForm(values: ContactFormValues, locale: Locale = defaultLocale): ContactFormErrors {
   const errors: ContactFormErrors = {};
+  const messages = validationMessages[locale];
   if (!NAME_REGEX.test(values.name.trim())) {
-    errors.name = "Ingresa un nombre valido (2 a 60 letras).";
+    errors.name = messages.name;
   }
   if (!EMAIL_REGEX.test(values.email.trim())) {
-    errors.email = "Ingresa un correo valido.";
+    errors.email = messages.email;
   }
   if (!SUBJECT_REGEX.test(values.subject.trim())) {
-    errors.subject = "Ingresa un asunto valido (3 a 100 caracteres).";
+    errors.subject = messages.subject;
   }
   if (!MESSAGE_REGEX.test(values.message.trim())) {
-    errors.message = "El mensaje debe tener entre 10 y 2000 caracteres.";
+    errors.message = messages.message;
   }
   return errors;
 }

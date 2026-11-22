@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { art } from "@/data/art";
+import { art as artContent } from "@/data/art";
 import { galleryConfig, galleryLabels } from "@/data/gallery";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { GalleryCounter } from "@/components/gallery/GalleryCounter";
 import { useCrossfade } from "@/hooks/useCrossfade";
 import { useMinWidth } from "@/hooks/useMinWidth";
@@ -11,8 +12,6 @@ import { placeholderGradient } from "@/lib/gradient";
 import type { Artwork } from "@/types";
 
 const cfg = galleryConfig;
-const artworks = art.artworks;
-const count = artworks.length;
 const titleClass =
   "col-start-1 row-start-1 font-display text-xl font-extrabold tracking-[0.1em] uppercase";
 
@@ -42,6 +41,10 @@ const SCROLL_PER_ITEM = 0.6;
 
 /** Rondo-style gallery pinned while scrolling: each scroll step advances the lens and the thumbnail arc. */
 export function ArtWheel() {
+  const art = useLocalized(artContent);
+  const labels = useLocalized(galleryLabels);
+  const artworks = art.artworks;
+  const count = artworks.length;
   const [index, setIndex] = useState(0);
   const reduced = useReducedMotion();
   const wide = useMinWidth(1024);
@@ -93,7 +96,7 @@ export function ArtWheel() {
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [count]);
 
   const goTo = useCallback(
     (next: number) => {
@@ -106,12 +109,12 @@ export function ArtWheel() {
         ((next + 0.5) / count) * range;
       window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
     },
-    [reduced],
+    [reduced, count],
   );
 
   const work = artworks[index];
   const { current, leaving } = useCrossfade(work, cfg.transitionMs);
-  const status = `${work.title}, ${index + 1} ${galleryLabels.counterSeparator} ${count}`;
+  const status = `${work.title}, ${index + 1} ${labels.counterSeparator} ${count}`;
   const stepRad = (g.stepDeg * Math.PI) / 180;
 
   return (
@@ -158,7 +161,7 @@ export function ArtWheel() {
           <GalleryCounter
             index={index}
             count={count}
-            separator={galleryLabels.counterSeparator}
+            separator={labels.counterSeparator}
             className="lg:absolute lg:top-[47%] lg:left-0 lg:-translate-y-1/2"
           />
           <div className="text-right lg:absolute lg:top-[47%] lg:right-0 lg:max-w-[18vw] lg:-translate-y-1/2">

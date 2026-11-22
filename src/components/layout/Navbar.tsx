@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { menuLabels, navbarBrand, navigation } from "@/data/navigation";
+import { menuLabels, navbarBrand, navigationIds } from "@/data/navigation";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { Reveal } from "@/components/loader/Reveal";
@@ -10,7 +11,7 @@ import { BackdropPicker } from "@/components/theme/BackdropPicker";
 import { MobileMenu } from "./MobileMenu";
 import { PillNav } from "./PillNav";
 
-const ids = navigation.map((item) => item.id);
+const ids = navigationIds;
 
 interface NavbarProps {
   /** Set on pages other than home: links point to `${homeHref}#section` instead of scrolling. */
@@ -18,6 +19,8 @@ interface NavbarProps {
 }
 
 export function Navbar({ homeHref }: NavbarProps) {
+  const labels = useLocalized(menuLabels);
+  const brand = useLocalized(navbarBrand);
   const external = homeHref !== undefined;
   const hrefPrefix = homeHref ?? "";
   const [open, setOpen] = useState(false);
@@ -46,12 +49,12 @@ export function Navbar({ homeHref }: NavbarProps) {
       <div className="relative flex items-start justify-between px-[var(--edge-x)] pt-6">
         {/* Mobile / tablet: compact pill with logo + hamburger. Desktop: logo alone, pill centered. */}
         <div className="pointer-events-auto flex w-full items-center justify-between rounded-full border border-line bg-surface/70 py-1.5 pr-2 pl-5 backdrop-blur-md xl:w-auto xl:py-2 xl:pr-5">
-          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-base font-black tracking-[0.12em] uppercase xl:text-lg">{navbarBrand.label}</a>
+          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="phosphor font-display text-base font-black tracking-[0.12em] uppercase xl:text-lg">{brand.label}</a>
           <button
             ref={toggleRef}
             type="button"
             className="flex h-9 w-9 items-center justify-center rounded-full xl:hidden"
-            aria-label={open ? menuLabels.close : menuLabels.open}
+            aria-label={open ? labels.close : labels.open}
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((value) => !value)}
@@ -65,11 +68,11 @@ export function Navbar({ homeHref }: NavbarProps) {
         <div className="pointer-events-auto hidden items-center gap-4 xl:flex">
           <BackdropPicker variant="compact" />
           <a
-            href={hrefPrefix + "#" + navbarBrand.cta.targetId}
-            onClick={(e) => handleAnchor(e, navbarBrand.cta.targetId)}
+            href={hrefPrefix + "#" + brand.cta.targetId}
+            onClick={(e) => handleAnchor(e, brand.cta.targetId)}
             className="label flex items-center gap-2 rounded-full border border-line bg-surface/70 px-4 py-2 text-xs backdrop-blur-md transition-colors hover:border-emphasis hover:text-emphasis"
           >
-            {navbarBrand.cta.label}
+            {brand.cta.label}
             <span aria-hidden="true" className="status-dot" />
           </a>
         </div>

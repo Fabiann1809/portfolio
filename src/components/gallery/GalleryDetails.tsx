@@ -2,11 +2,14 @@
 
 import { useCrossfade } from "@/hooks/useCrossfade";
 import { galleryConfig, galleryLabels } from "@/data/gallery";
-import { projectLabels } from "@/data/projects";
+import { projectLabels as projectLabelsContent } from "@/data/projects";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { LinkButton } from "@/components/ui/Button";
 import type { Project } from "@/types";
 
 function Details({ project }: { project: Project }) {
+  const galleryText = useLocalized(galleryLabels);
+  const projectLabels = useLocalized(projectLabelsContent);
   const { links } = project;
   return (
     <>
@@ -16,7 +19,7 @@ function Details({ project }: { project: Project }) {
         </span>
       )}
       <p className="text-sm leading-relaxed text-muted">{project.description}</p>
-      <ul aria-label={galleryLabels.technologies} className="mt-3 flex flex-wrap gap-2 text-xs">
+      <ul aria-label={galleryText.technologies} className="mt-3 flex flex-wrap gap-2 text-xs">
         {project.technologies.map((tech) => (
           <li key={tech} className="rounded border border-foreground/25 px-2 py-0.5">
             {tech}

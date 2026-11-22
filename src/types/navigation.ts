@@ -10,6 +10,8 @@ export interface MenuLabels {
   close: string;
   /** Accessible name of the full-screen menu. */
   panel: string;
+  /** Accessible name of the section links in the header pill. */
+  sections: string;
 }
 
 export interface NavbarBrand {

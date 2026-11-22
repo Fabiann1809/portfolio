@@ -1,18 +1,12 @@
-import type { HeroData } from "@/types";
+import type { HeroData, Localized } from "@/types";
 import { projectsSectionId } from "@/data/projects";
 
-export const hero: HeroData = {
-  greeting: "Hola, soy Fabian",
+/** Language-neutral part of the hero (layout, portrait, targets); shared by every locale. */
+export const heroShared = {
   displayName: "FABIAN",
-  role: "Ingeniero de Software Full Stack & AI Engineering",
-  roleLines: ["Ingeniero de Software", "Full Stack & AI Engineering"],
   metaLabel: "// PORTFOLIO",
   copyrightYear: 2026,
-  tagline: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
-  description: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
-  workLabel: "Ver proyectos",
   workTargetId: projectsSectionId,
-  cvLabel: "Descargar CV",
   cvPath: "/cv/fabian-cv.pdf",
   portrait: {
     src: "/images/hero/portrait.webp",
@@ -34,11 +28,41 @@ export const hero: HeroData = {
     photoScanAlpha: 0.04,
     photoVignette: 0.22,
   },
-  status: {
-    availability: "Disponible para oportunidades",
-    city: "Túquerres / Pasto",
-    timeZone: "America/Bogota",
-    locale: "es",
-    stage: "5.º semestre · Ing. de Software",
+};
+
+export const hero: Localized<HeroData> = {
+  es: {
+    ...heroShared,
+    greeting: "Hola, soy Fabian",
+    role: "Ingeniero de Software Full Stack & AI Engineering",
+    roleLines: ["Ingeniero de Software", "Full Stack & AI Engineering"],
+    tagline: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
+    description: "Diseño y desarrollo productos digitales que piensan, aprenden y resuelven problemas reales.",
+    workLabel: "Ver proyectos",
+    cvLabel: "Descargar CV",
+    status: {
+      availability: "Disponible para oportunidades",
+      city: "Túquerres / Pasto",
+      timeZone: "America/Bogota",
+      locale: "es",
+      stage: "5.º semestre · Ing. de Software",
+    },
+  },
+  en: {
+    ...heroShared,
+    greeting: "Hi, I'm Fabian",
+    role: "Software Engineer Full Stack & AI Engineering",
+    roleLines: ["Software Engineer", "Full Stack & AI Engineering"],
+    tagline: "I design and build digital products that think, learn and solve real problems.",
+    description: "I design and build digital products that think, learn and solve real problems.",
+    workLabel: "View projects",
+    cvLabel: "Download CV",
+    status: {
+      availability: "Available for opportunities",
+      city: "Túquerres / Pasto",
+      timeZone: "America/Bogota",
+      locale: "en",
+      stage: "5th semester · Software Eng.",
+    },
   },
 };

@@ -1,4 +1,7 @@
-import { contact } from "@/data/contact";
+"use client";
+
+import { contact as contactContent } from "@/data/contact";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { socials } from "@/data/socials";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SignalHeadline } from "@/components/contact/SignalHeadline";
@@ -7,6 +10,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /** "Send the signal": giant headline, availability, socials and the contact form. */
 export function Contact() {
+  const contact = useLocalized(contactContent);
   return (
     <section id="contact" className="px-[var(--edge-x)] pt-24 pb-20 md:pt-32">
       <SectionLabel>{contact.label}</SectionLabel>

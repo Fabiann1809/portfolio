@@ -1,19 +1,37 @@
-import type { ContactData } from "@/types";
+import type { ContactData, Localized } from "@/types";
 
-export const contact: ContactData = {
-  label: "Contacto",
-  headlineLines: ["Hablemos"],
-  intro: "¿Tienes una idea, una oportunidad o solo quieres conversar sobre tecnología? Escríbeme y te respondo pronto.",
-  availability: "Disponible para oportunidades como desarrollador full stack junior y proyectos freelance.",
-  // PLACEHOLDER: real email (rendered as a mailto link once it contains "@").
-  email: "PLACEHOLDER: correo",
-  emailLabel: "Correo",
-  location: "Túquerres / Pasto, Nariño, Colombia",
-  locationLabel: "Ubicación",
-  socialsLabel: "Redes",
-  fields: { name: "Nombre", email: "Correo", subject: "Asunto", message: "Mensaje" },
-  submitLabel: "Enviar",
-  sendingLabel: "Enviando",
-  successMessage: "Mensaje enviado. ¡Gracias!",
-  errorMessage: "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+// PLACEHOLDER: real email (rendered as a mailto link once it contains "@").
+export const contact: Localized<ContactData> = {
+  es: {
+    label: "Contacto",
+    headlineLines: ["Hablemos"],
+    intro: "¿Tienes una idea, una oportunidad o solo quieres conversar sobre tecnología? Escríbeme y te respondo pronto.",
+    availability: "Disponible para oportunidades como desarrollador full stack junior y proyectos freelance.",
+    email: "PLACEHOLDER: correo",
+    emailLabel: "Correo",
+    location: "Túquerres / Pasto, Nariño, Colombia",
+    locationLabel: "Ubicación",
+    socialsLabel: "Redes",
+    fields: { name: "Nombre", email: "Correo", subject: "Asunto", message: "Mensaje" },
+    submitLabel: "Enviar",
+    sendingLabel: "Enviando",
+    successMessage: "Mensaje enviado. ¡Gracias!",
+    errorMessage: "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+  },
+  en: {
+    label: "Contact",
+    headlineLines: ["Let's talk"],
+    intro: "Have an idea, an opportunity, or just want to chat about technology? Write to me and I'll get back to you soon.",
+    availability: "Available for junior full stack developer opportunities and freelance projects.",
+    email: "PLACEHOLDER: email",
+    emailLabel: "Email",
+    location: "Túquerres / Pasto, Nariño, Colombia",
+    locationLabel: "Location",
+    socialsLabel: "Social",
+    fields: { name: "Name", email: "Email", subject: "Subject", message: "Message" },
+    submitLabel: "Send",
+    sendingLabel: "Sending",
+    successMessage: "Message sent. Thank you!",
+    errorMessage: "The message could not be sent. Please try again.",
+  },
 };

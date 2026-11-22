@@ -1,9 +1,13 @@
-import { extra } from "@/data/extra";
+"use client";
+
+import { extra as extraContent } from "@/data/extra";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { stack } from "@/data/stack";
 import type { Ability } from "@/types";
 
 /** Scan panel body: active ability name, description and its framework icons. */
 export function PowerScan({ ability }: { ability: Ability }) {
+  const extra = useLocalized(extraContent);
   const technologies = ability.technologies
     .map((name) => stack.find((item) => item.name === name))
     .filter((item) => item !== undefined);

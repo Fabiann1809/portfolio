@@ -1,12 +1,13 @@
 "use client";
 
 import { hero } from "@/data/hero";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { Reveal } from "@/components/loader/Reveal";
 import { useNow } from "@/hooks/useNow";
 
 /** Mono status lines (top right): availability + date, city + live local time, study stage. */
 export function HeroStatus() {
-  const { status } = hero;
+  const { status } = useLocalized(hero);
   const now = useNow();
 
   const date = now

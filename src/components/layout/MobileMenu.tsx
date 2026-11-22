@@ -3,9 +3,11 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { menuLabels, navigation } from "@/data/navigation";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { BackdropPicker } from "@/components/theme/BackdropPicker";
+import { LocaleToggle } from "./LocaleToggle";
 
 interface MobileMenuProps {
   open: boolean;
@@ -22,6 +24,8 @@ interface MobileMenuProps {
  */
 export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClose }: MobileMenuProps) {
   const lenis = useLenisInstance();
+  const items = useLocalized(navigation);
+  const labels = useLocalized(menuLabels);
   const reduced = useReducedMotion();
   const panelRef = useRef<HTMLElement>(null);
 
@@ -58,14 +62,14 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
     <nav
       ref={panelRef}
       id="mobile-menu"
-      aria-label={menuLabels.panel}
+      aria-label={labels.panel}
       data-menu
       data-reduced={reduced}
       className="fixed inset-0 z-40 overflow-y-auto bg-background px-6 pt-24 pb-10 text-foreground xl:hidden"
     >
       <div className="flex min-h-full flex-col justify-center gap-6">
       <ul className="flex flex-col gap-1">
-        {navigation.map((item, index) => (
+        {items.map((item, index) => (
           <li key={item.id}>
             <a
               href={hrefPrefix + "#" + item.id}
@@ -83,7 +87,10 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
           </li>
         ))}
       </ul>
-      <BackdropPicker variant="full" className="self-start" />
+      <div className="flex flex-wrap items-center gap-4 self-start">
+        <LocaleToggle variant="menu" />
+        <BackdropPicker variant="full" />
+      </div>
       </div>
     </nav>,
     document.body,

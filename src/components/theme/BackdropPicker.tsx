@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { theme } from "@/data/theme";
+import { theme, themeLabels } from "@/data/theme";
+import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useBackdrop } from "@/hooks/useBackdrop";
 import { applyBackdrop } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ interface BackdropPickerProps {
 /** Radio group that switches the site-wide backdrop tone (ink / bone / signal). */
 export function BackdropPicker({ variant = "full", className }: BackdropPickerProps) {
   const current = useBackdrop();
+  const labels = useLocalized(themeLabels);
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
   const full = variant === "full";
   const { options } = theme;
@@ -31,7 +33,7 @@ export function BackdropPicker({ variant = "full", className }: BackdropPickerPr
   return (
     <div
       role="radiogroup"
-      aria-label={theme.pickerLabel}
+      aria-label={labels.pickerLabel}
       className={cn(
         "inline-flex items-center",
         full
@@ -40,7 +42,7 @@ export function BackdropPicker({ variant = "full", className }: BackdropPickerPr
         className,
       )}
     >
-      {full && <span className="font-mono text-[10px] tracking-[0.25em] text-muted uppercase">{theme.pickerCaption}</span>}
+      {full && <span className="font-mono text-[10px] tracking-[0.25em] text-muted uppercase">{labels.pickerCaption}</span>}
       {options.map((option, index) => {
         const checked = option.id === current;
         return (
@@ -52,8 +54,8 @@ export function BackdropPicker({ variant = "full", className }: BackdropPickerPr
             type="button"
             role="radio"
             aria-checked={checked}
-            aria-label={option.label}
-            title={option.label}
+            aria-label={labels.options[option.id]}
+            title={labels.options[option.id]}
             tabIndex={checked ? 0 : -1}
             onClick={() => applyBackdrop(option.id)}
             onKeyDown={(event) => onKeyDown(event, index)}
@@ -72,7 +74,7 @@ export function BackdropPicker({ variant = "full", className }: BackdropPickerPr
               )}
               style={{ backgroundColor: option.swatch }}
             />
-            {full && <span>{option.label}</span>}
+            {full && <span>{labels.options[option.id]}</span>}
           </button>
         );
       })}
