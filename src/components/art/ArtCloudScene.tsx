@@ -77,11 +77,15 @@ export function ArtCloudScene({ art, onOpen }: ArtCloudSceneProps) {
       const rot = smoothProgress * cfg.scrollDeg + idle;
       const rad = (rot * Math.PI) / 180;
       // closing: collapse to the first card during the last part of the track
-      const close = smooth((smoothProgress - cfg.closeStart) / (1 - cfg.closeStart));
-      const fade = 1 - smooth((close - 0.5) / 0.5);
+      // opening: starts as the single first card and fans out into the cloud over the first part of the track
+      const opening = 1 - smooth(smoothProgress / cfg.openEnd);
+      const closing = smooth((smoothProgress - cfg.closeStart) / (1 - cfg.closeStart));
+      const close = Math.max(opening, closing);
+      // only the exit fades the cloud out; on entry the gathered card stays visible
+      const fade = 1 - smooth((closing - 0.5) / 0.5);
       const parallax = wide ? cfg.tilt.parallax * unit : 0;
 
-      group.style.transform = `rotateX(${(-spring.y * cfg.tilt.maxDeg).toFixed(2)}deg) rotateY(${(spring.x * cfg.tilt.maxDeg).toFixed(2)}deg) scale(${lerp(1, 0.7, close).toFixed(3)})`;
+      group.style.transform = `rotateX(${(-spring.y * cfg.tilt.maxDeg).toFixed(2)}deg) rotateY(${(spring.x * cfg.tilt.maxDeg).toFixed(2)}deg) scale(${lerp(1, 0.7, closing).toFixed(3)})`;
 
       for (let i = 0; i < cards.length; i++) {
         const el = cardRefs.current[i];

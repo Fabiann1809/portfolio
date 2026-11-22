@@ -75,6 +75,8 @@ export interface ArtCloudConfig {
   /** Easing speed of scroll progress: 1 - exp(-speed * dt). */
   scrollEase: number;
   /** Progress (0-1) where the closing (collapse to one card) starts. */
+  /** Progress at which the opening fan-out ends (starts gathered as one card). */
+  openEnd: number;
   closeStart: number;
   /** Opacity of the farthest cards. */
   minOpacity: number;

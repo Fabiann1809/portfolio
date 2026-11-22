@@ -8,12 +8,10 @@ interface ArtLightboxProps {
   open: boolean;
   onClose: () => void;
   closeLabel: string;
-  techniqueLabel: string;
-  yearLabel: string;
 }
 
 /** Enlarged artwork in a native modal dialog (Esc, backdrop click and the close button dismiss it). */
-export function ArtLightbox({ work, open, onClose, closeLabel, techniqueLabel, yearLabel }: ArtLightboxProps) {
+export function ArtLightbox({ work, open, onClose, closeLabel }: ArtLightboxProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -42,12 +40,6 @@ export function ArtLightbox({ work, open, onClose, closeLabel, techniqueLabel, y
           // eslint-disable-next-line @next/next/no-img-element
           <img src={work.image} alt={work.title} className="min-h-0 max-w-full flex-1 object-contain" />
         )}
-        <div data-backdrop="" className="text-center">
-          <p className="font-condensed text-2xl font-bold">{work.title}</p>
-          <p className="mono-label mt-1 opacity-80">
-            {techniqueLabel}: {work.technique} · {yearLabel}: {work.year}
-          </p>
-        </div>
       </div>
     </dialog>
   );

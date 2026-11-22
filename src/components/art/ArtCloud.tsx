@@ -27,8 +27,6 @@ export function ArtCloud() {
         open={open}
         onClose={() => setOpen(false)}
         closeLabel={art.close}
-        techniqueLabel={art.techniqueLabel}
-        yearLabel={art.yearLabel}
       />
     </>
   );
