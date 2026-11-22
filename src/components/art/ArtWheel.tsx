@@ -47,6 +47,26 @@ export function ArtWheel() {
   const wide = useMinWidth(1024);
   const g = wide ? cfg.wheel.page : cfg.wheel.embedded;
   const trackRef = useRef<HTMLDivElement>(null);
+  const lensRef = useRef<HTMLDivElement>(null);
+
+  // 3D tilt: the lens leans toward the pointer and its glare follows it.
+  const tilt = (event: React.PointerEvent<HTMLDivElement>) => {
+    const lens = lensRef.current;
+    if (!lens || reduced || event.pointerType === "touch") return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const nx = (event.clientX - rect.left) / rect.width - 0.5;
+    const ny = (event.clientY - rect.top) / rect.height - 0.5;
+    lens.style.setProperty("--rx", `${(-ny * 18).toFixed(2)}deg`);
+    lens.style.setProperty("--ry", `${(nx * 24).toFixed(2)}deg`);
+    lens.style.setProperty("--gx", `${(50 + nx * 70).toFixed(1)}%`);
+    lens.style.setProperty("--gy", `${(50 + ny * 70).toFixed(1)}%`);
+  };
+  const resetTilt = () => {
+    const lens = lensRef.current;
+    if (!lens) return;
+    for (const v of ["--rx", "--ry", "--gx", "--gy"])
+      lens.style.removeProperty(v);
+  };
   const duration = reduced ? 0 : cfg.transitionMs;
 
   // Page scroll position inside the tall track picks the active artwork.
@@ -118,6 +138,8 @@ export function ArtWheel() {
             "--gallery-ease": cfg.ease,
           } as React.CSSProperties
         }
+        onPointerMove={tilt}
+        onPointerLeave={resetTilt}
         className="sticky top-0 flex h-svh flex-col justify-center gap-4 overflow-hidden outline-offset-4 focus-visible:outline-2 focus-visible:outline-(--color-primary) lg:block lg:gap-0"
       >
         <div
@@ -166,8 +188,13 @@ export function ArtWheel() {
 
         <div className="relative mx-auto w-[min(100%,calc(36svh*1.6))] shrink-0 lg:absolute lg:top-[40%] lg:left-1/2 lg:w-[min(52vw,720px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
           <div
+            ref={lensRef}
             className="relative aspect-[16/10] w-full rounded-[10%/14%]"
             style={{
+              transform:
+                "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.02)",
+              transition: "transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+              transformStyle: "preserve-3d",
               boxShadow:
                 "0 0 50px 6px color-mix(in srgb, var(--color-primary) 40%, transparent), 0 0 150px 30px color-mix(in srgb, var(--color-primary) 18%, transparent)",
             }}
@@ -197,7 +224,7 @@ export function ArtWheel() {
                 className="pointer-events-none absolute inset-0"
                 style={{
                   background:
-                    "radial-gradient(ellipse at 28% 18%, rgba(255,255,255,0.16), transparent 42%), repeating-linear-gradient(to bottom, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px)",
+                    "radial-gradient(ellipse at var(--gx, 28%) var(--gy, 18%), rgba(255,255,255,0.2), transparent 42%), repeating-linear-gradient(to bottom, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px)",
                   boxShadow:
                     "inset 0 0 90px 20px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(255,255,255,0.08)",
                 }}
