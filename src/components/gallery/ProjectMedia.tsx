@@ -78,16 +78,27 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
         stop();
       }
     };
-    // Touch: a tap on the video toggles it.
-    const onTap = (event: PointerEvent) => {
+    // Touch: press and hold on the video plays it; lifting the finger (or the browser taking over to scroll) stops it.
+    const onPress = (event: PointerEvent) => {
       if (event.pointerType !== "touch" || !inside(event.clientX, event.clientY)) return;
-      over = video.paused;
-      if (over) start();
-      else stop();
+      over = true;
+      start();
+    };
+    const onRelease = (event: PointerEvent) => {
+      if (event.pointerType !== "touch" || !over) return;
+      over = false;
+      stop();
+    };
+    // No long-press menu / image callout while holding the video.
+    const onMenu = (event: Event) => {
+      if (event instanceof MouseEvent && inside(event.clientX, event.clientY)) event.preventDefault();
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("pointerup", onTap);
+    window.addEventListener("pointerdown", onPress, { passive: true });
+    window.addEventListener("pointerup", onRelease);
+    window.addEventListener("pointercancel", onRelease);
+    window.addEventListener("contextmenu", onMenu);
     document.documentElement.addEventListener("pointerleave", onLeave);
     const io = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting && over) {
@@ -102,14 +113,17 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
       video.removeEventListener("playing", onPlaying);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", sync);
-      window.removeEventListener("pointerup", onTap);
+      window.removeEventListener("pointerdown", onPress);
+      window.removeEventListener("pointerup", onRelease);
+      window.removeEventListener("pointercancel", onRelease);
+      window.removeEventListener("contextmenu", onMenu);
       document.documentElement.removeEventListener("pointerleave", onLeave);
       io.disconnect();
     };
   }, []);
 
   return (
-    <div className="relative size-full">
+    <div className="relative size-full [-webkit-touch-callout:none] select-none">
       <video
         ref={ref}
         src={src}
@@ -136,7 +150,7 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
       {!reduced && (
         <span
           aria-hidden="true"
-          className="mono-label pointer-events-none absolute right-2 bottom-2 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white backdrop-blur-sm"
+          className="mono-label pointer-events-none absolute right-2 bottom-2 flex items-center gap-1.5 whitespace-nowrap rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white backdrop-blur-sm"
           style={{ opacity: playing ? 0 : 1, transition: `opacity ${POSTER_FADE_MS}ms ease` }}
         >
           <svg viewBox="0 0 10 10" className="size-2 fill-current" aria-hidden="true">

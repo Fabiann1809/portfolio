@@ -145,6 +145,18 @@ export function WorkGallery() {
           </div>
         </div>
 
+        {/* Touch-only swipe hint; fades away after the first interaction. */}
+        <p
+          aria-hidden="true"
+          className={
+            "mono-label mx-auto mb-1 hidden w-fit items-center gap-2 text-[10px] text-muted transition-opacity duration-500 [@media(hover:none)]:flex " +
+            (interacted ? "opacity-0" : "opacity-100")
+          }
+        >
+          <span className="swipe-hint-arrow" aria-hidden="true">←</span>
+          {labels.swipeHint}
+          <span className="swipe-hint-arrow" aria-hidden="true">→</span>
+        </p>
         {/* Indicator: counter + one segment per project; the active one fills while autoplay counts down. */}
         <div className="mx-auto mt-2 flex w-[min(88vw,520px)] items-center gap-4">
           <p className="font-sans text-sm font-semibold tabular-nums" aria-hidden="true">

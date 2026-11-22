@@ -418,3 +418,23 @@ html[data-skip-loader] .preloader {
 .work-progress.is-paused {
   animation: none;
 }
+
+/* Work gallery swipe hint (touch only): arrows nudge outward. */
+@keyframes swipe-hint {
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(4px); opacity: 1; }
+}
+.swipe-hint-arrow {
+  display: inline-block;
+  animation: swipe-hint 1.6s ease-in-out infinite;
+}
+.swipe-hint-arrow:first-child {
+  animation-name: swipe-hint-left;
+}
+@keyframes swipe-hint-left {
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(-4px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .swipe-hint-arrow { animation: none; }
+}
