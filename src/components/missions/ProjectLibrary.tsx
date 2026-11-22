@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { projectLabels as labelsContent, projects as projectsContent } from "@/data/projects";
 import { stack } from "@/data/stack";
 import { useLocalized } from "@/components/locale/LocaleProvider";
@@ -27,10 +28,10 @@ export function ProjectLibrary() {
         {projects.map((project, i) => (
           <li
             key={project.id}
-            className="sticky"
-            style={{ top: STICKY_TOP + i * PEEK, zIndex: i + 1 }}
+            className="lg:sticky lg:top-[var(--sticky-top)]"
+            style={{ "--sticky-top": `${STICKY_TOP + i * PEEK}px`, zIndex: i + 1 } as CSSProperties}
           >
-            <article className="grid gap-8 rounded-2xl border border-line bg-surface p-5 shadow-[0_-12px_40px_-20px_var(--shadow-color)] md:p-8 lg:min-h-[min(72svh,640px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-12">
+            <article className="grid gap-6 rounded-2xl border border-line bg-surface p-5 shadow-[0_-12px_40px_-20px_var(--shadow-color)] md:p-8 lg:min-h-[min(72svh,640px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-12">
               <div className="flex flex-col gap-6">
                 <div className="flex items-baseline justify-between gap-4">
                   <span className="outline-num font-condensed text-[clamp(48px,6vw,96px)] leading-[0.8] font-black">
@@ -59,7 +60,7 @@ export function ProjectLibrary() {
                 </div>
                 <MissionLinks project={project} className="mt-auto" />
               </div>
-              <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line bg-background lg:aspect-auto lg:min-h-full">
+              <div className="relative order-first aspect-[16/10] overflow-hidden rounded-xl border border-line bg-background lg:order-none lg:aspect-auto lg:min-h-full">
                 <ProjectMedia project={project} alt={project.title} />
               </div>
             </article>

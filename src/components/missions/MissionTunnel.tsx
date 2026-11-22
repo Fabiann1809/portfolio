@@ -5,6 +5,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { motion } from "@/data/motion";
 import { projectLabels as labelsContent, projects as projectsContent } from "@/data/projects";
 import { useLocalized } from "@/components/locale/LocaleProvider";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePinnedProgress } from "@/hooks/usePinnedProgress";
 import { scrambleFrame } from "@/lib/scramble";
 import { MissionFrame } from "./MissionFrame";
@@ -15,6 +16,10 @@ import { codeOf, countOf } from "./format";
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const SCRAMBLE_MS = 650;
 const cfg = motion.tunnel;
+/** Phones and portrait tablets: panel sized from the narrow side, HUD stacked under it. */
+const COMPACT_QUERY = "(max-width: 767px), (orientation: portrait)";
+const COMPACT_PANEL_VW = 0.8;
+const COMPACT_PANEL_MAX = 560;
 
 /**
  * Pinned corridor: scrolling flies the camera past each project (CSS 3D, no WebGL). Frame rings
@@ -25,6 +30,7 @@ export function MissionTunnel() {
   const projects = useLocalized(projectsContent);
   const projectLabels = useLocalized(labelsContent);
   const count = projects.length;
+  const compact = useMediaQuery(COMPACT_QUERY);
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
@@ -57,8 +63,9 @@ export function MissionTunnel() {
       const f = progress * (count - 1);
       const vw = stage.clientWidth;
       const vh = stage.clientHeight;
-      const panelW = Math.min(vw * cfg.panelWidth, cfg.panelMaxPx);
-      const offsetX = vw * 0.5 - panelW * 0.5 - vw * 0.06;
+      const panelW = compact ? Math.min(vw * COMPACT_PANEL_VW, COMPACT_PANEL_MAX) : Math.min(vw * cfg.panelWidth, cfg.panelMaxPx);
+      // Wide: panels alternate sides. Compact: the focused panel is centred and the others slide in from the sides.
+      const offsetX = compact ? vw * 0.3 : vw * 0.5 - panelW * 0.5 - vw * 0.06;
       const focusIdx = Math.min(count - 1, Math.max(0, Math.round(f)));
 
       if (focusIdx !== st.shown) {
@@ -77,7 +84,7 @@ export function MissionTunnel() {
       }
 
       // The camera drifts toward the side of the focused panel; the pointer adds a slight parallax.
-      const targetX = (focusIdx % 2 === 0 ? 1 : -1) * offsetX * 0.18;
+      const targetX = compact ? 0 : (focusIdx % 2 === 0 ? 1 : -1) * offsetX * 0.18;
       const ease = Math.min(1, dt * 3);
       st.camX += (targetX - st.camX) * ease;
       st.px += (st.tx - st.px) * ease;
@@ -111,14 +118,15 @@ export function MissionTunnel() {
         const fade = clamp01(1 - Math.max(0, d) / 3.2) * clamp01((d + 0.6) / 0.3);
         panel.style.opacity = String(fade);
         panel.style.filter = `grayscale(${((1 - focus) * 0.85).toFixed(2)}) brightness(${(0.82 + 0.18 * focus).toFixed(2)})`;
-        panel.style.transform = `translate3d(calc(-50% + ${side * offsetX}px), -50%, ${-d * cfg.spacing}px) rotateY(${side * -10.3 * (1 - focus)}deg)`;
+        const shift = compact ? side * offsetX * (1 - focus) : side * offsetX;
+        panel.style.transform = `translate3d(calc(-50% + ${shift}px), -50%, ${-d * cfg.spacing}px) rotateY(${side * -10.3 * (1 - focus)}deg)`;
       });
     },
     { enabled: true, damping: cfg.damping },
   );
 
   const project = projects[active];
-  const hudRight = active % 2 === 1;
+  const hudRight = !compact && active % 2 === 1;
 
   return (
     <div ref={rootRef} style={{ height: (count * motion.missionScreensPerProject + 0.2) * 100 + "vh" }}>
@@ -139,8 +147,13 @@ export function MissionTunnel() {
               ref={(el) => {
                 panelRefs.current[i] = el;
               }}
-              className="absolute top-1/2 left-1/2 will-change-transform"
-              style={{ width: `min(${cfg.panelWidth * 100}vw, ${cfg.panelMaxPx}px)`, visibility: i === 0 ? "visible" : "hidden" }}
+              className={"absolute left-1/2 will-change-transform " + (compact ? "top-[37%]" : "top-1/2")}
+              style={{
+                width: compact
+                  ? `min(${COMPACT_PANEL_VW * 100}vw, ${COMPACT_PANEL_MAX}px)`
+                  : `min(${cfg.panelWidth * 100}vw, ${cfg.panelMaxPx}px)`,
+                visibility: i === 0 ? "visible" : "hidden",
+              }}
             >
               <MissionFrame project={p} code={codeOf(projectLabels.codePrefix, i)} />
             </div>
@@ -158,13 +171,13 @@ export function MissionTunnel() {
           style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 55%, var(--vignette) 130%)" }}
         />
 
-        <div className="pointer-events-none absolute top-[100px] left-[var(--edge-x)]">
+        <div className="pointer-events-none absolute top-[84px] left-[var(--edge-x)] md:top-[100px]">
           <SectionLabel trailing={`${countOf(count)} ${projectLabels.countLabel}`}>{projectLabels.heading}</SectionLabel>
         </div>
 
         <ul
           aria-label={projectLabels.progressAria}
-          className="pointer-events-none absolute top-1/2 right-[1.6vw] flex -translate-y-1/2 flex-col items-end gap-2.5"
+          className="pointer-events-none absolute top-1/2 right-2 flex -translate-y-1/2 flex-col items-end gap-2.5 md:right-[1.6vw]"
         >
           {projects.map((p, i) => (
             <li
@@ -182,19 +195,35 @@ export function MissionTunnel() {
 
         <div
           className={
-            "pointer-events-none absolute bottom-[9vh] flex max-w-[min(46vw,640px)] flex-col gap-3.5 " +
-            (hudRight ? "right-[6vw] items-end text-right" : "left-[6vw] items-start")
+            "pointer-events-none absolute flex flex-col " +
+            (compact
+              ? "inset-x-[10vw] bottom-[max(3.5svh,16px)] max-w-[560px] items-start gap-2.5"
+              : "bottom-[9vh] max-w-[min(46vw,640px)] gap-3.5 " +
+                (hudRight ? "right-[6vw] items-end text-right" : "left-[6vw] items-start"))
           }
         >
-          <div aria-hidden="true" className="outline-num font-condensed text-[clamp(56px,9vw,150px)] leading-[0.8] font-black">
+          <div
+            aria-hidden="true"
+            className={
+              "outline-num font-condensed leading-[0.8] font-black " +
+              (compact ? "text-[clamp(40px,12vw,72px)]" : "text-[clamp(56px,9vw,150px)]")
+            }
+          >
             {countOf(active + 1)}
           </div>
-          <h3 className="giant-title text-[clamp(40px,5.6vw,96px)]">
+          <h3 className={"giant-title " + (compact ? "text-[clamp(34px,10.5vw,64px)]" : "text-[clamp(40px,5.6vw,96px)]")}>
             <span className="sr-only">{project.title}</span>
             <span ref={titleRef} aria-hidden="true" />
           </h3>
-          <MissionMeta project={project} className={hudRight ? "justify-end" : ""} />
-          <MissionLinks project={project} className={"pointer-events-auto " + (hudRight ? "justify-end" : "")} />
+          <MissionMeta project={project} className={hudRight ? "justify-end" : compact ? "text-[10px]" : ""} />
+          <MissionLinks
+            project={project}
+            className={
+              "pointer-events-auto " +
+              (hudRight ? "justify-end" : "") +
+              (compact ? " [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_button]:min-h-11" : "")
+            }
+          />
         </div>
 
       </div>
