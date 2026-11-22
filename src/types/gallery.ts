@@ -50,25 +50,43 @@ export interface GalleryConfig {
   wheel: { page: WheelGeometry; embedded: WheelGeometry };
 }
 
-/** Tuning of the scroll-driven artwork gallery (WebGL lens + 3D thumbnail ring). */
-export interface ArtGalleryConfig {
-  lens: {
-    distortion: number;
-    chromatic: number;
-    glow: number;
-    /** Max tilt (deg) of the lens toward the pointer. */
-    tilt: number;
-    /** Crossfade between two artworks. */
-    fadeMs: number;
+/** Cloud size and spread for one breakpoint. Distances are in "units" (one unit = min(unitVh * stage height, unitVw * stage width)). */
+export interface ArtCloudLayout {
+  /** Cards in the cloud; artworks repeat to reach it. */
+  count: number;
+  unitVh: number;
+  unitVw: number;
+  spreadX: number;
+  spreadY: number;
+  spreadZ: number;
+  /** Extra scroll distance (in viewport heights) while the section is pinned. */
+  trackScreens: number;
+}
+
+/** Tuning of the scroll-driven 3D image cloud. */
+export interface ArtCloudConfig {
+  perspective: number;
+  /** Seed of the deterministic card generator. */
+  seed: number;
+  /** Cloud rotation (deg) over the whole scroll track. */
+  scrollDeg: number;
+  /** Slow idle drift (deg per second). */
+  idleDegPerSec: number;
+  /** Easing speed of scroll progress: 1 - exp(-speed * dt). */
+  scrollEase: number;
+  /** Progress (0-1) where the closing (collapse to one card) starts. */
+  closeStart: number;
+  /** Opacity of the farthest cards. */
+  minOpacity: number;
+  /** Cards loaded eagerly. */
+  eagerCount: number;
+  tilt: {
+    maxDeg: number;
+    stiffness: number;
+    damping: number;
+    /** Pointer parallax shift (units) of the nearest cards. */
+    parallax: number;
   };
-  ring: {
-    perspective: number;
-    /** X rotation (deg) of the whole ring. */
-    tiltDeg: number;
-    /** Easing speed of the ring rotation: 1 - exp(-speed * dt). */
-    snapSpeed: number;
-    gap: number;
-    page: { thumbWidth: number; thumbHeight: number };
-    embedded: { thumbWidth: number; thumbHeight: number };
-  };
+  desktop: ArtCloudLayout;
+  mobile: ArtCloudLayout;
 }

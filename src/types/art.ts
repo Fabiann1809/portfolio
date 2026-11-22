@@ -4,9 +4,9 @@ export interface Artwork {
   /** Technique (e.g. "Óleo sobre lienzo"). */
   technique: string;
   year: string;
-  /** Optional image path under public/images/art. Without it a generated gradient is shown. */
+  /** Optional image path under public/images/art. */
   image?: string;
-  /** Width / height of the image; the lens takes this shape (16/10 when missing). */
+  /** Width / height of the image; cards take this shape (square when missing). */
   aspect?: number;
 }
 
@@ -17,10 +17,13 @@ export interface ArtData {
   text: string;
   techniqueLabel: string;
   yearLabel: string;
-  /** Accessible labels of the artwork wheel. */
+  /** Accessible name of the artwork cloud. */
   galleryAria: string;
-  wheelAria: string;
-  /** Prefix of a thumbnail accessible name, followed by the artwork title. */
-  select: string;
+  /** Screen-reader description of the cloud (there are no visible captions). */
+  description: string;
+  /** Prefix of a card accessible name, followed by the artwork title. */
+  openArtwork: string;
+  /** Close button of the enlarged-artwork dialog. */
+  close: string;
   artworks: Artwork[];
 }

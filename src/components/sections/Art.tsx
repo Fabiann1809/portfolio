@@ -2,11 +2,11 @@
 
 import { art as artContent } from "@/data/art";
 import { useLocalized } from "@/components/locale/LocaleProvider";
-import { ArtWheel } from "@/components/art/ArtWheel";
+import { ArtCloud } from "@/components/art/ArtCloud";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
-/** "Mi lado artístico": intro text and a Rondo-style snap wheel of artworks (image or generated gradient). */
+/** "Mi lado artístico": intro text and a scroll-driven 3D cloud of artworks. */
 export function Art() {
   const art = useLocalized(artContent);
   return (
@@ -15,7 +15,7 @@ export function Art() {
       <ScrollReveal as="p" className="mt-8 max-w-2xl font-condensed text-[clamp(24px,3vw,44px)] leading-[1.1] font-bold">
         {art.text}
       </ScrollReveal>
-      <ArtWheel />
+      <ArtCloud />
     </section>
   );
 }

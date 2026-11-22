@@ -32,8 +32,9 @@ export const art: Localized<ArtData> = {
     techniqueLabel: "Técnica",
     yearLabel: "Año",
     galleryAria: "Galería de obras",
-    wheelAria: "Selector de obras",
-    select: "Ir a la obra",
+    description: "Nube de obras que gira al hacer scroll. Pulsa una obra para verla en grande.",
+    openArtwork: "Ver en grande",
+    close: "Cerrar",
     artworks: artworkBases.map((base, i) => ({ ...base, ...artworkTexts.es[i] })),
   },
   en: {
@@ -43,8 +44,9 @@ export const art: Localized<ArtData> = {
     techniqueLabel: "Technique",
     yearLabel: "Year",
     galleryAria: "Artwork gallery",
-    wheelAria: "Artwork selector",
-    select: "Go to artwork",
+    description: "Cloud of artworks that turns as you scroll. Select an artwork to view it larger.",
+    openArtwork: "View larger",
+    close: "Close",
     artworks: artworkBases.map((base, i) => ({ ...base, ...artworkTexts.en[i] })),
   },
 };

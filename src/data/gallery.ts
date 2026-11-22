@@ -1,4 +1,4 @@
-import type { ArtGalleryConfig, GalleryConfig, GalleryLabels, Localized } from "@/types";
+import type { ArtCloudConfig, GalleryConfig, GalleryLabels, Localized } from "@/types";
 
 /** Language-neutral route of the gallery page (see lib/locale.ts for the localized path). */
 export const galleryRoute = "/projects";
@@ -50,14 +50,16 @@ export const galleryConfig: GalleryConfig = {
   },
 };
 
-export const artGalleryConfig: ArtGalleryConfig = {
-  lens: { distortion: 0.15, chromatic: 1.1, glow: 32, tilt: 18, fadeMs: 450 },
-  ring: {
-    perspective: 1400,
-    tiltDeg: -6,
-    snapSpeed: 9,
-    gap: 10,
-    page: { thumbWidth: 96, thumbHeight: 60 },
-    embedded: { thumbWidth: 64, thumbHeight: 40 },
-  },
+export const artCloudConfig: ArtCloudConfig = {
+  perspective: 1200,
+  seed: 20240611,
+  scrollDeg: 340,
+  idleDegPerSec: 4,
+  scrollEase: 6,
+  closeStart: 0.75,
+  minOpacity: 0.32,
+  eagerCount: 4,
+  tilt: { maxDeg: 14, stiffness: 80, damping: 12, parallax: 0.35 },
+  desktop: { count: 14, unitVh: 0.22, unitVw: 0.2, spreadX: 2.7, spreadY: 1.15, spreadZ: 2.4, trackScreens: 3.2 },
+  mobile: { count: 8, unitVh: 0.19, unitVw: 0.33, spreadX: 1.05, spreadY: 1.5, spreadZ: 1.6, trackScreens: 2.4 },
 };
