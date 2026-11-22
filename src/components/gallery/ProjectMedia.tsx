@@ -12,10 +12,14 @@ interface ProjectMediaProps {
   still?: boolean;
 }
 
+/** Cross-fade between the poster and the playing video. */
+const POSTER_FADE_MS = 300;
+
 /** Demo video that plays only while the pointer is over it (tap toggles on touch); shows the poster otherwise. */
 function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const video = ref.current;
@@ -32,11 +36,32 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
       return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
     };
     let last: { x: number; y: number } | null = null;
+    let over = false;
+    let rewind = 0;
+    // Enter: restart from the beginning; the poster fades out once frames are actually playing.
+    const start = () => {
+      window.clearTimeout(rewind);
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+    // Leave: fade the poster back in first, then pause and rewind behind it, so no cut is visible.
+    const stop = () => {
+      setPlaying(false);
+      window.clearTimeout(rewind);
+      rewind = window.setTimeout(() => {
+        video.pause();
+        video.currentTime = 0;
+      }, POSTER_FADE_MS);
+    };
+    const onPlaying = () => over && setPlaying(true);
+    video.addEventListener("playing", onPlaying);
     const sync = () => {
       if (!last) return;
-      const over = inside(last.x, last.y);
-      if (over && video.paused) video.play().catch(() => {});
-      else if (!over && !video.paused) video.pause();
+      const now = inside(last.x, last.y);
+      if (now === over) return;
+      over = now;
+      if (now) start();
+      else stop();
     };
     const onMove = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
@@ -45,24 +70,33 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
     };
     const onLeave = () => {
       last = null;
-      video.pause();
+      if (over) {
+        over = false;
+        stop();
+      }
     };
     // Touch: a tap on the video toggles it.
     const onTap = (event: PointerEvent) => {
       if (event.pointerType !== "touch" || !inside(event.clientX, event.clientY)) return;
-      if (video.paused) video.play().catch(() => {});
-      else video.pause();
+      over = video.paused;
+      if (over) start();
+      else stop();
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("scroll", sync, { passive: true });
     window.addEventListener("pointerup", onTap);
     document.documentElement.addEventListener("pointerleave", onLeave);
     const io = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) video.pause();
+      if (!entry.isIntersecting && over) {
+        over = false;
+        stop();
+      }
     });
     io.observe(video);
     return () => {
       window.clearTimeout(id);
+      window.clearTimeout(rewind);
+      video.removeEventListener("playing", onPlaying);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", sync);
       window.removeEventListener("pointerup", onTap);
@@ -72,18 +106,31 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
   }, []);
 
   return (
-    <video
-      ref={ref}
-      src={src}
-      poster={poster}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      controls={reduced}
-      draggable={false}
-      className="size-full object-cover"
-    />
+    <div className="relative size-full">
+      <video
+        ref={ref}
+        src={src}
+        poster={poster}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        controls={reduced}
+        draggable={false}
+        className="size-full object-cover"
+      />
+      {poster && !reduced && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={poster}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="pointer-events-none absolute inset-0 size-full object-cover"
+          style={{ opacity: playing ? 0 : 1, transition: `opacity ${POSTER_FADE_MS}ms ease` }}
+        />
+      )}
+    </div>
   );
 }
 
