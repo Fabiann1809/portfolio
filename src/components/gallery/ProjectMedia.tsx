@@ -12,7 +12,7 @@ interface ProjectMediaProps {
   still?: boolean;
 }
 
-/** Demo video that plays only while visible; with reduced motion it shows the poster and plays on click. */
+/** Demo video that plays only while the pointer is over it (tap toggles on touch); shows the poster otherwise. */
 function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
@@ -20,19 +20,55 @@ function ProjectVideo({ src, poster }: { src: string; poster?: string }) {
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const isReduced = mq.matches || document.querySelector('[data-reduced="true"]') !== null;
-    setReduced(isReduced);
-    if (isReduced) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {});
-        else video.pause();
-      },
-      { threshold: 0.25 },
-    );
+    const isReduced =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      document.querySelector('[data-reduced="true"]') !== null;
+    const id = window.setTimeout(() => setReduced(isReduced), 0);
+    if (isReduced) return () => window.clearTimeout(id);
+
+    // Hit-test by geometry: in the 3D tunnel other layers sit on top of the frame and swallow hover events.
+    const inside = (x: number, y: number) => {
+      const r = video.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    };
+    let last: { x: number; y: number } | null = null;
+    const sync = () => {
+      if (!last) return;
+      const over = inside(last.x, last.y);
+      if (over && video.paused) video.play().catch(() => {});
+      else if (!over && !video.paused) video.pause();
+    };
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      last = { x: event.clientX, y: event.clientY };
+      sync();
+    };
+    const onLeave = () => {
+      last = null;
+      video.pause();
+    };
+    // Touch: a tap on the video toggles it.
+    const onTap = (event: PointerEvent) => {
+      if (event.pointerType !== "touch" || !inside(event.clientX, event.clientY)) return;
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("pointerup", onTap);
+    document.documentElement.addEventListener("pointerleave", onLeave);
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) video.pause();
+    });
     io.observe(video);
-    return () => io.disconnect();
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("scroll", sync);
+      window.removeEventListener("pointerup", onTap);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
+      io.disconnect();
+    };
   }, []);
 
   return (
