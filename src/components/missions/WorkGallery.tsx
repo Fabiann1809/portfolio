@@ -45,7 +45,9 @@ export function WorkGallery() {
       // Each project rests centred for half of its slice, then glides (smoothstep) to the next one.
       const t = Math.min(count - 1, Math.max(0, progress * count - 0.5));
       const base = Math.floor(t);
-      const k = Math.min(1, Math.max(0, (t - base - 0.25) / 0.5));
+      // Phones: a short, almost immediate glide; desktop: a longer one.
+      const glide = compact ? 0.2 : 0.5;
+      const k = Math.min(1, Math.max(0, (t - base - (1 - glide) / 2) / glide));
       const next = Math.min(count - 1, base + k * k * (3 - 2 * k));
       setPos(next);
       const index = Math.round(next);
@@ -62,7 +64,7 @@ export function WorkGallery() {
       window.removeEventListener("resize", onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [reduced, count]);
+  }, [reduced, count, compact]);
 
   const go = useCallback(
     (index: number) => {
@@ -119,7 +121,7 @@ export function WorkGallery() {
           onKeyDown={onKeyDown}
         >
           <div className="relative py-3 select-none md:py-5" style={{ perspective: reduced ? undefined : cfg.perspective + "px" }}>
-            <div className="relative mx-auto w-[70vw] max-w-[490px] md:w-[min(32vw,490px,calc(30svh*1.6))]">
+            <div className="relative mx-auto w-[56vw] max-w-[490px] md:w-[min(32vw,490px,calc(30svh*1.6))]">
               <div className="aspect-[16/10]" aria-hidden="true" />
               {projects.map((project, i) => (
                 <WorkCard
