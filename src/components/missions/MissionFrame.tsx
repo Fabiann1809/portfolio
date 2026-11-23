@@ -2,10 +2,21 @@ import { ProjectMedia } from "@/components/gallery/ProjectMedia";
 import type { Project } from "@/types";
 
 /** Project image in a framed panel with an accent border and faint scanlines. */
-export function MissionFrame({ project, code, className = "" }: { project: Project; code: string; className?: string }) {
+export function MissionFrame({
+  project,
+  code,
+  className = "",
+  still = false,
+}: {
+  project: Project;
+  code: string;
+  className?: string;
+  /** Poster only, no video element (used for unfocused panels on phones). */
+  still?: boolean;
+}) {
   return (
     <div className={`relative aspect-[16/10] overflow-hidden rounded-2xl border border-emphasis bg-surface ${className}`}>
-      <ProjectMedia project={project} />
+      <ProjectMedia project={project} still={still} />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"

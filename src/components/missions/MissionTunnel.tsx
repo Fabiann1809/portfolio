@@ -18,6 +18,8 @@ const SCRAMBLE_MS = 650;
 const cfg = motion.tunnel;
 /** Phones and portrait tablets: panel sized from the narrow side, HUD stacked under it. */
 const COMPACT_QUERY = "(max-width: 767px), (orientation: portrait)";
+/** Tunnel rings rendered on phones (desktop uses motion.tunnel.rings). */
+const COMPACT_RINGS = 6;
 const COMPACT_PANEL_VW = 0.8;
 const COMPACT_PANEL_MAX = 560;
 
@@ -38,6 +40,15 @@ export function MissionTunnel() {
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const ringRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
+  /** Becomes true shortly before the tunnel reaches the viewport; its layers fade in instead of popping. */
+  const [arrived, setArrived] = useState(false);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(([entry]) => entry.isIntersecting && setArrived(true), { rootMargin: "50% 0px" });
+    io.observe(root);
+    return () => io.disconnect();
+  }, []);
   const state = useRef({ ringW: 0, ringH: 0, shown: -1, scrambleStart: 0, camX: 0, px: 0, py: 0, tx: 0, ty: 0, text: "" });
 
   useEffect(() => {
@@ -137,9 +148,10 @@ export function MissionTunnel() {
 
   return (
     <div ref={rootRef} style={{ height: (count * motion.missionScreensPerProject + 0.2) * 100 + "vh" }}>
-      <div ref={stageRef} className="sticky top-0 h-svh overflow-hidden bg-background" style={{ perspective: cfg.perspective + "px" }}>
+      <div ref={stageRef} className={"tunnel-stage sticky top-0 h-svh overflow-hidden bg-background" + (arrived ? " is-in" : "")} style={{ perspective: cfg.perspective + "px" }}>
         <div ref={groupRef} aria-hidden="true" className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-          {Array.from({ length: cfg.rings }, (_, k) => (
+          {/* Phones get fewer rings: each is a full-screen GPU layer, and 16 of them stall the first frames. */}
+          {Array.from({ length: compact ? COMPACT_RINGS : cfg.rings }, (_, k) => (
             <div
               key={k}
               ref={(el) => {
@@ -162,7 +174,7 @@ export function MissionTunnel() {
                 visibility: i === 0 ? "visible" : "hidden",
               }}
             >
-              <MissionFrame project={p} code={codeOf(projectLabels.codePrefix, i)} />
+              <MissionFrame project={p} code={codeOf(projectLabels.codePrefix, i)} still={compact && i !== active} />
             </div>
           ))}
         </div>
