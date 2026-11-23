@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { menuLabels, navigation } from "@/data/navigation";
 import { useLocalized } from "@/components/locale/LocaleProvider";
@@ -16,6 +16,9 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
+/** Length of the closing animation (keep in sync with .menu-panel in globals.css). */
+const CLOSE_MS = 380;
+
 /**
  * Full-screen menu panel. Rendered in a portal because the navbar has transform/backdrop-filter,
  * which would make `fixed` relative to the header instead of the viewport.
@@ -26,6 +29,14 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
   const labels = useLocalized(menuLabels);
   const reduced = useReducedMotion();
   const panelRef = useRef<HTMLElement>(null);
+  /** Stays mounted for the closing animation after `open` turns false. */
+  const [mounted, setMounted] = useState(open);
+  if (open && !mounted) setMounted(true);
+  useEffect(() => {
+    if (open || !mounted) return;
+    const id = window.setTimeout(() => setMounted(false), reduced ? 0 : CLOSE_MS);
+    return () => window.clearTimeout(id);
+  }, [open, mounted, reduced]);
 
   // Scroll lock + Escape + focus into the menu while open.
   useEffect(() => {
@@ -55,13 +66,14 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
     };
   }, [open, lenis, onClose]);
 
-  if (!open) return null;
+  if (!mounted) return null;
   return createPortal(
     <nav
       ref={panelRef}
       id="mobile-menu"
       aria-label={labels.panel}
       data-menu
+      data-state={open ? "open" : "closed"}
       data-reduced={reduced}
       className="fixed inset-0 z-40 overflow-y-auto bg-background px-6 pt-24 pb-10 text-foreground xl:hidden"
     >
@@ -77,7 +89,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
               style={{ "--i": index } as React.CSSProperties}
               className={
                 "label block py-2 text-3xl" +
-                (activeId === item.id ? "text-emphasis" : "")
+                (activeId === item.id ? " text-emphasis" : "")
               }
             >
               {item.label}

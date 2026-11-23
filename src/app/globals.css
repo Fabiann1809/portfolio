@@ -446,3 +446,31 @@ html[data-skip-loader] .preloader {
 @media (prefers-reduced-motion: reduce) {
   .tap-hint-dot > span:first-child { animation: none; }
 }
+
+/* Mobile menu panel: opens as a circle growing from the menu button (top right), closes back into it. */
+@keyframes menu-panel-in {
+  from { clip-path: circle(0% at calc(100% - 44px) 44px); opacity: 0.6; }
+  to { clip-path: circle(150% at calc(100% - 44px) 44px); opacity: 1; }
+}
+@keyframes menu-panel-out {
+  from { clip-path: circle(150% at calc(100% - 44px) 44px); opacity: 1; }
+  to { clip-path: circle(0% at calc(100% - 44px) 44px); opacity: 0.6; }
+}
+[data-menu][data-state="open"] {
+  animation: menu-panel-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+[data-menu][data-state="closed"] {
+  animation: menu-panel-out 380ms cubic-bezier(0.64, 0, 0.78, 0) both;
+  pointer-events: none;
+}
+[data-menu][data-state="closed"] [data-menu-link] {
+  animation: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+[data-menu][data-reduced="true"] {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-menu] { animation: none !important; }
+}
