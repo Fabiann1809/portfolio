@@ -82,8 +82,16 @@ export function Navbar({ homeHref }: NavbarProps) {
         <div className="pointer-events-auto absolute top-6 left-1/2 hidden -translate-x-1/2 xl:block">
           <PillNav activeId={activeId} hrefPrefix={hrefPrefix} onAnchor={handleAnchor} />
         </div>
-        <div className="pointer-events-auto hidden items-center gap-4 xl:flex">
+        <div className="pointer-events-auto hidden items-center gap-3 xl:flex">
           <BackdropPicker variant="compact" />
+          <a
+            href={hero.cvPath}
+            download
+            className="label flex items-center gap-1.5 rounded-full bg-emphasis px-5 py-3 text-xs text-background transition-opacity hover:opacity-85"
+          >
+            CV
+            <span aria-hidden="true">↓</span>
+          </a>
           <a
             href={hrefPrefix + "#" + brand.cta.targetId}
             onClick={(e) => handleAnchor(e, brand.cta.targetId)}
