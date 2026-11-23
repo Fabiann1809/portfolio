@@ -90,6 +90,7 @@ export const extra: Localized<ExtraData> = {
     activeLabel: "Activa",
     scanLabel: "Escáner",
     technologiesLabel: "Tecnologías",
+    tapHint: "Toca una habilidad para ver sus tecnologías",
     abilities: abilities("es"),
   },
   en: {
@@ -98,6 +99,7 @@ export const extra: Localized<ExtraData> = {
     activeLabel: "Active",
     scanLabel: "Scanner",
     technologiesLabel: "Technologies",
+    tapHint: "Tap a skill to see its technologies",
     abilities: abilities("en"),
   },
 };

@@ -22,6 +22,8 @@ export function Extra() {
   // Wide (2-column) layout: hover-activated list + side panel. Otherwise: tap-to-open accordion.
   const wide = useMediaQuery("(min-width: 1024px)");
   const [openId, setOpenId] = useState<string | null>(null);
+  /** Stays true after the first tap, so the hint does not come back when the panel is closed. */
+  const [touched, setTouched] = useState(false);
 
   return (
     <section
@@ -32,7 +34,24 @@ export function Extra() {
         {extra.label}
       </SectionTitle>
 
-      <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16">
+      {/* Accordion layout only: subtle tap hint that fades away once an ability has been opened. */}
+      {!wide && (
+        <p
+          aria-hidden="true"
+          className={
+            "mono-label mt-5 flex items-center gap-2 text-[10px] text-muted transition-opacity duration-500 " +
+            (touched ? "opacity-0" : "opacity-100")
+          }
+        >
+          <span className="tap-hint-dot relative flex size-2.5 items-center justify-center">
+            <span className="absolute inset-0 rounded-full bg-emphasis/40" />
+            <span className="relative size-1.5 rounded-full bg-emphasis" />
+          </span>
+          {extra.tapHint}
+        </p>
+      )}
+
+      <div className="mt-6 grid gap-12 lg:mt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16">
         <ScrollReveal as="ul" className="flex flex-col">
           {extra.abilities.map((ability, i) => {
             const open = !wide && ability.id === openId;
@@ -55,7 +74,7 @@ export function Extra() {
                   onClick={() =>
                     wide
                       ? setActiveId(ability.id)
-                      : setOpenId(open ? null : ability.id)
+                      : (setTouched(true), setOpenId(open ? null : ability.id))
                   }
                   className="grid w-full cursor-pointer grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-4 py-5 text-left"
                 >

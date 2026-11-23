@@ -434,3 +434,15 @@ html[data-skip-loader] .preloader {
 .tunnel-stage.is-in > [aria-hidden="true"]:first-child {
   opacity: 1;
 }
+
+/* Skills tap hint: a soft pulsing ring, like a finger tap. */
+@keyframes tap-hint-pulse {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  70%, 100% { transform: scale(2.2); opacity: 0; }
+}
+.tap-hint-dot > span:first-child {
+  animation: tap-hint-pulse 1.8s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tap-hint-dot > span:first-child { animation: none; }
+}

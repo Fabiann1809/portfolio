@@ -19,6 +19,8 @@ export interface ExtraData {
   activeLabel: string;
   scanLabel: string;
   technologiesLabel: string;
+  /** Touch / narrow screens: hint that tapping an ability opens it. */
+  tapHint: string;
   abilities: Ability[];
 }
 
