@@ -6,7 +6,8 @@ import { stack } from "@/data/stack";
 import type { Ability } from "@/types";
 
 /** Scan panel body: active ability name, description and its framework icons. */
-export function PowerScan({ ability }: { ability: Ability }) {
+/** `showTitle` is off in the mobile accordion, where the ability button already shows the name. */
+export function PowerScan({ ability, showTitle = true }: { ability: Ability; showTitle?: boolean }) {
   const extra = useLocalized(extraContent);
   const technologies = ability.technologies
     .map((name) => stack.find((item) => item.name === name))
@@ -14,7 +15,7 @@ export function PowerScan({ ability }: { ability: Ability }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="giant-title text-[clamp(28px,3vw,44px)]">{ability.name}</h3>
+      {showTitle && <h3 className="giant-title text-[clamp(28px,3vw,44px)]">{ability.name}</h3>}
 
       <p className="max-w-lg text-sm text-muted">{ability.description}</p>
 

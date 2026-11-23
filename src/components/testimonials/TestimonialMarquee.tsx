@@ -42,6 +42,7 @@ export function TestimonialMarquee({ items, config }: TestimonialMarqueeProps) {
 
   useMarquee(viewportRef, trackRef, {
     fastSpeed: config.fastSpeed,
+    mobileSpeed: config.mobileSpeed,
     slowSpeed: config.slowSpeed,
     dampingMs: config.dampingMs,
     disabled: reduced,

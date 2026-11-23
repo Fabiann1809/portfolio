@@ -89,7 +89,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
       </ul>
       <div className="flex flex-wrap items-center gap-4 self-start">
         <LocaleToggle variant="menu" />
-        <BackdropPicker variant="full" />
+        <BackdropPicker variant="compact" />
       </div>
       </div>
     </nav>,

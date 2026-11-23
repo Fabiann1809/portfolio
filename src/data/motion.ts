@@ -3,7 +3,7 @@ import type { MotionData } from "@/types";
 export const motion: MotionData = {
   lenis: { lerp: 0.08, wheelMultiplier: 0.9 },
   originScrollVh: 260,
-  missionScreensPerProject: 1,
+  missionScreensPerProject: 0.6,
   tunnel: {
     perspective: 900,
     spacing: 900,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { extra as extraContent } from "@/data/extra";
 import { useLocalized } from "@/components/locale/LocaleProvider";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { PowerScan } from "@/components/extra/PowerScan";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -10,30 +11,62 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 /** "Power profile": abilities list (hover / focus / click activates) next to a scan panel. */
 export function Extra() {
   const extra = useLocalized(extraContent);
-  const codeOf = (i: number) => `${extra.codePrefix}-${String(i + 1).padStart(2, "0")}`;
+  const codeOf = (i: number) =>
+    `${extra.codePrefix}-${String(i + 1).padStart(2, "0")}`;
   const [activeId, setActiveId] = useState(extra.abilities[0].id);
-  const activeIndex = Math.max(0, extra.abilities.findIndex((ability) => ability.id === activeId));
+  const activeIndex = Math.max(
+    0,
+    extra.abilities.findIndex((ability) => ability.id === activeId),
+  );
   const active = extra.abilities[activeIndex];
+  // Wide (2-column) layout: hover-activated list + side panel. Otherwise: tap-to-open accordion.
+  const wide = useMediaQuery("(min-width: 1024px)");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <section id="extra" className="section-glow glow-right px-[var(--edge-x)] py-24 md:py-32">
-      <SectionTitle trailing={String(extra.abilities.length).padStart(2, "0")}>{extra.label}</SectionTitle>
+    <section
+      id="extra"
+      className="section-glow glow-right px-[var(--edge-x)] py-24 md:py-32"
+    >
+      <SectionTitle trailing={String(extra.abilities.length).padStart(2, "0")}>
+        {extra.label}
+      </SectionTitle>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16">
         <ScrollReveal as="ul" className="flex flex-col">
           {extra.abilities.map((ability, i) => {
-            const on = ability.id === activeId;
+            const open = !wide && ability.id === openId;
+            const on = wide ? ability.id === activeId : open;
+            const panelId = `ability-panel-${ability.id}`;
             return (
-              <li key={ability.id} className="border-t border-line last:border-b">
+              <li
+                key={ability.id}
+                className="border-t border-line last:border-b"
+              >
                 <button
                   type="button"
-                  aria-pressed={on}
-                  onMouseEnter={() => setActiveId(ability.id)}
-                  onFocus={() => setActiveId(ability.id)}
-                  onClick={() => setActiveId(ability.id)}
+                  {...(wide
+                    ? { "aria-pressed": on }
+                    : { "aria-expanded": open, "aria-controls": panelId })}
+                  onMouseEnter={
+                    wide ? () => setActiveId(ability.id) : undefined
+                  }
+                  onFocus={wide ? () => setActiveId(ability.id) : undefined}
+                  onClick={() =>
+                    wide
+                      ? setActiveId(ability.id)
+                      : setOpenId(open ? null : ability.id)
+                  }
                   className="grid w-full cursor-pointer grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-4 py-5 text-left"
                 >
-                  <span className={"mono-label transition-colors " + (on ? "text-emphasis" : "text-muted")}>{codeOf(i)}</span>
+                  <span
+                    className={
+                      "mono-label transition-colors " +
+                      (on ? "text-emphasis" : "text-muted")
+                    }
+                  >
+                    {codeOf(i)}
+                  </span>
                   <span
                     className={
                       "giant-title transition-[font-size,opacity,transform] duration-500 " +
@@ -44,25 +77,52 @@ export function Extra() {
                   >
                     {ability.name}
                   </span>
-                  <span className={"mono-label flex items-center gap-2 transition-opacity " + (on ? "opacity-100" : "opacity-0")}>
+                  <span
+                    className={
+                      "mono-label flex items-center gap-2 transition-opacity " +
+                      (on ? "opacity-100" : "opacity-0")
+                    }
+                  >
                     <span aria-hidden="true" className="status-dot" />
                     {extra.activeLabel}
                   </span>
                 </button>
+                {!wide && (
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-label={ability.name}
+                    inert={!open}
+                    className={
+                      "grid transition-[grid-template-rows,opacity] duration-500 ease-out " +
+                      (open
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0")
+                    }
+                  >
+                    <div className="min-h-0 overflow-hidden">
+                      <div className="mb-5 rounded-3xl border border-line bg-surface/40 p-5 backdrop-blur-sm">
+                        <PowerScan ability={ability} showTitle={false} />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </li>
             );
           })}
         </ScrollReveal>
 
-        <ScrollReveal delay={120}>
-          <div className="rounded-3xl border border-line bg-surface/40 p-6 backdrop-blur-sm md:p-8">
-            <p className="mono-label mb-6 flex justify-between text-muted">
-              <span>{extra.scanLabel}</span>
-              <span className="text-emphasis">{codeOf(activeIndex)}</span>
-            </p>
-            <PowerScan ability={active} />
-          </div>
-        </ScrollReveal>
+        {wide && (
+          <ScrollReveal delay={120}>
+            <div className="rounded-3xl border border-line bg-surface/40 p-6 backdrop-blur-sm md:p-8">
+              <p className="mono-label mb-6 flex justify-between text-muted">
+                <span>{extra.scanLabel}</span>
+                <span className="text-emphasis">{codeOf(activeIndex)}</span>
+              </p>
+              <PowerScan ability={active} />
+            </div>
+          </ScrollReveal>
+        )}
       </div>
     </section>
   );

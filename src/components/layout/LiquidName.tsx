@@ -176,14 +176,14 @@ export function LiquidName({ text }: { text: string }) {
       const capAt400 = Math.max(1, probe.actualBoundingBoxAscent);
       // Fill the width, but never taller than the band
       const maxW = width * dpr;
-      const size = Math.min(400 * (maxW / widthAt400), (height * dpr * 1.0 * 400) / capAt400);
+      const size = Math.min(400 * (maxW / widthAt400), (height * dpr * 400) / capAt400);
       tx.font = font(size);
       const m = tx.measureText(text);
       tx.fillStyle = "#fff";
       tx.textBaseline = "alphabetic";
       const x = (textCanvas.width - m.width) / 2;
-      // baseline slightly below the band edge so the bottom of the letters is cut a little
-      const baseline = textCanvas.height + m.actualBoundingBoxAscent * 0.03;
+      // letters sit on the bottom edge of the band (band height is derived from the glyph ratio)
+      const baseline = textCanvas.height - Math.round(textCanvas.height * 0.02);
       tx.fillText(text, x, baseline);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, textTex);
@@ -191,10 +191,20 @@ export function LiquidName({ text }: { text: string }) {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
     };
 
+    // size the band to the glyphs (cap height at full width) so no empty space floats around the letters
+    const fit = (w: number) => {
+      const family = getComputedStyle(canvas).fontFamily || "sans-serif";
+      tx.font = `900 400px ${family}`;
+      const probe = tx.measureText(text);
+      const ratio = Math.max(0.05, probe.actualBoundingBoxAscent) / Math.max(1, probe.width);
+      return Math.max(40, Math.round(w * ratio * 1.04));
+    };
+
     const resize = () => {
       const r = wrap.getBoundingClientRect();
       width = Math.max(1, r.width);
-      height = Math.max(1, r.height);
+      height = fit(width);
+      wrap.style.height = `${height}px`;
       dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -213,11 +223,11 @@ export function LiquidName({ text }: { text: string }) {
     const loadFont = () => {
       document.fonts
         ?.load(`900 100px ${family}`)
-        .then(() => drawText())
+        .then(() => resize())
         .catch(() => {});
     };
     loadFont();
-    document.fonts?.addEventListener?.("loadingdone", drawText);
+    document.fonts?.addEventListener?.("loadingdone", resize);
 
     // colors come from the live CSS tokens and refresh when the backdrop tone changes
     const colors = { bg: [0, 0, 0] as Rgb, ink: [1, 1, 1] as Rgb, accent: [0.5, 0.8, 1] as Rgb };
@@ -336,7 +346,7 @@ export function LiquidName({ text }: { text: string }) {
       tokens.disconnect();
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVis);
-      document.fonts?.removeEventListener?.("loadingdone", drawText);
+      document.fonts?.removeEventListener?.("loadingdone", resize);
       gl.deleteTexture(textTex);
       gl.deleteTexture(trailTex);
       gl.deleteBuffer(buf);
@@ -350,11 +360,11 @@ export function LiquidName({ text }: { text: string }) {
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className="relative mt-6 h-[clamp(120px,34vw,420px)] w-full overflow-hidden font-sans select-none"
+      className="relative mt-2 h-[28vw] w-full overflow-hidden font-sans select-none"
     >
       <p
         ref={fallbackRef}
-        className="absolute inset-0 flex items-end justify-center overflow-hidden text-[clamp(80px,22vw,360px)] leading-[0.78] font-black tracking-[-0.05em] text-foreground/10"
+        className="absolute inset-0 flex items-end justify-center overflow-hidden text-[clamp(80px,22vw,360px)] leading-[0.74] font-black tracking-[-0.05em] text-foreground/10"
       >
         {text}
       </p>

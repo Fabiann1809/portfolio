@@ -5,6 +5,7 @@ import type { RefObject } from "react";
 
 interface MarqueeOptions {
   fastSpeed: number;
+  mobileSpeed: number;
   slowSpeed: number;
   dampingMs: number;
   /** Disables the loop entirely (reduced motion). */
@@ -20,7 +21,7 @@ interface MarqueeOptions {
 export function useMarquee(
   viewportRef: RefObject<HTMLElement | null>,
   trackRef: RefObject<HTMLElement | null>,
-  { fastSpeed, slowSpeed, dampingMs, disabled, pausedRef }: MarqueeOptions,
+  { fastSpeed, mobileSpeed, slowSpeed, dampingMs, disabled, pausedRef }: MarqueeOptions,
 ) {
   const stateRef = useRef({ offset: 0, velocity: 0 });
 
@@ -30,8 +31,8 @@ export function useMarquee(
     if (disabled || !viewport || !track) return;
 
     const s = stateRef.current;
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const baseSpeed = coarse ? slowSpeed : fastSpeed;
+    const mobileQuery = window.matchMedia("(max-width: 767px), (pointer: coarse)");
+
     let setWidth = 0;
     let hovered = false;
     let focused = false;
@@ -57,7 +58,7 @@ export function useMarquee(
       last = now;
       if (!dragging) {
         const stopped = pausedRef.current || focused;
-        const target = stopped ? 0 : hovered ? slowSpeed : baseSpeed;
+        const target = stopped ? 0 : hovered ? slowSpeed : mobileQuery.matches ? mobileSpeed : fastSpeed;
         s.velocity += (target - s.velocity) * (1 - Math.exp(-(dt * 1000) / Math.max(dampingMs, 1)));
         s.offset += s.velocity * dt;
         apply();
@@ -142,5 +143,5 @@ export function useMarquee(
       viewport.removeEventListener("focusin", onFocusIn);
       viewport.removeEventListener("focusout", onFocusOut);
     };
-  }, [viewportRef, trackRef, fastSpeed, slowSpeed, dampingMs, disabled, pausedRef]);
+  }, [viewportRef, trackRef, fastSpeed, mobileSpeed, slowSpeed, dampingMs, disabled, pausedRef]);
 }

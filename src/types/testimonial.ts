@@ -16,7 +16,9 @@ export interface TestimonialsMarqueeConfig {
   playLabel: string;
   /** Auto-scroll speed in px/s while the pointer is away. */
   fastSpeed: number;
-  /** Speed in px/s while hovering, and the default on touch devices. */
+  /** Auto-scroll speed in px/s on phones (max-width 767px) and touch devices. */
+  mobileSpeed: number;
+  /** Speed in px/s while hovering with a mouse. */
   slowSpeed: number;
   /** Time constant (ms) of the speed easing. */
   dampingMs: number;

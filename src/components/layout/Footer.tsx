@@ -15,7 +15,7 @@ export function Footer() {
   const links = useLocalized(navigation);
   const contact = useLocalized(contactContent);
   return (
-    <footer className="overflow-hidden border-t border-line px-[var(--edge-x)] pt-24 font-sans">
+    <footer className="overflow-hidden border-t border-line px-[var(--edge-x)] pt-24 pb-6 font-sans md:pb-10">
       <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-[1.4fr_1fr_0.9fr] md:items-end">
         <p className="text-[clamp(32px,3.4vw,54px)] whitespace-nowrap leading-[1.02] font-bold tracking-tight">
           {copy.taglineLines.map((line) => (
@@ -56,7 +56,7 @@ export function Footer() {
         </div>
       </div>
 
-      <p className="mono-label mx-auto mt-16 max-w-6xl text-muted">{copy.text}</p>
+      <p className="mono-label mx-auto mt-10 max-w-6xl text-muted">{copy.text}</p>
 
       <LiquidName text={heroShared.displayName} />
     </footer>

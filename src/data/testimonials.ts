@@ -7,7 +7,8 @@ export const testimonialsTitle: Localized<string> = {
 
 /** Language-neutral tuning of the marquee. */
 export const testimonialsMarqueeTiming = {
-  fastSpeed: 80,
+  fastSpeed: 105,
+  mobileSpeed: 85,
   slowSpeed: 12,
   dampingMs: 400,
   gap: 24,
