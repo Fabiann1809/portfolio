@@ -27,6 +27,8 @@ export function WorkGallery() {
   const compact = useMediaQuery("(max-width: 767px)");
   const lenis = useLenisInstance();
   const [active, setActive] = useState(0);
+  /** Fractional scroll position in projects (0 .. count-1); cards follow it continuously. */
+  const [pos, setPos] = useState(0);
   const rootRef = useRef<HTMLElement>(null);
 
   // Scroll -> active project (rAF-throttled, passive).
@@ -40,8 +42,14 @@ export function WorkGallery() {
       const rect = root.getBoundingClientRect();
       const range = rect.height - window.innerHeight;
       const progress = range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0;
-      const next = Math.min(count - 1, Math.floor(progress * count));
-      setActive((current) => (current === next ? current : next));
+      // Each project rests centred for half of its slice, then glides (smoothstep) to the next one.
+      const t = Math.min(count - 1, Math.max(0, progress * count - 0.5));
+      const base = Math.floor(t);
+      const k = Math.min(1, Math.max(0, (t - base - 0.25) / 0.5));
+      const next = Math.min(count - 1, base + k * k * (3 - 2 * k));
+      setPos(next);
+      const index = Math.round(next);
+      setActive((current) => (current === index ? current : index));
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -117,7 +125,7 @@ export function WorkGallery() {
                 <WorkCard
                   key={project.id}
                   project={project}
-                  offset={i - active}
+                  offset={reduced ? i - active : i - pos}
                   compact={compact}
                   reduced={reduced}
                   selectLabel={labels.goTo}

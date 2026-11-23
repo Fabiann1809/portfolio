@@ -7,9 +7,16 @@ import type { Project } from "@/types";
 
 const cfg = motion.gallery;
 
+/** Value of a per-distance table at a fractional distance (linear between steps). */
+const at = (table: number[], d: number) => {
+  const i = Math.min(Math.floor(d), table.length - 1);
+  const j = Math.min(i + 1, table.length - 1);
+  return table[i] + (table[j] - table[i]) * (d - i);
+};
+
 interface WorkCardProps {
   project: Project;
-  /** Signed distance from the active card (0 = centre). */
+  /** Signed, fractional distance from the centre (0 = centred); follows the scroll continuously. */
   offset: number;
   compact: boolean;
   reduced: boolean;
@@ -22,29 +29,31 @@ interface WorkCardProps {
 export function WorkCard({ project, offset, compact, reduced, selectLabel, onSelect }: WorkCardProps) {
   const dist = Math.abs(offset);
   const maxVisible = compact ? cfg.visibleCompact : cfg.visible;
-  const active = dist === 0;
-  const visible = reduced ? active : dist <= maxVisible;
+  const active = dist < 0.5;
+  const visible = reduced ? active : dist < maxVisible + 0.5;
   const side = Math.sign(offset);
   const xs = compact ? cfg.xCompact : cfg.x;
-  const i = Math.min(dist, cfg.x.length - 1);
+  const d = Math.min(dist, cfg.x.length - 1);
+  const fadeOut = dist > maxVisible ? Math.max(0, 1 - (dist - maxVisible) * 2) : 1;
 
   const style: CSSProperties = reduced
     ? { opacity: active ? 1 : 0 }
     : {
-        transform: `perspective(${cfg.perspective}px) translateX(calc(-50% + ${side * xs[i] * 100}%)) translateZ(${cfg.depth[i]}px) rotateY(${-side * cfg.rotate[i]}deg) scale(${cfg.scale[i]})`,
-        opacity: visible ? cfg.opacity[i] : 0,
-        transition: `transform ${cfg.transitionMs}ms cubic-bezier(0.22, 1, 0.36, 1), opacity ${cfg.transitionMs}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+        transform: `perspective(${cfg.perspective}px) translateX(calc(-50% + ${side * at(xs, d) * 100}%)) translateZ(${at(cfg.depth, d)}px) rotateY(${-side * at(cfg.rotate, d)}deg) scale(${at(cfg.scale, d)})`,
+        opacity: visible ? at(cfg.opacity, d) * fadeOut : 0,
+        // Positions already follow the (smoothed) scroll; a short transition only irons out frame gaps.
+        transition: `transform 90ms linear, opacity 90ms linear`,
       };
 
   return (
     <div
       className="absolute top-0 left-1/2 w-full will-change-transform"
-      style={{ ...style, zIndex: 10 - dist, pointerEvents: visible ? "auto" : "none" }}
+      style={{ ...style, zIndex: 10 - Math.round(dist * 2), pointerEvents: visible ? "auto" : "none" }}
       aria-hidden={active ? undefined : true}
     >
       <div
         className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_30px_60px_-25px_var(--shadow-color)]"
-        style={{ filter: active || reduced ? undefined : "brightness(0.8)" }}
+        style={{ filter: reduced || dist < 0.05 ? undefined : `brightness(${(1 - 0.2 * Math.min(1, dist)).toFixed(2)})` }}
       >
         {/* Neighbours show the poster only; the demo video plays on the active card. */}
         <ProjectMedia project={project} alt={active ? project.title : ""} still={!active} />
