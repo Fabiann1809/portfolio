@@ -33,7 +33,7 @@ export function WorkCard({ project, offset, compact, reduced, selectLabel, onSel
     : {
         transform: `perspective(${cfg.perspective}px) translateX(calc(-50% + ${side * xs[i] * 100}%)) translateZ(${cfg.depth[i]}px) rotateY(${-side * cfg.rotate[i]}deg) scale(${cfg.scale[i]})`,
         opacity: visible ? cfg.opacity[i] : 0,
-        transition: `transform ${cfg.transitionMs}ms ease-out, opacity ${cfg.transitionMs}ms ease-out`,
+        transition: `transform ${cfg.transitionMs}ms cubic-bezier(0.22, 1, 0.36, 1), opacity ${cfg.transitionMs}ms cubic-bezier(0.22, 1, 0.36, 1)`,
       };
 
   return (

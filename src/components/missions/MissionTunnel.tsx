@@ -38,7 +38,7 @@ export function MissionTunnel() {
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const ringRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
-  const state = useRef({ shown: -1, scrambleStart: 0, camX: 0, px: 0, py: 0, tx: 0, ty: 0, text: "" });
+  const state = useRef({ ringW: 0, ringH: 0, shown: -1, scrambleStart: 0, camX: 0, px: 0, py: 0, tx: 0, ty: 0, text: "" });
 
   useEffect(() => {
     const onMove = (event: PointerEvent) => {
@@ -93,6 +93,10 @@ export function MissionTunnel() {
 
       // Frame rings: element k always shows ring index base - 2 + k, so rings stream past the camera.
       const base = Math.floor(f / cfg.ringStep);
+      // Ring size only changes on resize: writing width/height every frame forces a layout (lag on phones).
+      const resized = st.ringW !== vw || st.ringH !== vh;
+      st.ringW = vw;
+      st.ringH = vh;
       ringRefs.current.forEach((ring, k) => {
         if (!ring) return;
         const g = base - 2 + k;
@@ -101,8 +105,10 @@ export function MissionTunnel() {
         const strength = hot ? 0.75 : 0.18;
         const fade = d < 0 ? clamp01(1 + d / 0.4) : clamp01(1 - d / (cfg.rings * cfg.ringStep * 0.85));
         ring.style.opacity = String(fade * strength);
-        ring.style.width = vw * 1.12 + "px";
-        ring.style.height = vh * 1.12 + "px";
+        if (resized) {
+          ring.style.width = vw * 1.12 + "px";
+          ring.style.height = vh * 1.12 + "px";
+        }
         ring.dataset.hot = String(hot);
         ring.style.transform = `translate3d(-50%, -50%, ${-d * cfg.spacing}px)`;
       });
@@ -117,7 +123,8 @@ export function MissionTunnel() {
         const focus = clamp01(1 - Math.abs(d) / 0.6);
         const fade = clamp01(1 - Math.max(0, d) / 3.2) * clamp01((d + 0.6) / 0.3);
         panel.style.opacity = String(fade);
-        panel.style.filter = `grayscale(${((1 - focus) * 0.85).toFixed(2)}) brightness(${(0.82 + 0.18 * focus).toFixed(2)})`;
+        // CSS filters repaint the whole panel (and its video) every frame; skip them on phones.
+        if (!compact) panel.style.filter = `grayscale(${((1 - focus) * 0.85).toFixed(2)}) brightness(${(0.82 + 0.18 * focus).toFixed(2)})`;
         const shift = compact ? side * offsetX * (1 - focus) : side * offsetX;
         panel.style.transform = `translate3d(calc(-50% + ${shift}px), -50%, ${-d * cfg.spacing}px) rotateY(${side * -10.3 * (1 - focus)}deg)`;
       });

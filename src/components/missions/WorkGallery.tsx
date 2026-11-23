@@ -89,7 +89,7 @@ export function WorkGallery() {
       id="work"
       aria-label={labels.galleryAria}
       className="section-glow glow-left overflow-x-clip"
-      style={reduced ? undefined : { height: `calc(100svh + ${count * cfg.scrollVh}svh)` }}
+      style={reduced ? undefined : { height: `calc(100svh + ${count * (compact ? cfg.scrollVhCompact : cfg.scrollVh)}svh)` }}
     >
       <div
         className={

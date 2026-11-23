@@ -24,8 +24,9 @@ export const motion: MotionData = {
     visible: 3,
     visibleCompact: 1,
     perspective: 1400,
-    transitionMs: 600,
+    transitionMs: 520,
     scrollVh: 70,
+    scrollVhCompact: 42,
   },
   reveal: { stagger: 70, rise: 24 },
 };

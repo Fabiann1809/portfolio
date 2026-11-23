@@ -30,6 +30,8 @@ export interface WorkGalleryConfig {
   transitionMs: number;
   /** Scroll length (svh) the pinned gallery spends on each project. */
   scrollVh: number;
+  /** Scroll per project on phones (shorter, so it advances faster). */
+  scrollVhCompact: number;
 }
 
 export interface MotionData {
