@@ -169,8 +169,22 @@ export function WorkGallery() {
           </div>
         </div>
 
-        <div aria-live="polite">
-          <WorkDetails key={projects[active].id} project={projects[active]} />
+        {/* Every project's details share one grid cell, so the block keeps the tallest height
+            and switching projects cross-fades in place instead of shifting the layout. */}
+        <div aria-live="polite" className="grid">
+          {projects.map((project, i) => (
+            <div
+              key={project.id}
+              aria-hidden={i === active ? undefined : true}
+              inert={i !== active}
+              className={
+                "[grid-area:1/1] transition-opacity duration-200 ease-out " +
+                (i === active ? "opacity-100" : "pointer-events-none opacity-0")
+              }
+            >
+              <WorkDetails project={project} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

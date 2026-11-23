@@ -6,11 +6,11 @@ import { useLocalized } from "@/components/locale/LocaleProvider";
 import type { Project } from "@/types";
 import { MissionLinks } from "./MissionLinks";
 
-/** Text under the coverflow for the active project. Remount with a `key` to replay the entry animation. */
+/** Text under the coverflow for the active project. The gallery cross-fades between them. */
 export function WorkDetails({ project }: { project: Project }) {
   const labels = useLocalized(labelsContent);
   return (
-    <div className="work-details-in mx-auto mt-3 flex max-w-3xl flex-col items-center gap-1.5 md:gap-2.5 text-center md:mt-6">
+    <div className="mx-auto mt-3 flex max-w-3xl flex-col items-center gap-1.5 md:gap-2.5 text-center md:mt-6">
       <h3 className="giant-title text-[22px] md:text-[clamp(24px,2.6vw,38px)]">{project.title}</h3>
       <p className="max-w-2xl text-xs leading-snug text-muted md:text-sm">{project.description}</p>
       <p className="mono-label text-[10px] text-muted">
