@@ -17,7 +17,7 @@ export function PowerScan({ ability, showTitle = true }: { ability: Ability; sho
     <div className="flex flex-col gap-4">
       {showTitle && <h3 className="giant-title text-[clamp(24px,2.4vw,36px)]">{ability.name}</h3>}
 
-      <p className="max-w-md text-[13px] leading-relaxed text-muted">{ability.description}</p>
+      <p className="max-w-md text-[13px] leading-relaxed text-muted lg:text-sm">{ability.description}</p>
 
       <div>
         <p className="mono-label text-[10px] text-muted">{extra.technologiesLabel}</p>
@@ -30,11 +30,11 @@ export function PowerScan({ ability, showTitle = true }: { ability: Ability; sho
               style={{ animationDelay: `${i * 60}ms` }}
               title={tech.name}
             >
-              <span className="flex size-10 items-center justify-center rounded-full border border-line bg-surface shadow-[0_6px_18px_-8px_var(--shadow-color)] transition-colors hover:border-emphasis">
+              <span className="flex size-10 lg:size-12 items-center justify-center rounded-full border border-line bg-surface shadow-[0_6px_18px_-8px_var(--shadow-color)] transition-colors hover:border-emphasis">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={tech.icon} alt="" width={20} height={20} className="size-5 object-contain" />
+                <img src={tech.icon} alt="" width={20} height={20} className="size-5 object-contain lg:size-6" />
               </span>
-              <span className="mono-label text-[8.5px] leading-tight text-muted">{tech.name}</span>
+              <span className="mono-label text-[8.5px] leading-tight text-muted lg:text-[9.5px]">{tech.name}</span>
             </li>
           ))}
         </ul>

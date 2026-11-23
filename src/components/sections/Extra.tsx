@@ -133,7 +133,7 @@ export function Extra() {
 
         {wide && (
           <ScrollReveal delay={120} className="self-start lg:sticky lg:top-28">
-            <div className="mx-auto w-full max-w-md rounded-3xl border border-line bg-surface/40 p-5 backdrop-blur-sm lg:mt-6">
+            <div className="mx-auto w-full max-w-md rounded-3xl border border-line bg-surface/40 p-5 backdrop-blur-sm lg:mt-6 lg:max-w-lg lg:p-7">
               <p className="mono-label mb-6 flex justify-between text-muted">
                 <span>{extra.scanLabel}</span>
                 <span className="text-emphasis">{codeOf(activeIndex)}</span>
