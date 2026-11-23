@@ -5,7 +5,7 @@ import type { Localized, ThemeData, ThemeLabels } from "@/types";
 export const theme: ThemeData = {
   storageKey: "portfolio-backdrop",
   options: [
-    { id: "ink", swatch: "#0b0b0c" },
+    { id: "ink", swatch: "#000000" },
     { id: "bone", swatch: "#ece7dd" },
   ],
   defaultForDark: "ink",

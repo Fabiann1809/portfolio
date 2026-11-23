@@ -16,10 +16,10 @@
 :root,
 :root[data-backdrop="ink"] {
   color-scheme: dark;
-  --background: #05070b;
+  --background: #000000;
   --foreground: #dcecff;
   --muted: #8aa0b6;
-  --surface: #0b111a;
+  --surface: #0a0a0a;
   --line: rgba(207, 232, 255, 0.18);
   --emphasis: #7ddcff;
   --shadow-color: rgba(0, 0, 0, 0.6);
