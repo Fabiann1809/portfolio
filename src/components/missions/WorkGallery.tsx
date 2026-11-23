@@ -46,7 +46,7 @@ export function WorkGallery() {
       const t = Math.min(count - 1, Math.max(0, progress * count - 0.5));
       const base = Math.floor(t);
       // Phones: a short, almost immediate glide; desktop: a longer one.
-      const glide = compact ? 0.2 : 0.5;
+      const glide = compact ? 0.5 : 0.6;
       const k = Math.min(1, Math.max(0, (t - base - (1 - glide) / 2) / glide));
       const next = Math.min(count - 1, base + k * k * (3 - 2 * k));
       setPos(next);
@@ -178,7 +178,7 @@ export function WorkGallery() {
               aria-hidden={i === active ? undefined : true}
               inert={i !== active}
               className={
-                "[grid-area:1/1] transition-opacity duration-200 ease-out " +
+                "[grid-area:1/1] transition-opacity duration-500 ease-out " +
                 (i === active ? "opacity-100" : "pointer-events-none opacity-0")
               }
             >

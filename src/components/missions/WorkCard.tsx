@@ -42,7 +42,7 @@ export function WorkCard({ project, offset, compact, reduced, selectLabel, onSel
         transform: `perspective(${cfg.perspective}px) translateX(calc(-50% + ${side * at(xs, d) * 100}%)) translateZ(${at(cfg.depth, d)}px) rotateY(${-side * at(cfg.rotate, d)}deg) scale(${at(cfg.scale, d)})`,
         opacity: visible ? at(cfg.opacity, d) * fadeOut : 0,
         // Positions already follow the (smoothed) scroll; a short transition only irons out frame gaps.
-        transition: `transform 90ms linear, opacity 90ms linear`,
+        transition: `transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms cubic-bezier(0.22, 1, 0.36, 1)`,
       };
 
   return (
