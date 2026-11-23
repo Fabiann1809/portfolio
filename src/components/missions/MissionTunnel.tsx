@@ -36,7 +36,7 @@ export function MissionTunnel() {
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
-  const titleRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const titleRef = useRef<HTMLSpanElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const ringRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
@@ -49,7 +49,7 @@ export function MissionTunnel() {
     io.observe(root);
     return () => io.disconnect();
   }, []);
-  const state = useRef({ ringW: 0, ringH: 0, shown: -1, scrambleStart: 0, camX: 0, px: 0, py: 0, tx: 0, ty: 0, texts: [] as string[] });
+  const state = useRef({ ringW: 0, ringH: 0, shown: -1, scrambleStart: 0, camX: 0, px: 0, py: 0, tx: 0, ty: 0, text: "" });
 
   useEffect(() => {
     const onMove = (event: PointerEvent) => {
@@ -77,26 +77,22 @@ export function MissionTunnel() {
       const panelW = compact ? Math.min(vw * COMPACT_PANEL_VW, COMPACT_PANEL_MAX) : Math.min(vw * cfg.panelWidth, cfg.panelMaxPx);
       // Wide: panels alternate sides. Compact: the focused panel is centred and the others slide in from the sides.
       const offsetX = compact ? vw * 0.3 : vw * 0.5 - panelW * 0.5 - vw * 0.06;
-      // Hysteresis: the focus only flips once f is clearly past the midpoint, so scroll jitter at the boundary cannot flip-flop the HUD.
-      const rounded = Math.min(count - 1, Math.max(0, Math.round(f)));
-      const focusIdx = st.shown >= 0 && rounded !== st.shown && Math.abs(f - st.shown) < 0.58 ? st.shown : rounded;
+      const focusIdx = Math.min(count - 1, Math.max(0, Math.round(f)));
 
       if (focusIdx !== st.shown) {
         st.shown = focusIdx;
         st.scrambleStart = now;
         setActive(focusIdx);
       }
-      // Only the focused title scrambles; the rest sit on their final text. The overlay is absolutely
-      // positioned over an invisible full-text copy, so changing glyph widths never reflows the HUD.
-      titleRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const target = projects[i].title.toUpperCase();
-        const text = i === focusIdx ? scrambleFrame(target, clamp01((now - st.scrambleStart) / SCRAMBLE_MS)) : target;
-        if (text !== st.texts[i]) {
-          st.texts[i] = text;
-          el.textContent = text;
+      const title = titleRef.current;
+      if (title) {
+        const target = projects[focusIdx].title.toUpperCase();
+        const text = scrambleFrame(target, clamp01((now - st.scrambleStart) / SCRAMBLE_MS));
+        if (text !== st.text) {
+          st.text = text;
+          title.textContent = text;
         }
-      });
+      }
 
       // The camera drifts toward the side of the focused panel; the pointer adds a slight parallax.
       const targetX = compact ? 0 : (focusIdx % 2 === 0 ? 1 : -1) * offsetX * 0.18;
@@ -147,6 +143,8 @@ export function MissionTunnel() {
     { enabled: true, damping: cfg.damping },
   );
 
+  const project = projects[active];
+  const hudRight = !compact && active % 2 === 1;
 
   return (
     <div ref={rootRef} style={{ height: (count * motion.missionScreensPerProject + 0.2) * 100 + "vh" }}>
@@ -214,61 +212,37 @@ export function MissionTunnel() {
           ))}
         </ul>
 
-        {/* All HUD blocks share one grid cell (container height = tallest) and crossfade, so switching project never shifts layout. */}
         <div
           className={
-            "pointer-events-none absolute grid " +
-            (compact ? "inset-x-[10vw] bottom-[max(3.5svh,16px)] max-w-[560px]" : "inset-x-[6vw] bottom-[9vh]")
+            "pointer-events-none absolute flex flex-col " +
+            (compact
+              ? "inset-x-[10vw] bottom-[max(3.5svh,16px)] max-w-[560px] items-start gap-2.5"
+              : "bottom-[9vh] max-w-[min(46vw,640px)] gap-3.5 " +
+                (hudRight ? "right-[6vw] items-end text-right" : "left-[6vw] items-start"))
           }
         >
-          {projects.map((project, i) => {
-            const isActive = i === active;
-            const hudRight = !compact && i % 2 === 1;
-            return (
-              <div
-                key={project.id}
-                inert={!isActive}
-                aria-hidden={!isActive}
-                className={
-                  "col-start-1 row-start-1 flex flex-col self-end transition-opacity duration-300 " +
-                  (compact ? "items-start gap-2.5" : "max-w-[min(46vw,640px)] gap-3.5 " + (hudRight ? "items-end justify-self-end text-right" : "items-start"))
-                }
-                style={{ opacity: isActive ? 1 : 0, visibility: isActive ? "visible" : "hidden", transitionProperty: "opacity, visibility" }}
-              >
-                <div
-                  aria-hidden="true"
-                  className={
-                    "outline-num font-condensed leading-[0.8] font-black " +
-                    (compact ? "text-[clamp(40px,12vw,72px)]" : "text-[clamp(56px,9vw,150px)]")
-                  }
-                >
-                  {countOf(i + 1)}
-                </div>
-                <h3 className={"giant-title relative " + (compact ? "text-[clamp(34px,10.5vw,64px)]" : "text-[clamp(40px,5.6vw,96px)]")}>
-                  <span className="sr-only">{project.title}</span>
-                  <span aria-hidden="true" className="invisible">
-                    {project.title.toUpperCase()}
-                  </span>
-                  <span
-                    ref={(el) => {
-                      titleRefs.current[i] = el;
-                    }}
-                    aria-hidden="true"
-                    className={"absolute inset-y-0 " + (hudRight ? "right-0" : "left-0")}
-                  />
-                </h3>
-                <MissionMeta project={project} className={hudRight ? "justify-end" : compact ? "text-[10px]" : ""} />
-                <MissionLinks
-                  project={project}
-                  className={
-                    "pointer-events-auto " +
-                    (hudRight ? "justify-end" : "") +
-                    (compact ? " [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_button]:min-h-11" : "")
-                  }
-                />
-              </div>
-            );
-          })}
+          <div
+            aria-hidden="true"
+            className={
+              "outline-num font-condensed leading-[0.8] font-black " +
+              (compact ? "text-[clamp(40px,12vw,72px)]" : "text-[clamp(56px,9vw,150px)]")
+            }
+          >
+            {countOf(active + 1)}
+          </div>
+          <h3 className={"giant-title " + (compact ? "text-[clamp(34px,10.5vw,64px)]" : "text-[clamp(40px,5.6vw,96px)]")}>
+            <span className="sr-only">{project.title}</span>
+            <span ref={titleRef} aria-hidden="true" />
+          </h3>
+          <MissionMeta project={project} className={hudRight ? "justify-end" : compact ? "text-[10px]" : ""} />
+          <MissionLinks
+            project={project}
+            className={
+              "pointer-events-auto " +
+              (hudRight ? "justify-end" : "") +
+              (compact ? " [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_button]:min-h-11" : "")
+            }
+          />
         </div>
 
       </div>

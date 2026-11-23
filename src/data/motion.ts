@@ -3,7 +3,7 @@ import type { MotionData } from "@/types";
 export const motion: MotionData = {
   lenis: { lerp: 0.08, wheelMultiplier: 0.9 },
   originScrollVh: 260,
-  missionScreensPerProject: 0.6,
+  missionScreensPerProject: 1,
   tunnel: {
     perspective: 900,
     spacing: 900,
@@ -25,8 +25,8 @@ export const motion: MotionData = {
     visibleCompact: 1,
     perspective: 1400,
     transitionMs: 520,
-    scrollVh: 70,
-    scrollVhCompact: 45,
+    scrollVh: 45,
+    scrollVhCompact: 30,
   },
   reveal: { stagger: 70, rise: 24 },
 };

@@ -41,8 +41,8 @@ export function WorkCard({ project, offset, compact, reduced, selectLabel, onSel
     : {
         transform: `perspective(${cfg.perspective}px) translateX(calc(-50% + ${side * at(xs, d) * 100}%)) translateZ(${at(cfg.depth, d)}px) rotateY(${-side * at(cfg.rotate, d)}deg) scale(${at(cfg.scale, d)})`,
         opacity: visible ? at(cfg.opacity, d) * fadeOut : 0,
-        // Positions already follow the (smoothed) scroll; a short transition only irons out frame gaps.
-        transition: `transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms cubic-bezier(0.22, 1, 0.36, 1)`,
+        // No CSS transition: positions already follow the smoothed scroll every frame, and a transition
+        // restarted on each frame lags behind and wobbles (the "tremor" when switching projects).
       };
 
   return (
@@ -53,10 +53,13 @@ export function WorkCard({ project, offset, compact, reduced, selectLabel, onSel
     >
       <div
         className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_30px_60px_-25px_var(--shadow-color)]"
-        style={{ filter: reduced || dist < 0.05 ? undefined : `brightness(${(1 - 0.2 * Math.min(1, dist)).toFixed(2)})` }}
       >
         {/* Neighbours show the poster only; the demo video plays on the active card. */}
         <ProjectMedia project={project} alt={active ? project.title : ""} still={!active} />
+        {/* Side cards dim with a cheap overlay instead of a CSS filter, which repaints the media every frame. */}
+        {!reduced && dist > 0.02 && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: 0.2 * Math.min(1, dist) }} />
+        )}
         {!active && visible && (
           <button
             type="button"
