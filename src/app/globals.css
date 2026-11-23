@@ -474,3 +474,15 @@ html[data-skip-loader] .preloader {
 @media (prefers-reduced-motion: reduce) {
   [data-menu] { animation: none !important; }
 }
+
+/* Skills icons: a slow, slight float so the scattered icons feel alive. */
+@keyframes tech-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.tech-float {
+  animation: tech-float 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tech-float { animation: none; }
+}
