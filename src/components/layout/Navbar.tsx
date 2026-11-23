@@ -9,6 +9,8 @@ import { useScrollTo } from "@/hooks/useScrollTo";
 import { Reveal } from "@/components/loader/Reveal";
 import { HamburgerIcon } from "@/components/ui/HamburgerIcon";
 import { BackdropPicker } from "@/components/theme/BackdropPicker";
+import { hero as heroContent } from "@/data/hero";
+import { LocaleToggle } from "./LocaleToggle";
 import { MobileMenu } from "./MobileMenu";
 import { PillNav } from "./PillNav";
 
@@ -22,6 +24,7 @@ interface NavbarProps {
 export function Navbar({ homeHref }: NavbarProps) {
   const labels = useLocalized(menuLabels);
   const brand = useLocalized(navbarBrand);
+  const hero = useLocalized(heroContent);
   const external = homeHref !== undefined;
   const hrefPrefix = homeHref ?? "";
   const [open, setOpen] = useState(false);
@@ -49,19 +52,32 @@ export function Navbar({ homeHref }: NavbarProps) {
     <Reveal as="header" className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="relative flex items-start justify-between px-[var(--edge-x)] pt-6">
         {/* Mobile / tablet: compact pill with logo + hamburger. Desktop: logo alone, pill centered. */}
-        <div className={`${glass} pointer-events-auto flex w-full items-center justify-between rounded-full py-2 pr-2.5 pl-6 xl:w-auto xl:py-3 xl:pr-6`}>
-          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="font-sans text-lg font-bold tracking-[0.12em] uppercase xl:text-xl">{brand.label}</a>
-          <button
-            ref={toggleRef}
-            type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full xl:hidden"
-            aria-label={open ? labels.close : labels.open}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen((value) => !value)}
-          >
-            <HamburgerIcon open={open} />
-          </button>
+        <div className={`${glass} pointer-events-auto flex w-full items-center justify-between rounded-full py-2 pr-2 pl-5 xl:w-auto xl:py-3 xl:pr-6`}>
+          <a href={hrefPrefix + "#hero"} onClick={(e) => handleAnchor(e, "hero")} className="font-sans text-base font-bold tracking-[0.12em] uppercase sm:text-lg xl:text-xl">{brand.label}</a>
+          {/* Mobile / tablet controls: language, theme, CV and menu, each in its own round chip. */}
+          <div className="flex items-center gap-1.5 xl:hidden">
+            <LocaleToggle variant="chip" className="rounded-full border border-line p-0.5" />
+            <BackdropPicker variant="compact" className="size-9 justify-center border border-line" />
+            <a
+              href={hero.cvPath}
+              download
+              className="label flex h-9 items-center gap-1 rounded-full bg-emphasis px-3 text-[11px] text-background transition-opacity hover:opacity-85"
+            >
+              CV
+              <span aria-hidden="true">↓</span>
+            </a>
+            <button
+              ref={toggleRef}
+              type="button"
+              className="flex size-9 items-center justify-center rounded-full border border-line"
+              aria-label={open ? labels.close : labels.open}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={() => setOpen((value) => !value)}
+            >
+              <HamburgerIcon open={open} />
+            </button>
+          </div>
         </div>
         <div className="pointer-events-auto absolute top-6 left-1/2 hidden -translate-x-1/2 xl:block">
           <PillNav activeId={activeId} hrefPrefix={hrefPrefix} onAnchor={handleAnchor} />

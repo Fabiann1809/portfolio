@@ -6,8 +6,6 @@ import { menuLabels, navigation } from "@/data/navigation";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { useLenisInstance } from "@/components/layout/SmoothScroll";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { BackdropPicker } from "@/components/theme/BackdropPicker";
-import { LocaleToggle } from "./LocaleToggle";
 
 interface MobileMenuProps {
   open: boolean;
@@ -78,7 +76,7 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
               data-menu-link
               style={{ "--i": index } as React.CSSProperties}
               className={
-                "block py-2 font-display text-4xl font-extrabold tracking-[0.06em] uppercase " +
+                "label block py-2 text-3xl" +
                 (activeId === item.id ? "text-emphasis" : "")
               }
             >
@@ -87,10 +85,6 @@ export function MobileMenu({ open, activeId, hrefPrefix = "", onNavigate, onClos
           </li>
         ))}
       </ul>
-      <div className="flex flex-wrap items-center gap-4 self-start">
-        <LocaleToggle variant="menu" />
-        <BackdropPicker variant="compact" />
-      </div>
       </div>
     </nav>,
     document.body,

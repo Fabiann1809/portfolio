@@ -8,8 +8,8 @@ import { localizePath, splitLocalePath } from "@/lib/locale";
 import { cn } from "@/lib/utils";
 
 interface LocaleToggleProps {
-  /** "pill": compact links inside the header pill. "menu": larger links in the mobile menu. */
-  variant?: "pill" | "menu";
+  /** "pill": compact links inside the header pill. "menu": larger links in the mobile menu. "chip": mobile header, active option filled. */
+  variant?: "pill" | "menu" | "chip";
   className?: string;
 }
 
@@ -20,6 +20,7 @@ export function LocaleToggle({ variant = "pill", className }: LocaleToggleProps)
   const labels = localeToggleLabels[current];
   const { path } = splitLocalePath(pathname);
   const menu = variant === "menu";
+  const chip = variant === "chip";
 
   return (
     <div role="group" aria-label={labels.groupLabel} className={cn("flex items-center", menu ? "gap-2" : "gap-0.5", className)}>
@@ -44,8 +45,12 @@ export function LocaleToggle({ variant = "pill", className }: LocaleToggleProps)
             }}
             className={cn(
               "label block rounded-full transition-colors duration-300",
-              menu ? "border border-line px-4 py-2 text-sm" : "px-2 py-1.5 text-[11px] 2xl:text-xs",
-              active ? "text-emphasis" : "text-foreground/80 hover:text-emphasis",
+              menu ? "border border-line px-4 py-2 text-sm" : chip ? "flex size-8 items-center justify-center text-[11px]" : "px-2 py-1.5 text-[11px] 2xl:text-xs",
+              chip && active
+                ? "bg-emphasis text-background"
+                : active
+                  ? "text-emphasis"
+                  : "text-foreground/80 hover:text-emphasis",
               menu && active && "border-emphasis",
             )}
           >
