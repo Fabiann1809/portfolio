@@ -42,7 +42,7 @@ export const hero: Localized<HeroData> = {
     cvLabel: "Descargar CV",
     status: {
       availability: "Disponible para oportunidades",
-      city: "Túquerres / Pasto",
+      city: "Pasto",
       timeZone: "America/Bogota",
       locale: "es",
       stage: "5.º semestre · Ing. de Software",
@@ -60,7 +60,7 @@ export const hero: Localized<HeroData> = {
     cvLabel: "Download CV",
     status: {
       availability: "Available for opportunities",
-      city: "Túquerres / Pasto",
+      city: "Pasto",
       timeZone: "America/Bogota",
       locale: "en",
       stage: "5th semester · Software Eng.",
