@@ -45,7 +45,7 @@ export const testimonials: Localized<Testimonial[]> = {
       role: "Estudiante de medicina",
       company: "Universidad de Caldas",
       quote:
-        "Colaborar con Fabian me hizo ver cómo la tecnología realmente puede facilitar nuestro trabajo en salud. Siempre está dispuesto a escuchar lo que uno necesita desde la parte médica y transformarlo en una herramienta fácil de usar.",
+        "Colaborar con Fabian me hizo ver cómo la tecnología realmente puede facilitar nuestro trabajo en salud. Siempre está dispuesto a escuchar lo que uno necesita desde la parte médica y transformarlo en herramientas fáciles de usar.",
     },
     {
       id: "jhonny-bastidas",
@@ -71,7 +71,7 @@ export const testimonials: Localized<Testimonial[]> = {
       role: "Medical student",
       company: "Universidad de Caldas",
       quote:
-        "Working with Fabian showed me how technology can truly make our work in healthcare easier. He is always willing to listen to what we need on the medical side and turn it into an easy-to-use tool.",
+        "Working with Fabian showed me how technology can truly make our work in healthcare easier. He is always willing to listen to what we need on the medical side and turn it into easy-to-use tools.",
     },
     {
       id: "jhonny-bastidas",
