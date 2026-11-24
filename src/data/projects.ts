@@ -121,7 +121,7 @@ const projectTexts: Localized<Record<string, { title: string; description: strin
     vyro: {
       title: "VYRO",
       description:
-        "Entrenador de habilidades de escritorio: observa tu técnica con la cámara y te corrige en tiempo real, con seguimiento de tu progreso. Todo se procesa en tu computador.",
+        "Entrenador de habilidades de escritorio para macOS, Linux y Windows: observa tu técnica con la cámara y te corrige en tiempo real, con seguimiento de tu progreso. Todo se procesa en tu computador.",
     },
     reader: {
       title: "Asistente de lectura (Android)",
@@ -148,7 +148,7 @@ const projectTexts: Localized<Record<string, { title: string; description: strin
     vyro: {
       title: "VYRO",
       description:
-        "Desktop skills trainer: it watches your technique through the camera and corrects you in real time, tracking your progress. Everything is processed on your computer.",
+        "Desktop skills trainer for macOS, Linux and Windows: it watches your technique through the camera and corrects you in real time, tracking your progress. Everything is processed on your computer.",
     },
     reader: {
       title: "Reading Assistant (Android)",
