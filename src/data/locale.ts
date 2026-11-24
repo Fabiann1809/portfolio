@@ -31,3 +31,6 @@ export const siteMetadata: Localized<SiteMetadata> = {
     description: "I design and build digital products that think, learn and solve real problems.",
   },
 };
+
+/** Public address of the deployed site (used for canonical links and link previews). */
+export const siteUrl = "https://fabianchipu.vercel.app";
