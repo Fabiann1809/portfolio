@@ -60,6 +60,8 @@ const projectBases: ProjectBase[] = [
   {
     id: "vyro",
     featured: true,
+    image: "/images/projects/vyro-poster.jpg",
+    video: "/videos/projects/vyro-demo.mp4",
     technologies: ["Electron", "React", "Tailwind CSS", "MediaPipe", "Supabase", "Zustand"],
     collaborative: false,
     year: "2026",
