@@ -4,15 +4,15 @@ export const about: Localized<AboutData> = {
   es: {
     label: "Sobre mí",
     statement: [
-      { text: "Soy de Túquerres, Nariño, y estudio ingeniería de software en Pasto. Me gusta entender el " },
-      { text: "porqué", emphasis: true },
-      { text: " de las cosas antes de usarlas, y esa " },
-      { text: "curiosidad", emphasis: true },
-      { text: " me acompaña tanto en el código como fuera de él." },
+      { text: "Soy estudiante de Ingeniería de Software enfocado en " },
+      { text: "desarrollo full stack", emphasis: true },
+      { text: " e " },
+      { text: "inteligencia artificial", emphasis: true },
+      { text: ". Disfruto convertir ideas y problemas reales en productos digitales prácticos." },
     ],
     paragraphs: [
-      "Lo que más disfruto en mi tiempo libre es dibujar y pintar. Un lienzo en blanco me relaja y me reta a la vez, y es el lugar donde mejor se me apaga el ruido. Varias de mis obras están en la sección \"Mi lado artístico\".",
-      "También me apunto a cualquier deporte. El fútbol y el tenis de mesa son mis favoritos. No soy bueno en todos, pero los practico hasta alcanzar un buen nivel, porque disfruto el proceso de mejorar tanto como el juego. Esa constancia, la misma del pincel y de la cancha, es la que llevo a cada proyecto de software.",
+      "Trabajo de punta a punta: interfaces web con React y Next.js, APIs con Spring Boot y NestJS, bases de datos relacionales y no relacionales, apps nativas para Android y Wear OS, y agentes de IA con LangGraph y LangChain. Desde 2024 desarrollo proyectos como freelance, y he construido desde un asistente financiero conversacional hasta modelos de machine learning que corren en el dispositivo.",
+      "Mi trabajo ha sido reconocido con la beca al mejor promedio de la carrera, y soy monitor académico del programa. Me formé como técnico en programación en el SENA y fui ponente en dos encuentros nacionales de RedCOLSI. Fuera del código dibujo, pinto y practico deporte, y esa misma constancia es la que llevo a cada proyecto.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origen" },
@@ -25,15 +25,15 @@ export const about: Localized<AboutData> = {
   en: {
     label: "About me",
     statement: [
-      { text: "I'm from Túquerres, Nariño, and I study software engineering in Pasto. I like to understand the " },
-      { text: "why", emphasis: true },
-      { text: " of things before I use them, and that " },
-      { text: "curiosity", emphasis: true },
-      { text: " stays with me in code and out of it." },
+      { text: "I'm a Software Engineering student focused on " },
+      { text: "full stack development", emphasis: true },
+      { text: " and " },
+      { text: "artificial intelligence", emphasis: true },
+      { text: ". I enjoy turning ideas and real-world problems into practical digital products." },
     ],
     paragraphs: [
-      "What I enjoy most in my free time is drawing and painting. A blank canvas relaxes and challenges me at the same time, and it's where the noise quiets down best. Several of my works are in the \"My artistic side\" section.",
-      "I'll also join in any sport. Football and table tennis are my favorites. I'm not good at all of them, but I practice until I reach a solid level, because I enjoy the process of improving as much as the game. That persistence, the same one I bring to the brush and to the court, is what I bring to every software project.",
+      "I work end to end: web interfaces with React and Next.js, APIs with Spring Boot and NestJS, relational and non-relational databases, native Android and Wear OS apps, and AI agents with LangGraph and LangChain. I've been building projects as a freelancer since 2024, from a conversational finance assistant to machine learning models that run on-device.",
+      "My work has been recognized with the scholarship for the highest GPA in my program, and I'm a teaching assistant for the program. I trained as a programming technician at SENA and was a speaker at two RedCOLSI national meetings. Outside of code I draw, paint and play sports, and that same persistence is what I bring to every project.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origin" },
