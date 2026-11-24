@@ -11,8 +11,7 @@ export const about: Localized<AboutData> = {
       { text: ". Disfruto convertir ideas y problemas reales en productos digitales prácticos." },
     ],
     paragraphs: [
-      "Trabajo de punta a punta: interfaces web con React y Next.js, APIs con Spring Boot y NestJS, bases de datos relacionales y no relacionales, apps nativas para Android y Wear OS, y agentes de IA con LangGraph y LangChain. Desde 2024 desarrollo proyectos como freelance, y he construido desde un asistente financiero conversacional hasta modelos de machine learning que corren en el dispositivo.",
-      "Mi trabajo ha sido reconocido con la beca al mejor promedio de la carrera, y soy monitor académico del programa. Me formé como técnico en programación en el SENA y fui ponente en dos encuentros nacionales de RedCOLSI. Fuera del código dibujo, pinto y practico deporte, y esa misma constancia es la que llevo a cada proyecto.",
+      "Me gusta construir de punta a punta, de la interfaz al modelo de IA, cuidando que cada detalle funcione bien. Fuera del código dibujo, pinto y practico deporte, y esa misma constancia es la que llevo a cada proyecto.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origen" },
@@ -32,8 +31,7 @@ export const about: Localized<AboutData> = {
       { text: ". I enjoy turning ideas and real-world problems into practical digital products." },
     ],
     paragraphs: [
-      "I work end to end: web interfaces with React and Next.js, APIs with Spring Boot and NestJS, relational and non-relational databases, native Android and Wear OS apps, and AI agents with LangGraph and LangChain. I've been building projects as a freelancer since 2024, from a conversational finance assistant to machine learning models that run on-device.",
-      "My work has been recognized with the scholarship for the highest GPA in my program, and I'm a teaching assistant for the program. I trained as a programming technician at SENA and was a speaker at two RedCOLSI national meetings. Outside of code I draw, paint and play sports, and that same persistence is what I bring to every project.",
+      "I like building end to end, from the interface to the AI model, making sure every detail works well. Outside of code I draw, paint and play sports, and that same persistence is what I bring to every project.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origin" },
