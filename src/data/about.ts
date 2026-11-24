@@ -11,7 +11,8 @@ export const about: Localized<AboutData> = {
       { text: ". Disfruto convertir ideas y problemas reales en productos digitales prácticos." },
     ],
     paragraphs: [
-      "Me gusta construir de punta a punta, de la interfaz al modelo de IA, cuidando que cada detalle funcione bien. Fuera del código dibujo, pinto y practico deporte, y esa misma constancia es la que llevo a cada proyecto.",
+      "Me gusta construir de punta a punta, de la interfaz al modelo de IA, cuidando que cada detalle funcione bien. Desde 2024 lo hago como freelance, con proyectos que van de un asistente financiero conversacional a modelos que corren en el dispositivo.",
+      "Mi trabajo ha sido reconocido con la beca al mejor promedio de la carrera, soy monitor académico del programa y fui ponente en dos encuentros nacionales de RedCOLSI. Fuera del código dibujo, pinto y practico deporte, y esa misma constancia es la que llevo a cada proyecto.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origen" },
@@ -31,7 +32,8 @@ export const about: Localized<AboutData> = {
       { text: ". I enjoy turning ideas and real-world problems into practical digital products." },
     ],
     paragraphs: [
-      "I like building end to end, from the interface to the AI model, making sure every detail works well. Outside of code I draw, paint and play sports, and that same persistence is what I bring to every project.",
+      "I like building end to end, from the interface to the AI model, making sure every detail works well. I've done it as a freelancer since 2024, with projects ranging from a conversational finance assistant to models that run on-device.",
+      "My work has been recognized with the scholarship for the highest GPA in my program; I'm a teaching assistant for the program and was a speaker at two RedCOLSI national meetings. Outside of code I draw, paint and play sports, and that same persistence is what I bring to every project.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origin" },
