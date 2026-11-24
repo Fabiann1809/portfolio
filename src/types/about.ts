@@ -16,12 +16,6 @@ export interface AboutFact {
   value: string;
 }
 
-export interface AboutNow {
-  id: "building" | "exploring" | "learning";
-  title: string;
-  detail: string;
-}
-
 export interface AboutData {
   /** Section label, shown as "// LABEL 000%". */
   label: string;
@@ -32,7 +26,4 @@ export interface AboutData {
   stackTitle: string;
   /** Small cards next to the text with facts the paragraphs don't mention. */
   facts: AboutFact[];
-  /** "Currently" row: what I'm building, exploring and learning. */
-  nowLabel: string;
-  now: AboutNow[];
 }

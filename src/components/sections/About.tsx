@@ -4,7 +4,6 @@ import { about as aboutContent } from "@/data/about";
 import { useLocalized } from "@/components/locale/LocaleProvider";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { StackMarquee } from "@/components/about/StackMarquee";
-import { AboutNowIcon } from "@/components/about/AboutNowIcon";
 
 /** "About me": plain heading and paragraphs, then the technologies strip. */
 export function About() {
@@ -33,24 +32,6 @@ export function About() {
             ))}
           </ScrollReveal>
         </div>
-
-        {/* Currently: building / exploring / learning. */}
-        <ScrollReveal className="mt-12">
-          <p className="mono-label text-[10px] text-muted">{about.nowLabel}</p>
-          <ul className="mt-4 grid gap-5 sm:grid-cols-3">
-            {about.now.map((item) => (
-              <li key={item.id} className="flex items-center gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-emphasis">
-                  <AboutNowIcon id={item.id} />
-                </span>
-                <span>
-                  <span className="block font-semibold text-foreground">{item.title}</span>
-                  <span className="block text-sm text-muted">{item.detail}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </ScrollReveal>
       </div>
       <ScrollReveal className="mt-20">
         <StackMarquee title={about.stackTitle} />

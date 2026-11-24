@@ -26,12 +26,6 @@ export const about: Localized<AboutData> = {
       { label: "Ahora", value: "5.º semestre" },
       { label: "Idiomas", value: "Español · Inglés B2" },
     ],
-    nowLabel: "Actualmente",
-    now: [
-      { id: "building", title: "Construyendo", detail: "Proyectos freelance web y móviles" },
-      { id: "exploring", title: "Explorando", detail: "Agentes de IA con LangGraph" },
-      { id: "learning", title: "Aprendiendo", detail: "Machine learning en el dispositivo" },
-    ],
   },
   en: {
     label: "About me",
@@ -57,12 +51,6 @@ export const about: Localized<AboutData> = {
       { label: "Studying", value: "Software Engineering" },
       { label: "Now", value: "5th semester" },
       { label: "Languages", value: "Spanish · English B2" },
-    ],
-    nowLabel: "Currently",
-    now: [
-      { id: "building", title: "Building", detail: "Freelance web and mobile projects" },
-      { id: "exploring", title: "Exploring", detail: "AI agents with LangGraph" },
-      { id: "learning", title: "Learning", detail: "On-device machine learning" },
     ],
   },
 };
