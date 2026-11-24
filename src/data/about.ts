@@ -11,7 +11,7 @@ export const about: Localized<AboutData> = {
       { text: ". Disfruto convertir ideas y problemas reales en productos digitales prácticos. Me gusta construir de punta a punta, de la interfaz al modelo de IA, cuidando que cada detalle funcione bien. Desde 2024 lo hago como freelance, con proyectos que van de un asistente financiero conversacional a modelos que corren en el dispositivo." },
     ],
     paragraphs: [
-      "Mi trabajo ha sido reconocido con la beca al mejor promedio de la carrera, soy monitor académico del programa y fui ponente en dos encuentros nacionales de RedCOLSI. Fuera del código dibujo y pinto: un lienzo en blanco me relaja y me reta a la vez, y es mi forma de desconectarme y de ver las cosas desde otro ángulo (varias obras están en \"Mi lado artístico\"). Esa misma atención al detalle es la que llevo a cada proyecto.",
+      "Mi trabajo ha sido reconocido con la beca al mejor promedio de la carrera, soy monitor académico del programa y fui ponente en dos encuentros nacionales de RedCOLSI. Fuera del código dibujo y pinto: un lienzo en blanco me relaja y me reta a la vez, y es mi forma de desconectarme y de ver las cosas desde otro ángulo. Esa misma atención al detalle es la que llevo a cada proyecto.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origen" },
@@ -31,7 +31,7 @@ export const about: Localized<AboutData> = {
       { text: ". I enjoy turning ideas and real-world problems into practical digital products. I like building end to end, from the interface to the AI model, making sure every detail works well. I've done it as a freelancer since 2024, with projects ranging from a conversational finance assistant to models that run on-device." },
     ],
     paragraphs: [
-      "My work has been recognized with the scholarship for the highest GPA in my program; I'm a teaching assistant for the program and was a speaker at two RedCOLSI national meetings. Outside of code I draw and paint: a blank canvas relaxes and challenges me at once, and it's how I unplug and see things from another angle (several works are in \"My artistic side\"). That same attention to detail is what I bring to every project.",
+      "My work has been recognized with the scholarship for the highest GPA in my program; I'm a teaching assistant for the program and was a speaker at two RedCOLSI national meetings. Outside of code I draw and paint: a blank canvas relaxes and challenges me at once, and it's how I unplug and see things from another angle. That same attention to detail is what I bring to every project.",
     ],
     timeline: [
       { id: "step-1", place: "Túquerres", period: "Origin" },
