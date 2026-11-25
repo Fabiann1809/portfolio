@@ -13,6 +13,7 @@ export const projectLabels: Localized<ProjectLabels> = {
     github: "GitHub",
     demo: "Sitio web",
     download: "APK",
+    release: "Descargar",
     progressAria: "Progreso de proyectos",
     hoverHint: "Pasa el cursor para ver la demo",
     tapHint: "Mantén presionado",
@@ -36,6 +37,7 @@ export const projectLabels: Localized<ProjectLabels> = {
     github: "GitHub",
     demo: "Live site",
     download: "APK",
+    release: "Download",
     progressAria: "Projects progress",
     hoverHint: "Hover to play the demo",
     tapHint: "Press and hold",
@@ -65,7 +67,10 @@ const projectBases: ProjectBase[] = [
     technologies: ["Electron", "React", "Tailwind CSS", "MediaPipe", "Supabase", "Zustand"],
     collaborative: false,
     year: "2026",
-    links: { github: "https://github.com/Fabiann1809/vyro" },
+    links: {
+      github: "https://github.com/Fabiann1809/vyro",
+      release: "https://github.com/Fabiann1809/vyro/releases/latest",
+    },
   },
   {
     id: "reader",

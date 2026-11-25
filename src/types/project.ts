@@ -13,6 +13,8 @@ export interface ProjectLinks {
   vercel?: string;
   /** APK download. */
   download?: string;
+  /** Release page with installers for several platforms (desktop apps). */
+  release?: string;
 }
 
 export interface Project {
@@ -44,6 +46,8 @@ export interface ProjectLabels {
   github: string;
   demo: string;
   download: string;
+  /** Label of the desktop release link (installers for macOS, Linux and Windows). */
+  release: string;
   /** Accessible name of the progress ticks list. */
   progressAria: string;
   /** Small badge on demo videos: pointer devices / touch screens. */

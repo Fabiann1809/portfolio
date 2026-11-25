@@ -38,6 +38,11 @@ export function MissionLinks({ project, className = "" }: { project: Project; cl
           {projectLabels.demo}
         </a>
       )}
+      {links.release && (
+        <a className="bracket-link" href={links.release} target="_blank" rel="noreferrer">
+          {projectLabels.release}
+        </a>
+      )}
       {links.download && (
         <a className="bracket-link" href={links.download} download>
           {projectLabels.download}
